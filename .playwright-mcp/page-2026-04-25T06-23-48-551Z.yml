@@ -1,0 +1,33 @@
+- generic [ref=e31]:
+  - button "?" [ref=e34] [cursor=pointer]:
+    - generic [ref=e35]: "?"
+  - button
+  - generic [ref=e39]:
+    - banner [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e46] [cursor=pointer]
+          - generic [ref=e50] [cursor=pointer]:
+            - generic [ref=e51]: Qwen3.6-Plus
+            - img [ref=e53]
+        - generic [ref=e56]:
+          - generic [ref=e58] [cursor=pointer]: 登录
+          - generic [ref=e60] [cursor=pointer]: 注册
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - generic [ref=e65]: 我有什么可以帮您的？
+        - generic [ref=e70]:
+          - textbox "有什么我能帮您的吗？" [ref=e79]: 你好！请查看 https://wonderful-begonia-2e72a0.netlify.app 的技能库，告诉我有哪些 skill 可以用？请尝试访问几个 skill 文件看看是否能正常读取。
+          - generic [ref=e126]:
+            - img [ref=e132] [cursor=pointer]
+            - generic [ref=e134]:
+              - generic [ref=e138] [cursor=pointer]:
+                - combobox [ref=e140]
+                - generic [ref=e142]:
+                  - generic [ref=e143]: 自动
+                  - generic:
+                    - img
+              - button [ref=e146] [cursor=pointer]:
+                - img [ref=e147]:
+                  - img [ref=e148]
+      - generic [ref=e120]: 使用 Qwen Studio，即表示您同意我们的 用户条款 和 隐私协议。

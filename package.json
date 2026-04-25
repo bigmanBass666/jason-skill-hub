@@ -1,0 +1,19 @@
+{
+  "name": "ai-skill-hub",
+  "version": "1.0.0",
+  "description": "A lightweight static site for hosting Agent Skills, allowing any AI agent to automatically index and read skill files via URL",
+  "scripts": {
+    "scan": "node scripts/scan.js",
+    "build": "node scripts/scan.js",
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "ai",
+    "skill",
+    "agent",
+    "netlify"
+  ],
+  "author": "",
+  "license": "MIT"
+}

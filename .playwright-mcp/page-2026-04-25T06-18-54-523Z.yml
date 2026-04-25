@@ -1,0 +1,72 @@
+- generic [ref=e5]:
+  - generic [ref=e7]:
+    - button [ref=e9] [cursor=pointer]:
+      - generic [ref=e10]:
+        - button [ref=e11]:
+          - img [ref=e14]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - button [ref=e18]:
+              - img [ref=e19]
+            - button [ref=e22]:
+              - img [ref=e23]
+          - button [ref=e27]:
+            - img [ref=e29]
+    - generic [ref=e32]:
+      - navigation [ref=e33]:
+        - generic [ref=e35]:
+          - button "选择一个模型" [disabled] [ref=e41]:
+            - generic [ref=e42]: GLM-5V-Turbo
+          - button "User Menu" [ref=e58] [cursor=pointer]:
+            - button "User Menu" [ref=e59]:
+              - img "User profile" [ref=e61]
+      - generic [ref=e64]:
+        - generic [ref=e167]:
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - generic [ref=e175]: 你好！请查看 https://wonderful-begonia-2e72a0.netlify.app 的技能库，告诉我有哪些 skill 可以用？请尝试访问几个 skill 文件看看是否能正常读取。
+              - iframe [ref=e176]:
+                
+            - generic [ref=e177]:
+              - generic "编辑" [ref=e178]
+              - generic "复制" [ref=e179]
+          - generic [ref=e233]:
+            - generic [ref=e234]:
+              - generic [ref=e235] [cursor=pointer]:
+                - generic [ref=e239]: 用户想让我查看一个网站 https://wonderful-begonia-2e72a0.netlify.app 的技能库，了解有哪些 skill 可以用，并尝试访问几个 skill 文件看看是否能正常读取。
+                - img [ref=e241]
+              - blockquote [ref=e243]:
+                - paragraph [ref=e244]:
+                  - text: 用户想让我查看一个网站
+                  - link "https://wonderful-begonia-2e72a0.netlify.app" [ref=e245] [cursor=pointer]:
+                    - /url: https://wonderful-begonia-2e72a0.netlify.app
+                  - text: 的技能库，了解有哪些 skill 可以用，并尝试访问几个 skill 文件看看是否能正常读取。
+                - paragraph [ref=e246]: 我需要使用 zai_read_webpage 工具来访问这个网页并获取其内容。
+            - paragraph [ref=e247]: 我来帮您查看这个网站的技能库信息。
+            - generic [ref=e250]:
+              - img [ref=e252]
+              - generic [ref=e254]: 网页精读
+              - separator [ref=e255]
+              - link "https://wonderful-begonia-2e72a0.netlify.app" [ref=e256] [cursor=pointer]:
+                - /url: https://wonderful-begonia-2e72a0.netlify.app
+        - generic [ref=e200]:
+          - textbox "输入消息" [active] [ref=e202]
+          - generic [ref=e203]:
+            - generic [ref=e204]:
+              - generic "最多上传 10 个文件, 每个 50 MB" [ref=e206]:
+                - button "More" [ref=e207]:
+                  - button "More" [ref=e208] [cursor=pointer]:
+                    - img [ref=e209]
+              - generic [ref=e211]:
+                - generic "联网搜索已开启" [ref=e212]:
+                  - button [ref=e213] [cursor=pointer]:
+                    - img [ref=e214]
+                - generic "工具已开启" [ref=e216]:
+                  - button [ref=e217] [cursor=pointer]:
+                    - img [ref=e218]
+                - generic "深度思考已开启" [ref=e220]:
+                  - button [ref=e221] [cursor=pointer]:
+                    - img [ref=e222]
+            - generic "停止" [ref=e228]:
+              - button [ref=e231] [cursor=pointer]
+  - generic [ref=e161]: Z.ai - Free AI Chatbot & Agent powered by GLM-5.1 & GLM-5
