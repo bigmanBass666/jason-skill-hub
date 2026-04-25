@@ -130,7 +130,7 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Path**: ${skill.path}/SKILL.md\n\n`;
+    md += `- **Path**: skills/${skill.path}/SKILL.md\n\n`;
   }
 
   return md;
