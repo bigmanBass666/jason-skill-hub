@@ -4,10 +4,11 @@
 
 **第一步**: 从下方选择一个 skill
 
-**第二步**: 根据它的 **Path** 拼接完整 URL：
-  - **公式**: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + Path
-  - **注意**: Path本身已经包含了skill的目录名（如`skill-creator/SKILL.md`），直接拼接到上面URL后面即可
-  - 例如 Path 是 `skill-creator/SKILL.md`，则完整 URL 是 `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
+**第二步**: 拼接完整 URL：
+  - 完整 URL = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + **Path中的目录名部分**
+  - 例如 Path 是 `skill-creator/SKILL.md`，其中目录名是 `skill-creator`
+  - 完整 URL = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + `skill-creator/SKILL.md`
+  - 结果是: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
 
 **第三步**: 访问完整 URL 抓取 **完整的 SKILL.md 原文**
 
