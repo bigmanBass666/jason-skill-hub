@@ -1,24 +1,30 @@
 # Skill Catalog
 
+## URL拼接规则（必读）
+
+所有skill文件都在GitHub的`skills/`目录下。
+
+**基础URL**: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/`
+
+**完整URL公式**: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + **Path**
+
+**示例**:
+- INDEX.md在: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md`
+- skill-creator的SKILL.md在: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
+- awwwards-design的SKILL.md在: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/SKILL.md`
+
 ## 使用方法
 
-**第一步**: 从下方选择一个 skill
+**第一步**: 从下方选择一个skill
 
-**第二步**: 拼接完整 URL：
-  - 完整 URL = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + **Path中的目录名部分**
-  - 例如 Path 是 `skill-creator/SKILL.md`，其中目录名是 `skill-creator`
-  - 完整 URL = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/` + `skill-creator/SKILL.md`
-  - 结果是: `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
+**第二步**: 找到它的Path，将Path直接拼接在`https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/`后面
 
-**第三步**: 访问完整 URL 抓取 **完整的 SKILL.md 原文**
-
-**第四步**: 如果 SKILL.md 中提到其他文件，根据 SKILL.md 所在的目录 + 文件相对路径拼接完整 URL
+**第三步**: 访问完整URL抓取SKILL.md原文
 
 > **⚠️ 强制要求**：
-> - 你必须实际访问完整 URL 获取 SKILL.md 内容，**不能仅凭 description 推断**
-> - 抓取后必须先输出 SKILL.md 的完整内容，证明你真的读取了
-> - 必须按照 SKILL.md 里的步骤执行
-> - **如果 SKILL.md 提到其他目录文件，必须先访问该目录获取真实文件列表**
+> - 你必须实际访问完整URL获取SKILL.md内容，**不能仅凭description推断**
+> - 抓取后必须先输出SKILL.md的完整内容，证明你真的读取了
+> - 必须按照SKILL.md里的步骤执行
 
 ## Skills### arch-design
 - **Description**: 项目启动前的架构设计向导，专为用 AI 开发项目的初学者设计。当用户说「我想做一个新项目」「帮我规划一下架构」「我要开始开发 XX 系统」「我有一个想法想实现」「新项目怎么开始」「帮我想想怎么设计」时，必须使用此 skill，在写任何代码之前引导用户完成完整的架构设计。即使用户只是说「我想做个 XX」也应立即触发此 skill，阻止过早写代码。
