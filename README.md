@@ -99,15 +99,33 @@ ai-skill-hub/
 
 ## AI 使用说明
 
-将部署后的 URL 提供给 AI，AI 可以：
+### 访问方式
 
-1. 访问根 URL 获取技能目录
-2. 根据需求访问具体 skill 文件
-3. 自动追踪引用并读取依赖文件
+本项目提供两种访问方式：
+
+#### 方式 1：GitHub Raw URL（推荐用于 AI）
+
+AI 平台访问 GitHub Raw URL 最稳定可靠：
+
+```
+https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
+```
+
+所有 skill 的路径都是完整的 GitHub Raw URL，AI 可直接读取。
+
+#### 方式 2：Netlify（备用于人类浏览）
+
+```
+https://jason-skill-hub.netlify.app/skills/INDEX.md
+```
+
+### AI 推断规则
+
+如果 AI 需要访问具体的 skill 文件，可以根据 INDEX.md 中的 Path 推断完整 URL，或参考 `.ai/url-guide.md` 获取详细规则。
 
 示例：
 ```
-请查看 https://your-site.netlify.app 的技能库，
+请查看 https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
 使用 code-review skill 帮我审查以下代码...
 ```
 

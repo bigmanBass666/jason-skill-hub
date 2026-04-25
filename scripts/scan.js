@@ -3,6 +3,13 @@
  * scan.js - 扫描 skills 目录并生成 INDEX.md 和 _redirects
  *
  * 使用方法：node scripts/scan.js
+ *
+ * 配置：
+ *   GITHUB_RAW=true  - 输出 GitHub Raw URL 格式（用于 AI 平台访问）
+ *   GITHUB_RAW=false - 输出相对路径格式（默认，保持向后兼容）
+ *
+ * GitHub 仓库配置：
+ *   修改下面的 GITHUB_OWNER 和 GITHUB_REPO 为你的仓库信息
  */
 
 const fs = require('fs');
@@ -11,6 +18,24 @@ const path = require('path');
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
 const OUTPUT_INDEX = path.join(SKILLS_DIR, 'INDEX.md');
 const OUTPUT_REDIRECTS = path.join(__dirname, '..', '_redirects');
+
+// GitHub 仓库配置
+const GITHUB_OWNER = 'bigmanBass666';
+const GITHUB_REPO = 'jason-skill-hub';
+const GITHUB_BRANCH = 'master';
+
+// 是否输出 GitHub Raw URL（AI 平台友好）
+const USE_GITHUB_RAW = process.env.GITHUB_RAW === 'true';
+
+/**
+ * 获取 skill 的 URL（根据配置返回 GitHub Raw URL 或相对路径）
+ */
+function getSkillUrl(skillPath) {
+  if (USE_GITHUB_RAW) {
+    return `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${skillPath}/SKILL.md`;
+  }
+  return `/${skillPath}/SKILL.md`;
+}
 
 /**
  * 解析 YAML frontmatter
@@ -110,7 +135,7 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Path**: /${skill.path}/SKILL.md\n\n`;
+    md += `- **Path**: ${getSkillUrl(skill.path)}\n\n`;
   }
 
   return md;

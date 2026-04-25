@@ -2,3 +2,10 @@ node_modules/
 .omc/
 *.log
 .DS_Store
+
+# Local Netlify folder
+.netlify
+
+# AI and spec files (not needed in repo)
+.ai/
+.trae/
