@@ -1,3 +1,5 @@
+functionsDirectory = "D:\\Working\\programming_projects\\jason-skill-hub\\netlify\\functions"
+functionsDirectoryOrigin = "ui"
 headersOrigin = "config"
 plugins = []
 
@@ -10,6 +12,7 @@ publish = "D:\\Working\\programming_projects\\jason-skill-hub\\skills"
 publishOrigin = "config"
 commandOrigin = "config"
 command = "node scripts/scan.js"
+functions = "D:\\Working\\programming_projects\\jason-skill-hub\\netlify\\functions"
 
 [build.environment]
 NODE_VERSION = "18"

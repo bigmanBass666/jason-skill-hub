@@ -7,27 +7,90 @@
 **只需告诉 AI 以下链接，它会自动发现所有 skills：**
 
 ```
-https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
+https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
 ```
+
+> **为什么用 jsDelivr CDN？**
+> - 国内 AI 平台访问 GitHub Raw URL 不稳定
+> - jsDelivr 是免费的 CDN 服务，访问更可靠
+> - 同时提供 gcore 国内加速节点作为备选
 
 AI 会自动：
 1. 读取 INDEX.md 发现所有可用 skills
 2. 根据 Path 读取对应的 SKILL.md
 3. 自动推断并读取关联的参考文件
 
-## 核心价值
+## 🔗 URL 格式选项
 
-解决「线上 chat/agent 无法像本地 CLI 那样便捷访问 skill 文件」的问题——**只需给 AI 一个链接，它就能自己找到并读取需要的 skill**。
+### 方式 1：jsDelivr CDN（推荐）
 
-## 快速开始
+```
+https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
+```
 
-### 1. 安装依赖
+稳定可靠，推荐用于所有 AI 平台。
+
+### 方式 2：gcore 国内加速（备选）
+
+```
+https://gcore.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
+```
+
+国内访问速度更快，作为备选方案。
+
+### 方式 3：GitHub Raw（备选）
+
+```
+https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
+```
+
+部分 AI 平台可能访问不稳定，仅作备选。
+
+## 🤝 AI 平台兼容性
+
+| 平台 | 状态 | 说明 |
+|------|------|------|
+| 智谱 AI | ✅ 推荐 | 完全支持 skill 引用处理 |
+| Kimi.ai | ✅ 可用 | 支持基本访问 |
+| 通义千问 | ⚠️ 可用 | 基本功能正常 |
+| z.ai | ❌ 不可用 | 网页抓取 403 错误 |
+| 文心一言 | ❌ 不可用 | 代码解释器限制 |
+
+## 📦 可用 Skills（21 个）
+
+| Skill | 描述 |
+|-------|------|
+| **arch-design** | 项目启动前的架构设计向导 |
+| **article-to-image-prompt** | 根据文章内容生成绘图 prompt |
+| **awwwards-design** | 创建 Awwwards 获奖级别网站 |
+| **canvas-design** | Canvas 视觉艺术设计 |
+| **code-refactor** | AI Agent 代码优化与重构 |
+| **daily-summary** | AI 第一人称工作日记生成 |
+| **diary-recorder** | 日记成稿生成 |
+| **doc-coauthoring** | 文档协作工作流 |
+| **docx** | Word 文档操作 |
+| **gitignore-gen** | 自动生成 .gitignore 文件 |
+| **learning-report** | 学习过程报告生成 |
+| **long-running-agent** | 长时运行 Agent 实现 |
+| **pdf** | PDF 文件操作 |
+| **pptx** | PPT 演示文稿操作 |
+| **pr-template** | Pull Request 模板生成 |
+| **process-cleanup** | 开发进程清理 |
+| **skill-creator** | Skill 创建与优化 |
+| **skill-ref-test** | 引用关系验证测试 |
+| **webapp-testing** | Web 应用测试工具集 |
+| **xlsx** | Excel 表格操作 |
+| **zai-consult** | z.ai 增强推理咨询协议 |
+
+## 🚀 快速部署
+
+### 安装依赖
 
 ```bash
 npm install
 ```
 
-### 2. 创建 Skill
+### 创建 Skill
 
 在 `skills/` 目录下创建新的 skill 文件夹，每个 skill 必须包含 `SKILL.md` 入口文件：
 
@@ -39,13 +102,13 @@ skills/
 │       └── checklist.md  # 可选：引用文件
 ```
 
-### 3. 生成索引
+### 生成索引
 
 ```bash
 npm run scan
 ```
 
-### 4. 部署到 Netlify
+### 部署到 Netlify
 
 ```bash
 # 安装 Netlify CLI（仅首次）
@@ -58,17 +121,17 @@ netlify deploy
 netlify deploy --prod
 ```
 
-## 项目结构
+## 📁 项目结构
 
 ```
 ai-skill-hub/
 ├── skills/                 # Skill 文件目录
 │   ├── INDEX.md           # 自动生成的索引
-│   ├── code-review/       # 示例 skill
-│   │   ├── SKILL.md
-│   │   └── references/
-│   └── pr-template/       # 示例 skill
-│       └── references/
+│   ├── arch-design/       # 架构设计 skill
+│   │   └── SKILL.md
+│   ├── awwwards-design/   # Awwwards 网站设计
+│   │   └── SKILL.md
+│   └── ...                # 其他 skills
 ├── scripts/
 │   └── scan.js            # 扫描生成脚本
 ├── netlify.toml           # Netlify 配置
@@ -77,7 +140,7 @@ ai-skill-hub/
 └── README.md
 ```
 
-## 配置说明
+## ⚙️ 配置说明
 
 ### netlify.toml
 
@@ -94,55 +157,23 @@ ai-skill-hub/
 自动生成的重定向规则，将目录路径重定向到 `SKILL.md`：
 
 ```
-/code-review /code-review/SKILL.md 200
-/code-review/ /code-review/SKILL.md 200
+/arch-design /arch-design/SKILL.md 200
+/arch-design/ /arch-design/SKILL.md 200
 ```
 
-## 可用技能
+## 💡 AI 使用示例
 
-部署后访问根 URL 查看所有可用技能。
-
-### Code Review
-- 路径：`/code-review/SKILL.md`
-- 用途：代码审查检查清单
-
-### PR Template
-- 路径：`/pr-template/SKILL.md`
-- 用途：Pull Request 模板生成
-
-## AI 使用说明
-
-### 访问方式
-
-本项目提供两种访问方式：
-
-#### 方式 1：GitHub Raw URL（推荐用于 AI）
-
-AI 平台访问 GitHub Raw URL 最稳定可靠：
-
-```
-https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
+```markdown
+请查看 https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
+使用 awwwards-design skill 帮我创建一个震撼的作品集网站
 ```
 
-所有 skill 的路径都是完整的 GitHub Raw URL，AI 可直接读取。
-
-#### 方式 2：Netlify（备用于人类浏览）
-
-```
-https://jason-skill-hub.netlify.app/skills/INDEX.md
+```markdown
+请查看 https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
+使用 code-refactor skill 重构我的代码
 ```
 
-### AI 推断规则
-
-如果 AI 需要访问具体的 skill 文件，可以根据 INDEX.md 中的 Path 推断完整 URL，或参考 `.ai/url-guide.md` 获取详细规则。
-
-示例：
-```
-请查看 https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
-使用 code-review skill 帮我审查以下代码...
-```
-
-## 开发
+## 🔧 开发
 
 ```bash
 # 本地预览

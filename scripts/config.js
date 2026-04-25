@@ -45,14 +45,14 @@ function getBaseUrl() {
     return `${process.env.DOMAIN}/${owner}/${repo}/${branch}`;
   }
 
-  const urlFormat = process.env.URL_FORMAT || 'github-raw';
+  const urlFormat = process.env.URL_FORMAT || 'jsdelivr';
   return URL_FORMATS[urlFormat].base;
 }
 
 function getConfig() {
   const computedBaseUrl = getBaseUrl();
-  const urlFormat = process.env.URL_FORMAT || 'github-raw';
-  const formatConfig = URL_FORMATS[urlFormat] || URL_FORMATS['github-raw'];
+  const urlFormat = process.env.URL_FORMAT || 'jsdelivr';
+  const formatConfig = URL_FORMATS[urlFormat] || URL_FORMATS['jsdelivr'];
 
   return {
     baseUrl: computedBaseUrl,
