@@ -1,19 +1,10 @@
 # Skill Catalog
 
-## 如何获取完整 Raw URL
+**使用说明**：
 
-每个 skill 的 Raw URL 在下方 **Raw** 列。
-
-**基础 URL**：`https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/`
-
-**完整 URL** = 基础URL + `skill-name/SKILL.md`
-
-示例：
-- skill-creator → `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
-
-⚠️ 完整URL中间必须有 `skills/` 目录！
-
-**主动抓取 Raw URL 获取 SKILL.md 全文，然后根据内容执行 skill。**
+1. 下方每个 skill 的 **Raw** 列就是完整 Raw URL
+2. **直接使用**这个 URL，不要修改！
+3. 抓取 Raw URL 获取 SKILL.md
 
 ## Skills### arch-design
 - **Description**: 项目启动前的架构设计向导，专为用 AI 开发项目的初学者设计。当用户说「我想做一个新项目」「帮我规划一下架构」「我要开始开发 XX 系统」「我有一个想法想实现」「新项目怎么开始」「帮我想想怎么设计」时，必须使用此 skill，在写任何代码之前引导用户完成完整的架构设计。即使用户只是说「我想做个 XX」也应立即触发此 skill，阻止过早写代码。
