@@ -13,5 +13,11 @@
 示例: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pr-template/references/template.md
 ```
 
+## 验证方法
+
+读取完任何文件后，**必须把文件内容完整输出**，证明确实读到了，而不是凭记忆生成。
+
+**常见错误**：看到 skill 的 Description 就以为懂了，然后凭自己的知识生成内容。这样做 100% 是错的，必须去抓 Raw URL。
+
 ## Skills
 
