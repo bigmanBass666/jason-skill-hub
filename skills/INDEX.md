@@ -21,11 +21,6 @@
 ### awwwards-design
 - **Description**: 创建能在 Awwwards 获奖的设计级网站。当用户要求创建视觉震撼、沉浸式体验、获奖级别的网站、作品集、品牌展示页、产品落地页，或任何追求极致视觉与交互体验的 web 项目时，必须使用此 skill。关键词触发：「Awwwards 级别」「沉浸式网站」「震撼视觉」「高端网站」「创意交互」「WebGL」「Scrollytelling」「获奖设计」「极致动效」「创意代理网站」。即使用户只说「帮我做个很酷的网站」也应触发此 skill，因为它包含了创建世界顶级 web 体验所需的全部技术与设计框架。
 - **Raw URL**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/SKILL.md
-- **Other Files**:
-  - references/animation-patterns.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/references/animation-patterns.md
-  - references/tech-stack.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/references/tech-stack.md
-  - references/typography-guide.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/references/typography-guide.md
-  - references/webgl-patterns.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/references/webgl-patterns.md
 
 ### canvas-design
 - **Description**: 
@@ -66,22 +61,14 @@
 ### pdf
 - **Description**: 
 - **Raw URL**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pdf/SKILL.md
-- **Other Files**:
-  - forms.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pdf/forms.md
-  - reference.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pdf/reference.md
 
 ### pptx
 - **Description**: 
 - **Raw URL**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pptx/SKILL.md
-- **Other Files**:
-  - editing.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pptx/editing.md
-  - pptxgenjs.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pptx/pptxgenjs.md
 
 ### pr-template
 - **Description**: Pull Request 模板生成器 - 自动生成标准化的 PR 描述
 - **Raw URL**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pr-template/SKILL.md
-- **Other Files**:
-  - references/template.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pr-template/references/template.md
 
 ### process-cleanup
 - **Description**: 自动检测并清理所有残留的开发进程。当用户提到清理进程、清理残留、结束工作或需要释放资源时使用。支持清理 Node.js/npm、Python、Claude/MCP、Ruby 等各类开发相关进程，采用强制终止确保彻底清理。
@@ -90,11 +77,6 @@
 ### skill-creator
 - **Description**: 
 - **Raw URL**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md
-- **Other Files**:
-  - agents/analyzer.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/agents/analyzer.md
-  - agents/comparator.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/agents/comparator.md
-  - agents/grader.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/agents/grader.md
-  - references/schemas.md: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/references/schemas.md
 
 ### webapp-testing
 - **Description**: 

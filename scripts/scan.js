@@ -136,20 +136,7 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Raw URL**: ${getSkillUrl(skill.path)}\n`;
-    if (skill.files && skill.files.length > 1) {
-      const others = skill.files.filter(f => f.endsWith('.md') && !f.endsWith('SKILL.md'));
-      if (others.length > 0) {
-        const base = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/${skill.path}`;
-        md += `- **Other Files**:\n`;
-        for (const f of others) {
-          const normalized = f.replace(/\\/g, '/');
-          const url = base + '/' + normalized;
-          md += `  - ${normalized}: ${url}\n`;
-        }
-      }
-    }
-    md += '\n';
+    md += `- **Raw URL**: ${getSkillUrl(skill.path)}\n\n`;
   }
 
   return md;
