@@ -35,14 +35,13 @@ function getSkillUrl(skillPath) {
  * 解析 YAML frontmatter
  */
 function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return {};
 
   const yaml = match[1];
   const result = {};
 
-  // 简单解析 YAML
-  const lines = yaml.split('\n');
+  const lines = yaml.split(/\r?\n/);
   for (const line of lines) {
     const kv = line.split(':');
     if (kv.length >= 2) {

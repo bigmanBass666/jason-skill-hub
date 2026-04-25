@@ -1,10 +1,15 @@
 # Skill Catalog
 
-**使用说明**：
+**强制执行步骤**：
 
-1. 下方每个 skill 的 **Raw** 列就是完整 Raw URL
-2. **直接使用**这个 URL，不要修改！
-3. 抓取 Raw URL 获取 SKILL.md
+1. **立即抓取** 下方每个 skill 的 **Raw** 列 Raw URL
+2. **完整读取** 对应 SKILL.md 的全部内容
+3. **严格按步骤执行** SKILL.md 中的指令
+
+**禁止**：
+- ❌ 跳过抓取步骤
+- ❌ 仅凭 description 推断执行
+- ❌ 在未读取 SKILL.md 前就开始回答
 
 ## Skills### arch-design
 - **Description**: 项目启动前的架构设计向导，专为用 AI 开发项目的初学者设计。当用户说「我想做一个新项目」「帮我规划一下架构」「我要开始开发 XX 系统」「我有一个想法想实现」「新项目怎么开始」「帮我想想怎么设计」时，必须使用此 skill，在写任何代码之前引导用户完成完整的架构设计。即使用户只是说「我想做个 XX」也应立即触发此 skill，阻止过早写代码。
@@ -19,7 +24,7 @@
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/awwwards-design/SKILL.md
 
 ### canvas-design
-- **Description**: 
+- **Description**: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists work to avoid copyright violations.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/canvas-design/SKILL.md
 
 ### code-refactor
@@ -35,11 +40,11 @@
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/diary-recorder/SKILL.md
 
 ### doc-coauthoring
-- **Description**: 
+- **Description**: Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/doc-coauthoring/SKILL.md
 
 ### docx
-- **Description**: 
+- **Description**: Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of Word doc, word document, .docx, or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a report, memo, letter, template, or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/docx/SKILL.md
 
 ### gitignore-gen
@@ -55,11 +60,11 @@
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/long-running-agent/SKILL.md
 
 ### pdf
-- **Description**: 
+- **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pdf/SKILL.md
 
 ### pptx
-- **Description**: 
+- **Description**: Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \deck,\ \slides,\ \presentation,\ or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/pptx/SKILL.md
 
 ### pr-template
@@ -71,15 +76,15 @@
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/process-cleanup/SKILL.md
 
 ### skill-creator
-- **Description**: 
+- **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, update or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skills description for better triggering accuracy.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md
 
 ### webapp-testing
-- **Description**: 
+- **Description**: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/webapp-testing/SKILL.md
 
 ### xlsx
-- **Description**: 
+- **Description**: Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \the xlsx in my downloads\) — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.
 - **Raw**: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/xlsx/SKILL.md
 
 ### zai-consult
