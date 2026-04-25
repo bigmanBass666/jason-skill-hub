@@ -2,6 +2,19 @@
 
 一个**轻量级静态网站**，用于托管 Agent Skills 文件夹，让任何 AI agent 都能通过 URL **自动索引、按需读取** skill 文件及其依赖。
 
+## 🤖 AI 快速开始
+
+**只需告诉 AI 以下链接，它会自动发现所有 skills：**
+
+```
+https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/INDEX.md
+```
+
+AI 会自动：
+1. 读取 INDEX.md 发现所有可用 skills
+2. 根据 Path 读取对应的 SKILL.md
+3. 自动推断并读取关联的参考文件
+
 ## 核心价值
 
 解决「线上 chat/agent 无法像本地 CLI 那样便捷访问 skill 文件」的问题——**只需给 AI 一个链接，它就能自己找到并读取需要的 skill**。
