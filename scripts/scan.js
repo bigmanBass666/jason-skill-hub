@@ -25,12 +25,10 @@ const GITHUB_REPO = 'jason-skill-hub';
 const GITHUB_BRANCH = 'master';
 
 /**
- * 获取 skill 的相对路径
- * AI 需要根据此路径构造完整 Raw URL
- * 构造规则: https://raw.githubusercontent.com/{owner}/{repo}/{branch}/skills/{path}/SKILL.md
+ * 获取 skill 的完整 GitHub Raw URL
  */
-function getSkillPath(skillPath) {
-  return `${skillPath}/SKILL.md`;
+function getSkillUrl(skillPath) {
+  return `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/${skillPath}/SKILL.md`;
 }
 
 /**
@@ -132,7 +130,7 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Path**: ${getSkillPath(skill.path)}\n\n`;
+    md += `- **Raw**: ${getSkillUrl(skill.path)}\n\n`;
   }
 
   return md;
