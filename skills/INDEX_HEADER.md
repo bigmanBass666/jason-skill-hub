@@ -1,23 +1,29 @@
 # Skill Catalog
 
-**使用说明**：
+## 如何获取完整 Raw URL
 
-当你需要使用某个 skill 时：
+每个 skill 的信息在下方 **Skills** 列表中。
 
-1. 基础URL：`https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/`
-2. Skill Path：见下方 Path 列（格式：`skill-name/SKILL.md`）
-3. **拼接方式**：基础URL + Path = 完整URL
+**Step 1**: 找到你要的 skill（例如 skill-creator）
 
-**正确示例**：
-- 基础URL = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/`
-- Path = `skill-creator/SKILL.md`
-- 完整URL = `基础URL` + `Path` = `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
+**Step 2**: 看它的 **Path** 列：`skill-creator/SKILL.md`
 
-**常见错误**：
-- ❌ 漏掉 `skills/`：→ `.../master/skill-creator/SKILL.md`（少了skills）
-- ❌ 漏掉 `SKILL.md`：→ `.../master/skills/skill-creator`（少了文件名）
+**Step 3**: 把这个 Path **直接拼接**在下面这个固定前缀后面：
 
-4. **主动抓取** 完整URL获取 SKILL.md 全文
-5. 根据 SKILL.md 内容执行 skill
+```
+https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/
+```
+
+**计算过程**：
+```
+固定前缀: https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/
+Path:      skill-creator/SKILL.md
+────────────────────────────────────────
+完整URL:   https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md
+```
+
+⚠️ **注意**：Path 不是完整URL！必须加上面的固定前缀！URL中间必须有 `skills/` 目录！
+
+**主动抓取完整URL获取 SKILL.md 全文，然后根据内容执行 skill。**
 
 ## Skills
