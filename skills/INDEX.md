@@ -2,17 +2,14 @@
 
 ## URL 构造规则
 
-**GitHub Raw URL 格式：**
+**固定前缀：**
 ```
-https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}
+https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/
 ```
 
-**固定值：**
-- owner = `bigmanBass666`
-- repo = `jason-skill-hub`
-- branch = `master`
+**拼接方式：固定前缀 + 下方Path值，直接拼接得到完整URL**
 
-**拼接公式：直接拼接 `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/` + 下方Path值**
+**重要：Path值是完整的文件路径，包含所有目录层级，禁止删减、禁止省略任何部分！**
 
 ---
 
