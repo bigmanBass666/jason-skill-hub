@@ -24,17 +24,11 @@ const GITHUB_OWNER = 'bigmanBass666';
 const GITHUB_REPO = 'jason-skill-hub';
 const GITHUB_BRANCH = 'master';
 
-// 是否输出 GitHub Raw URL（AI 平台友好）
-const USE_GITHUB_RAW = process.env.GITHUB_RAW === 'true';
-
 /**
- * 获取 skill 的 URL（根据配置返回 GitHub Raw URL 或相对路径）
+ * 获取 skill 的完整 GitHub Raw URL
  */
 function getSkillUrl(skillPath) {
-  if (USE_GITHUB_RAW) {
-    return `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/skills/${skillPath}/SKILL.md`;
-  }
-  return `/${skillPath}/SKILL.md`;
+  return `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/${skillPath}/SKILL.md`;
 }
 
 /**
@@ -136,7 +130,7 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Path**: \`${skill.path}/SKILL.md\`\n\n`;
+    md += `- **URL**: ${getSkillUrl(skill.path)}\n\n`;
   }
 
   return md;
