@@ -1,11 +1,18 @@
 # Skill Catalog
 
-**使用说明**：
+## 如何获取完整 Raw URL
 
-当你需要使用某个 skill 时：
+每个 skill 的 Raw URL 在下方 **Raw** 列。
 
-1. 从下方的 **Raw URL** 列获取完整 Raw URL
-2. **主动抓取** 该 Raw URL 获取 SKILL.md 全文
-3. 根据 SKILL.md 内容执行 skill
+**基础 URL**：`https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/`
+
+**完整 URL** = 基础URL + `skill-name/SKILL.md`
+
+示例：
+- skill-creator → `https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skill-creator/SKILL.md`
+
+⚠️ 完整URL中间必须有 `skills/` 目录！
+
+**主动抓取 Raw URL 获取 SKILL.md 全文，然后根据内容执行 skill。**
 
 ## Skills
