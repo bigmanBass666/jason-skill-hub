@@ -17,6 +17,7 @@ const config = require('./config');
 
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
 const OUTPUT_INDEX = path.join(SKILLS_DIR, 'INDEX.md');
+const OUTPUT_JSON = path.join(SKILLS_DIR, 'skills.json');
 const OUTPUT_REDIRECTS = path.join(__dirname, '..', '_redirects');
 const AGENTS_TEMPLATE = path.join(__dirname, '..', 'AGENTS.md.template');
 const OUTPUT_AGENTS = path.join(__dirname, '..', 'AGENTS.md');
@@ -40,12 +41,24 @@ function parseFrontmatter(content) {
 
   const lines = yaml.split(/\r?\n/);
   for (const line of lines) {
-    const kv = line.split(':');
-    if (kv.length >= 2) {
-      const key = kv[0].trim();
-      const value = kv.slice(1).join(':').trim().replace(/['"]/g, '');
+    const colonIndex = line.indexOf(':');
+    if (colonIndex === -1) continue;
+
+    const key = line.slice(0, colonIndex).trim();
+    let value = line.slice(colonIndex + 1).trim();
+
+    if (value.startsWith('[') && value.endsWith(']')) {
+      value = value.slice(1, -1).split(',').map(s => s.trim().replace(/['"]/g, ''));
       result[key] = value;
+      continue;
     }
+
+    if ((value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+
+    result[key] = value;
   }
 
   return result;
@@ -76,6 +89,56 @@ function getAllFiles(dirPath, basePath = '') {
 }
 
 /**
+ * 检查 SKILL.md 中引用的文件是否存在
+ */
+function checkReferences(skillDir, skillName, content) {
+  const refPatterns = [
+    /`([^`]*\.(md|txt|py|js|sh|yaml|yml|json|html))`/g,
+    /\[([^\]]*\.(md|txt|py|js|sh|yaml|yml|json|html))\]/g,
+  ];
+
+  const referencedFiles = new Set();
+  for (const pattern of refPatterns) {
+    let match;
+    while ((match = pattern.exec(content)) !== null) {
+      let ref = match[1].trim();
+      if (ref.startsWith('./')) ref = ref.slice(2);
+      if (ref.startsWith('http://') || ref.startsWith('https://')) continue;
+      if (ref.startsWith('../')) continue;
+      referencedFiles.add(ref);
+    }
+  }
+
+  const actualFiles = new Set();
+  function collectFiles(dir, base) {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      const relPath = base ? `${base}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        collectFiles(fullPath, relPath);
+      } else {
+        actualFiles.add(relPath);
+      }
+    }
+  }
+  collectFiles(skillDir, '');
+
+  for (const ref of referencedFiles) {
+    if (!actualFiles.has(ref)) {
+      const lowerRef = ref.toLowerCase();
+      const caseMatch = [...actualFiles].find(f => f.toLowerCase() === lowerRef);
+      if (caseMatch) {
+        console.warn(`⚠️  Warning: [${skillName}] Reference "${ref}" case mismatch — actual file is "${caseMatch}"`);
+      } else {
+        console.warn(`⚠️  Warning: [${skillName}] Referenced file "${ref}" not found`);
+      }
+    }
+  }
+}
+
+/**
  * 扫描 skills 目录
  */
 function scanSkills() {
@@ -98,6 +161,12 @@ function scanSkills() {
 
     const content = fs.readFileSync(skillMd, 'utf-8');
     const frontmatter = parseFrontmatter(content);
+
+    if (frontmatter.name && frontmatter.name !== entry.name) {
+      console.warn(`⚠️  Warning: Directory "${entry.name}" has frontmatter name "${frontmatter.name}" — using directory name for URL`);
+    }
+
+    checkReferences(skillDir, entry.name, content);
 
     const allFiles = getAllFiles(skillDir);
 
@@ -124,10 +193,57 @@ function generateIndex(skills) {
   for (const skill of skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
-    md += `- **Raw**: ${getSkillUrl(skill.path)}\n\n`;
+    md += `- **Raw**: ${getSkillUrl(skill.path)}\n`;
+
+    const referenceFiles = skill.files.filter(f => {
+      const normalized = f.replace(/\\/g, '/');
+      if (normalized === 'SKILL.md') return false;
+      const ext = normalized.split('.').pop().toLowerCase();
+      return ext === 'md' || ext === 'txt';
+    });
+
+    if (referenceFiles.length > 0) {
+      md += `- **Files**:\n`;
+      for (const file of referenceFiles) {
+        const normalized = file.replace(/\\/g, '/');
+        const cdnUrl = config.getFileUrl(skill.path, normalized);
+        md += `  - ${normalized} → ${cdnUrl}\n`;
+      }
+    }
+
+    md += `\n`;
   }
 
   return md;
+}
+
+/**
+ * 生成 skills.json 结构化索引
+ */
+function generateSkillsJson(skills) {
+  const data = skills.map(skill => {
+    const referenceFiles = skill.files.filter(f => {
+      const normalized = f.replace(/\\/g, '/');
+      if (normalized === 'SKILL.md') return false;
+      const ext = normalized.split('.').pop().toLowerCase();
+      return ext === 'md' || ext === 'txt';
+    });
+
+    return {
+      name: skill.name,
+      description: skill.description,
+      url: getSkillUrl(skill.path),
+      references: referenceFiles.map(f => {
+        const normalized = f.replace(/\\/g, '/');
+        return {
+          path: normalized,
+          url: config.getFileUrl(skill.path, normalized)
+        };
+      })
+    };
+  });
+
+  return JSON.stringify(data, null, 2);
 }
 
 /**
@@ -180,6 +296,10 @@ function main() {
   fs.writeFileSync(OUTPUT_INDEX, indexContent);
   console.log('Generated INDEX.md');
 
+  const jsonContent = generateSkillsJson(skills);
+  fs.writeFileSync(OUTPUT_JSON, jsonContent);
+  console.log('Generated skills.json');
+
   const redirectsContent = generateRedirects(skills);
   fs.writeFileSync(path.join(__dirname, '..', '_redirects'), redirectsContent);
   console.log('Generated _redirects');
@@ -187,6 +307,22 @@ function main() {
   generateAgents();
 
   console.log(`Found ${skills.length} skill(s): ${skills.map(s => s.name).join(', ')}`);
+
+  const totalReferences = skills.reduce((sum, s) => {
+    return sum + s.files.filter(f => {
+      const normalized = f.replace(/\\/g, '/');
+      if (normalized === 'SKILL.md') return false;
+      const ext = normalized.split('.').pop().toLowerCase();
+      return ext === 'md' || ext === 'txt';
+    }).length;
+  }, 0);
+
+  const indexLines = fs.readFileSync(OUTPUT_INDEX, 'utf-8').split('\n').length;
+
+  console.log(`\n📊 Statistics:`);
+  console.log(`   Skills: ${skills.length}`);
+  console.log(`   Reference files: ${totalReferences}`);
+  console.log(`   INDEX.md: ${indexLines} lines`);
 }
 
 main();

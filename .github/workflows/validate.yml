@@ -1,0 +1,56 @@
+name: Validate Skill Index
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'skills/**'
+      - 'scripts/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'skills/**'
+      - 'scripts/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run scan.js
+        run: node scripts/scan.js
+
+      - name: Check INDEX.md is up to date
+        run: |
+          if git diff --quiet skills/INDEX.md; then
+            echo "✅ INDEX.md is up to date"
+          else
+            echo "❌ INDEX.md is out of date. Run 'node scripts/scan.js' and commit the changes."
+            git diff skills/INDEX.md
+            exit 1
+          fi
+
+      - name: Check skills.json is up to date
+        run: |
+          if git diff --quiet skills/skills.json; then
+            echo "✅ skills.json is up to date"
+          else
+            echo "❌ skills.json is out of date. Run 'node scripts/scan.js' and commit the changes."
+            git diff skills/skills.json
+            exit 1
+          fi
+
+      - name: Check _redirects is up to date
+        run: |
+          if git diff --quiet _redirects; then
+            echo "✅ _redirects is up to date"
+          else
+            echo "❌ _redirects is out of date. Run 'node scripts/scan.js' and commit the changes."
+            git diff _redirects
+            exit 1
+          fi

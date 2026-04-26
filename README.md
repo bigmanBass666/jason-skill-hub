@@ -10,6 +10,12 @@
 https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
 ```
 
+**JSON 格式索引（AI 解析更可靠）：**
+
+```
+https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skills.json
+```
+
 > **为什么用 jsDelivr CDN？**
 > - 国内 AI 平台访问 GitHub Raw URL 不稳定
 > - jsDelivr 是免费的 CDN 服务，访问更可靠
@@ -30,6 +36,8 @@ https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.md
 
 稳定可靠，推荐用于所有 AI 平台。
 
+同样支持 skills.json 格式：`https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skills.json`
+
 ### 方式 2：gcore 国内加速（备选）
 
 ```
@@ -38,6 +46,8 @@ https://gcore.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/INDEX.
 
 国内访问速度更快，作为备选方案。
 
+同样支持 skills.json 格式：`https://gcore.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skills.json`
+
 ### 方式 3：GitHub Raw（备选）
 
 ```
@@ -45,6 +55,8 @@ https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/IN
 ```
 
 部分 AI 平台可能访问不稳定，仅作备选。
+
+同样支持 skills.json 格式：`https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/skills.json`
 
 ## 🤝 AI 平台兼容性
 
@@ -56,7 +68,7 @@ https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/IN
 | z.ai | ❌ 不可用 | 网页抓取 403 错误 |
 | 文心一言 | ❌ 不可用 | 代码解释器限制 |
 
-## 📦 可用 Skills（21 个）
+## 📦 可用 Skills（15 个）
 
 | Skill | 描述 |
 |-------|------|
@@ -65,17 +77,11 @@ https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master/skills/IN
 | **awwwards-design** | 创建 Awwwards 获奖级别网站 |
 | **canvas-design** | Canvas 视觉艺术设计 |
 | **code-refactor** | AI Agent 代码优化与重构 |
-| **daily-summary** | AI 第一人称工作日记生成 |
-| **diary-recorder** | 日记成稿生成 |
 | **doc-coauthoring** | 文档协作工作流 |
 | **docx** | Word 文档操作 |
 | **gitignore-gen** | 自动生成 .gitignore 文件 |
-| **learning-report** | 学习过程报告生成 |
-| **long-running-agent** | 长时运行 Agent 实现 |
 | **pdf** | PDF 文件操作 |
 | **pptx** | PPT 演示文稿操作 |
-| **pr-template** | Pull Request 模板生成 |
-| **process-cleanup** | 开发进程清理 |
 | **skill-creator** | Skill 创建与优化 |
 | **skill-ref-test** | 引用关系验证测试 |
 | **webapp-testing** | Web 应用测试工具集 |
@@ -128,14 +134,28 @@ ai-skill-hub/
 ├── skills/                 # Skill 文件目录
 │   ├── INDEX.md           # 自动生成的索引
 │   ├── arch-design/       # 架构设计 skill
-│   │   └── SKILL.md
+│   ├── article-to-image-prompt/ # 绘图 prompt 生成
 │   ├── awwwards-design/   # Awwwards 网站设计
-│   │   └── SKILL.md
-│   └── ...                # 其他 skills
+│   ├── canvas-design/     # Canvas 视觉设计
+│   ├── code-refactor/     # 代码优化与重构
+│   ├── doc-coauthoring/   # 文档协作工作流
+│   ├── docx/              # Word 文档操作
+│   ├── gitignore-gen/     # .gitignore 生成
+│   ├── pdf/               # PDF 文件操作
+│   ├── pptx/              # PPT 演示文稿操作
+│   ├── skill-creator/     # Skill 创建与优化
+│   ├── skill-ref-test/    # 引用关系验证测试
+│   ├── webapp-testing/    # Web 应用测试
+│   ├── xlsx/              # Excel 表格操作
+│   └── zai-consult/       # z.ai 增强推理咨询
+├── docs/                   # 文档目录
+│   └── url-guide.md       # URL 推断指南
 ├── scripts/
 │   └── scan.js            # 扫描生成脚本
 ├── netlify.toml           # Netlify 配置
 ├── _redirects             # URL 重定向规则（自动生成）
+├── AGENTS.md              # AI Agent 提示词
+├── AGENTS.md.template     # AI Agent 提示词模板
 ├── package.json
 └── README.md
 ```
