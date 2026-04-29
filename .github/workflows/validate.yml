@@ -12,11 +12,16 @@ on:
       - 'skills/**'
       - 'scripts/**'
 
+permissions:
+  contents: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -25,32 +30,31 @@ jobs:
       - name: Run scan.js
         run: node scripts/scan.js
 
-      - name: Check INDEX.md is up to date
+      - name: Check if index files need update
+        id: check_changes
         run: |
-          if git diff --quiet skills/INDEX.md; then
-            echo "✅ INDEX.md is up to date"
+          if git diff --quiet skills/INDEX.md skills/skills.json _redirects; then
+            echo "changed=false" >> $GITHUB_OUTPUT
           else
-            echo "❌ INDEX.md is out of date. Run 'node scripts/scan.js' and commit the changes."
-            git diff skills/INDEX.md
-            exit 1
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check skills.json is up to date
+      - name: Auto-fix and commit index files (push only)
+        if: github.event_name == 'push' && steps.check_changes.outputs.changed == 'true'
         run: |
-          if git diff --quiet skills/skills.json; then
-            echo "✅ skills.json is up to date"
-          else
-            echo "❌ skills.json is out of date. Run 'node scripts/scan.js' and commit the changes."
-            git diff skills/skills.json
-            exit 1
-          fi
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add skills/INDEX.md skills/skills.json _redirects
+          git commit -m "chore: auto-update skill index files"
+          git push
 
-      - name: Check _redirects is up to date
+      - name: Fail if index files out of date (PR only)
+        if: github.event_name == 'pull_request' && steps.check_changes.outputs.changed == 'true'
         run: |
-          if git diff --quiet _redirects; then
-            echo "✅ _redirects is up to date"
-          else
-            echo "❌ _redirects is out of date. Run 'node scripts/scan.js' and commit the changes."
-            git diff _redirects
-            exit 1
-          fi
+          echo "❌ Index files are out of date. Run 'node scripts/scan.js' and commit the changes."
+          git diff skills/INDEX.md skills/skills.json _redirects
+          exit 1
+
+      - name: ✅ Index files are up to date
+        if: steps.check_changes.outputs.changed == 'false'
+        run: echo "✅ All index files are up to date"
