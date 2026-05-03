@@ -429,6 +429,26 @@
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/CONTRIBUTING.zh.md"
       },
       {
+        "path": "README.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README.md"
+      },
+      {
+        "path": "README_ja.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ja.md"
+      },
+      {
+        "path": "README_ko.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ko.md"
+      },
+      {
+        "path": "README_zh.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_zh.md"
+      },
+      {
+        "path": "examples/README.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/README.md"
+      },
+      {
         "path": "examples/excel/charts-advanced.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-advanced.md"
       },
@@ -529,10 +549,6 @@
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/video.md"
       },
       {
-        "path": "examples/README.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/README.md"
-      },
-      {
         "path": "examples/word/formulas.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/word/formulas.md"
       },
@@ -545,24 +561,12 @@
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/word/textbox.md"
       },
       {
-        "path": "README.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README.md"
-      },
-      {
-        "path": "README_ja.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ja.md"
-      },
-      {
-        "path": "README_ko.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ko.md"
-      },
-      {
-        "path": "README_zh.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_zh.md"
-      },
-      {
         "path": "schemas/README.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/schemas/README.md"
+      },
+      {
+        "path": "skills/morph-ppt/SKILL.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/SKILL.md"
       },
       {
         "path": "skills/morph-ppt/reference/decision-rules.md",
@@ -571,6 +575,10 @@
       {
         "path": "skills/morph-ppt/reference/pptx-design.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/pptx-design.md"
+      },
+      {
+        "path": "skills/morph-ppt/reference/styles/INDEX.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/INDEX.md"
       },
       {
         "path": "skills/morph-ppt/reference/styles/bw--brutalist-raw/style.md",
@@ -663,10 +671,6 @@
       {
         "path": "skills/morph-ppt/reference/styles/dark--velvet-rose/style.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--velvet-rose/style.md"
-      },
-      {
-        "path": "skills/morph-ppt/reference/styles/INDEX.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/INDEX.md"
       },
       {
         "path": "skills/morph-ppt/reference/styles/light--bold-type/style.md",
@@ -781,10 +785,6 @@
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--vital-bloom/style.md"
       },
       {
-        "path": "skills/morph-ppt/SKILL.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/SKILL.md"
-      },
-      {
         "path": "skills/morph-ppt-3d/SKILL.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt-3d/SKILL.md"
       },
@@ -819,6 +819,10 @@
       {
         "path": "skills/officecli-xlsx/SKILL.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-xlsx/SKILL.md"
+      },
+      {
+        "path": "styles/INDEX.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/INDEX.md"
       },
       {
         "path": "styles/bw--brutalist-raw/style.md",
@@ -911,10 +915,6 @@
       {
         "path": "styles/dark--velvet-rose/style.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--velvet-rose/style.md"
-      },
-      {
-        "path": "styles/INDEX.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/INDEX.md"
       },
       {
         "path": "styles/light--bold-type/style.md",
