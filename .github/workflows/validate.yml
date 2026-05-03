@@ -46,6 +46,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add skills/INDEX.md skills/skills.json _redirects
           git commit -m "chore: auto-update skill index files"
+          git pull --rebase origin master
           git push
 
       - name: Purge jsDelivr CDN cache (push only)
