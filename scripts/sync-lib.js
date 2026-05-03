@@ -14,7 +14,7 @@ function log(msg) {
 const IGNORED_DIRS = new Set(['.git', '__pycache__', 'node_modules', '.DS_Store']);
 const PRESERVED_FILES = new Set(['INDEX.md', 'INDEX_HEADER.md', 'skills.json']);
 
-function walkDir(dir, preserveSet) {
+function walkDir(dir, preserveRootFiles) {
   const results = [];
   if (!fs.existsSync(dir)) return results;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -22,14 +22,13 @@ function walkDir(dir, preserveSet) {
     if (IGNORED_DIRS.has(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      const subResults = walkDir(fullPath, preserveSet);
+      const subResults = walkDir(fullPath, false);
       for (const r of subResults) {
         results.push(path.join(entry.name, r));
       }
     } else {
-      const rel = entry.name;
-      if (preserveSet && preserveSet.has(rel)) continue;
-      results.push(rel);
+      if (preserveRootFiles && PRESERVED_FILES.has(entry.name)) continue;
+      results.push(entry.name);
     }
   }
   return results;
@@ -137,8 +136,9 @@ function runBuild(projectRoot) {
   log('构建完成');
 }
 
-function gitCommitAndPush(projectRoot) {
-  const status = execSync('git status --porcelain', { cwd: projectRoot }).toString().trim();
+function gitCommitAndPush(projectRoot, targetDir) {
+  const relDir = path.relative(projectRoot, targetDir).replace(/\\/g, '/');
+  const status = execSync(`git status --porcelain -- "${relDir}"`, { cwd: projectRoot }).toString().trim();
   if (!status) {
     log('无变更，跳过提交');
     return false;
@@ -147,14 +147,26 @@ function gitCommitAndPush(projectRoot) {
   const now = new Date();
   const dateStr = now.toISOString().replace('T', ' ').slice(0, 19);
 
-  log('执行 git add -A');
-  execSync('git add -A', { cwd: projectRoot, stdio: 'inherit' });
+  log(`执行 git add "${relDir}"`);
+  execSync(`git add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
 
   log(`执行 git commit -m "sync: auto-sync skills from source [${dateStr}]"`);
-  execSync(`git commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
+  try {
+    execSync(`git commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
+  } catch (e) {
+    log('commit 失败，可能因 pre-commit hook 修改了文件，重新 add 后重试');
+    execSync(`git add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
+  }
 
   log('执行 git push');
-  execSync('git push', { cwd: projectRoot, stdio: 'inherit' });
+  try {
+    execSync('git push', { cwd: projectRoot, stdio: 'inherit' });
+  } catch (e) {
+    log('push 被拒绝，远端有新提交，执行 pull --rebase 后重试');
+    execSync('git pull --rebase', { cwd: projectRoot, stdio: 'inherit' });
+    execSync('git push', { cwd: projectRoot, stdio: 'inherit' });
+  }
 
   log('提交并推送完成');
   return true;
@@ -174,7 +186,7 @@ async function fullSync({ dryRun, projectRoot, sourceDir, targetDir }) {
     runBuild(projectRoot);
 
     log('步骤 4/4: 提交并推送');
-    gitCommitAndPush(projectRoot);
+    gitCommitAndPush(projectRoot, targetDir);
   } else {
     log('[DRY-RUN] 跳过构建和提交');
   }
