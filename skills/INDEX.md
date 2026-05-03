@@ -33,6 +33,27 @@
   - references/visual-styles.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design/references/visual-styles.md
   - references/webgl-patterns.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design/references/webgl-patterns.md
 
+### awwwards-design
+- **Description**: 创建具有 Awwwards 获奖水准的设计级网站。当用户要求创建视觉震撼、沉浸式体验、获奖级别的网站、作品集、品牌展示页、产品落地页、创意代理网站，或任何追求极致视觉与交互体验的 web 项目时，必须使用此 skill。关键词触发：「Awwwards 级别」「沉浸式网站」「震撼视觉」「高端网站」「创意交互」「WebGL」「Scrollytelling」「获奖设计」「极致动效」「创意代理网站」「Site of the Day」「SOTD」「超酷网站」「逼格网站」「设计感网站」「3D 网站」「滚动动画」「叙事滚动」「品牌体验」「作品集」「Portfolio」。即使用户只说「帮我做个很酷的网站」「做个有设计感的页面」也应触发此 skill。
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/SKILL.md
+- **Files**:
+  - ITERATION-GUIDE.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/ITERATION-GUIDE.md
+  - references/animation-patterns.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/animation-patterns.md
+  - references/design-process.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/design-process.md
+  - references/interaction-patterns.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/interaction-patterns.md
+  - references/performance-guide.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/performance-guide.md
+  - references/quality-framework.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/quality-framework.md
+  - references/typography-system.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/typography-system.md
+  - references/visual-styles.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/visual-styles.md
+  - references/webgl-patterns.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/awwwards-design-new/references/webgl-patterns.md
+
+### brainstorming
+- **Description**: You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/SKILL.md
+- **Files**:
+  - spec-document-reviewer-prompt.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/spec-document-reviewer-prompt.md
+  - visual-companion.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/visual-companion.md
+
 ### canvas-design
 - **Description**: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/SKILL.md
@@ -66,19 +87,11 @@
   - canvas-fonts/YoungSerif-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/YoungSerif-OFL.txt
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/LICENSE.txt
 
-### code-refactor
-- **Description**: 专门用于 AI Agent 及复杂项目的代码优化与重构。当用户提到代码有 bug、架构混乱、屎山代码、模块不连贯、代码难以维护、想重构项目、需要 code review、遇到奇怪的错误但不知道根因、或者感觉代码越来越难改时，必须使用此 skill。关键词触发：「重构」「屎山」「bug 太多」「架构混乱」「模块耦合」「代码优化」「code review」「refactor」「技术债」「难以维护」「不知道哪里出问题」。即使用户只是说「这段代码越改越乱」也应触发此 skill。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/code-refactor/SKILL.md
-
-### daily-summary
-- **Description**: 以 AI 第一人称视角，总结用户在 Claude Code 中的对话活动，生成日记形式的工作记录。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/daily-summary/SKILL.md
-
-### diary-recorder
-- **Description**: 以 AI 第一人称视角，根据真实 Claude 对话、本地 Claude 记录，以及用户提供的日记草稿或笔记，生成可写入日记的成稿。文风可偏文学，但不得虚构事实。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/diary-recorder/SKILL.md
+### design-principles
+- **Description**: 软件设计原则审查器。用 SOLID、DRY、OCP 等经典原则对代码进行结构化审查，识别违反原则的设计并给出具体修复建议。当用户提到"设计原则"、"代码质量"、"SOLID"、"DRY"、"开闭原则"、"重构建议"、"架构审查"、"代码评审"、"设计模式"、"principles"、"code review"、"architecture review"、"代码坏味道"、"耦合"、"内聚"、"职责不清"时，必须使用此 skill。即使用户只是说"这段代码有什么问题"或"帮我看看架构合不合理"也应触发。
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/design-principles/SKILL.md
 - **Files**:
-  - skill.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/diary-recorder/skill.md
+  - references/principles.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/design-principles/references/principles.md
 
 ### doc-coauthoring
 - **Description**: Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.
@@ -90,17 +103,64 @@
 - **Files**:
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/LICENSE.txt
 
+### find-skills
+- **Description**: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/find-skills/SKILL.md
+
+### free-resource-hunter
+- **Description**: 开发者免费资源情报雷达。通过增量对比扫描法（加载基线→多源搜索→计算差异→验证→输出增量）帮助开发者实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。核心行为：对已知资源基线做增量对比，发现新增平台、模型变动、免费额度缩水、限时优惠等情报，输出结构化简报并回写基线。触发场景：免费资源搜索、免费 API 发现、资源变动追踪、限时优惠、模型上新、白嫖情报、平台评估。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/SKILL.md
+- **Files**:
+  - references/evaluation-framework.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/references/evaluation-framework.md
+  - references/push-format.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/references/push-format.md
+  - references/resource-database.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/references/resource-database.md
+  - references/search-strategies.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/references/search-strategies.md
+
+### frontend-design
+- **Description**: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/SKILL.md
+- **Files**:
+  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/LICENSE.txt
+
 ### gitignore-gen
 - **Description**: 自动分析当前 git 仓库的内容与用途，生成精准的 .gitignore 文件。适用于一切使用 git 进行版本管理的场景，不限于软件开发——包括写作/文档管理、数据分析、设计资产、学术研究、知识库、运维配置、财务记录、游戏开发等任意工作流。当用户说「帮我生成 gitignore」「生成 .gitignore」「我需要 gitignore」「仓库缺少 gitignore」「gitignore 怎么写」「帮我忽略不必要的文件」「哪些文件不需要提交」「git 应该忽略什么」时，必须使用此 skill。即使用户只是说「我在用 git 管理我的 XX，怎么配置忽略规则」也应立即触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/gitignore-gen/SKILL.md
 
-### learning-report
-- **Description**: 以 AI 第一人称视角、用户作为主角，生成学习过程报告。用于总结用户在一次协作中展现的能力、思维过程和学习成果。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/learning-report/SKILL.md
+### huashu-design
+- **Description**: 花叔Design（Huashu-Design）——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审的一体化设计能力。HTML是工具不是媒介，根据任务embody不同专家（UX设计师/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、设计Demo、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、设计探索、做个HTML页面、做个可视化、app原型、iOS原型、移动应用mockup、导出MP4、导出GIF、60fps视频、设计风格、设计方向、设计哲学、配色方案、视觉风格、推荐风格、选个风格、做个好看的、评审、好不好看、review this design。**主干能力**：Junior Designer工作流（先给假设+reasoning+placeholder再迭代）、反AI slop清单、React+Babel最佳实践、Tweaks变体切换、Speaker Notes演示、Starter Components（幻灯片外壳/变体画布/动画引擎/设备边框）、App原型专属守则（默认从Wikimedia/Met/Unsplash取真图、每台iPhone包AppPhone状态管理器可交互、交付前跑Playwright点击测试）、Playwright验证、HTML动画→MP4/GIF视频导出（25fps基础 + 60fps插帧 + palette优化GIF + 6首场景化BGM + 自动fade）。**需求模糊时的Fallback**：设计方向顾问模式——从5流派×20种设计哲学（Pentagram信息建筑/Field.io运动诗学/Kenya Hara东方极简/Sagmeister实验先锋等）推荐3个差异化方向，展示24个预制showcase（8场景×3风格），并行生成3个视觉Demo让用户选。**交付后可选**：专家级5维度评审（哲学一致性/视觉层级/细节执行/功能性/创新性各打10分+修复清单）。
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md
+- **Files**:
+  - assets/showcases/INDEX.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/assets/showcases/INDEX.md
+  - README.en.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.en.md
+  - README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.md
+  - references/animation-best-practices.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animation-best-practices.md
+  - references/animation-pitfalls.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animation-pitfalls.md
+  - references/animations.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animations.md
+  - references/apple-gallery-showcase.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/apple-gallery-showcase.md
+  - references/audio-design-rules.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/audio-design-rules.md
+  - references/cinematic-patterns.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/cinematic-patterns.md
+  - references/content-guidelines.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/content-guidelines.md
+  - references/critique-guide.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/critique-guide.md
+  - references/design-context.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/design-context.md
+  - references/design-styles.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/design-styles.md
+  - references/editable-pptx.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/editable-pptx.md
+  - references/hero-animation-case-study.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/hero-animation-case-study.md
+  - references/react-setup.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/react-setup.md
+  - references/scene-templates.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/scene-templates.md
+  - references/sfx-library.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/sfx-library.md
+  - references/slide-decks.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/slide-decks.md
+  - references/tweaks-system.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/tweaks-system.md
+  - references/verification.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/verification.md
+  - references/video-export.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/video-export.md
+  - references/workflow.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/workflow.md
 
 ### long-running-agent
 - **Description**: Long-running agent implementation based on Anthropic's "Effective harnesses for long-running agents" article
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/long-running-agent/SKILL.md
+
+### officecli
+- **Description**: Create, analyze, proofread, and modify Office documents (.docx, .xlsx, .pptx) using the officecli CLI tool. Use when the user wants to create, inspect, check formatting, find issues, add charts, or modify Office documents.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/SKILL.md
 
 ### pdf
 - **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
@@ -118,16 +178,6 @@
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/LICENSE.txt
   - pptxgenjs.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/pptxgenjs.md
 
-### pr-template
-- **Description**: Pull Request 模板生成器 - 自动生成标准化的 PR 描述
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pr-template/SKILL.md
-- **Files**:
-  - references/template.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pr-template/references/template.md
-
-### process-cleanup
-- **Description**: 自动检测并清理所有残留的开发进程。当用户提到"清理进程"、"清理残留"、"结束工作"或需要释放资源时使用。支持清理 Node.js/npm、Python、Claude/MCP、Ruby 等各类开发相关进程，采用强制终止确保彻底清理。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/process-cleanup/SKILL.md
-
 ### skill-creator
 - **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, update or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/SKILL.md
@@ -138,19 +188,9 @@
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt
   - references/schemas.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/references/schemas.md
 
-### skill-ref-test
-- **Description**: 引用关系验证测试专用 skill。当需要验证 AI 是否正确处理 SKILL.md 中的引用关系时使用此 skill。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-ref-test/SKILL.md
-- **Files**:
-  - references/alpha.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-ref-test/references/alpha.md
-  - references/beta.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-ref-test/references/beta.md
-  - references/gamma.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-ref-test/references/gamma.md
-
-### webapp-testing
-- **Description**: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/webapp-testing/SKILL.md
-- **Files**:
-  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/webapp-testing/LICENSE.txt
+### ui-ux-pro-max
+- **Description**: UI/UX design intelligence. 67 styles, 96 palettes, 57 font pairings, 25 charts, 13 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/SKILL.md
 
 ### xlsx
 - **Description**: Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \"the xlsx in my downloads\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.

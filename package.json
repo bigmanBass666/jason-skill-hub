@@ -6,7 +6,10 @@
     "scan": "node scripts/scan.js",
     "build": "node scripts/scan.js",
     "dev": "netlify dev",
-    "deploy": "netlify deploy --prod"
+    "deploy": "netlify deploy --prod",
+    "sync": "node scripts/sync-watch.js",
+    "sync:once": "node scripts/sync-watch.js --once",
+    "sync:dry-run": "node scripts/sync-watch.js --once --dry-run"
   },
   "keywords": [
     "ai",
@@ -15,5 +18,8 @@
     "netlify"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "^5.0.0"
+  }
 }

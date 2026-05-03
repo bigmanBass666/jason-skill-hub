@@ -1,21 +1,4 @@
-/**
- * config.js - 域名配置中心
- *
- * 所有 URL 域名相关配置集中管理
- *
- * 使用方法：
- *   const config = require('./config.js');
- *   console.log(config.baseUrl); // 输出当前配置的 baseUrl
- *
- * 环境变量覆盖：
- *   BASE_URL=https://custom.com/files node scripts/scan.js
- *   DOMAIN=https://example.com OWNER=user REPO=repo BRANCH=main node scripts/scan.js
- *
- * URL 格式选项：
- *   URL_FORMAT=github-raw  - GitHub Raw URL (默认)
- *   URL_FORMAT=jsdelivr    - jsDelivr CDN URL
- *   URL_FORMAT=gcore       - jsDelivr + gcore 国内加速
- */
+const path = require('path');
 
 const DEFAULT_GITHUB_BASE = 'https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master';
 
@@ -53,6 +36,7 @@ function getConfig() {
   const computedBaseUrl = getBaseUrl();
   const urlFormat = process.env.URL_FORMAT || 'jsdelivr';
   const formatConfig = URL_FORMATS[urlFormat] || URL_FORMATS['jsdelivr'];
+  const projectRoot = path.join(__dirname, '..');
 
   return {
     baseUrl: computedBaseUrl,
@@ -66,7 +50,12 @@ function getConfig() {
 
     getFileUrl(skillName, filePath) {
       return formatConfig.pattern(`skills/${skillName}/${filePath}`);
-    }
+    },
+
+    syncSourceDir: process.env.SYNC_SOURCE_DIR || 'C:\\Users\\86150\\.agents\\skills',
+    syncIntervalMs: parseInt(process.env.SYNC_INTERVAL_MS, 10) || 300000,
+    syncTargetDir: process.env.SYNC_TARGET_DIR || path.join(__dirname, '..', 'skills'),
+    projectRoot: projectRoot
   };
 }
 
