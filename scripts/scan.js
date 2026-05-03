@@ -9,6 +9,8 @@
  *   可以通过环境变量覆盖默认配置：
  *   BASE_URL=https://custom.com/files node scripts/scan.js
  *   DOMAIN=https://example.com node scripts/scan.js
+ *   INCLUDE_FILES=true node scripts/scan.js           # 输出引用文件列表（默认 false）
+ *   FILE_EXTENSIONS=md,txt,py,js,html node scripts/scan.js  # 白名单模式：只包含指定扩展名
  */
 
 const fs = require('fs');
@@ -138,6 +140,25 @@ function checkReferences(skillDir, skillName, content) {
   }
 }
 
+const BINARY_EXTENSIONS = new Set([
+  'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico', 'webp', 'bmp', 'tiff',
+  'ttf', 'otf', 'woff', 'woff2', 'eot',
+  'pyc', 'pyo', 'exe', 'dll', 'so', 'o',
+  'zip', 'tar', 'gz', 'rar', '7z',
+  'mp3', 'mp4', 'avi', 'mov', 'wav', 'flac', 'ogg',
+  'docx', 'xlsx', 'pptx', 'pdf',
+  'db', 'sqlite',
+]);
+
+function isReferenceFile(normalized) {
+  if (normalized === 'SKILL.md') return false;
+  const ext = normalized.split('.').pop().toLowerCase();
+  if (config.fileExtensions) {
+    return config.fileExtensions.includes(ext);
+  }
+  return !BINARY_EXTENSIONS.has(ext);
+}
+
 /**
  * 扫描 skills 目录
  */
@@ -196,18 +217,34 @@ function generateIndex(skills) {
     md += `- **Raw**: ${getSkillUrl(skill.path)}\n`;
 
     const referenceFiles = skill.files.filter(f => {
-      const normalized = f.replace(/\\/g, '/');
-      if (normalized === 'SKILL.md') return false;
-      const ext = normalized.split('.').pop().toLowerCase();
-      return ext === 'md' || ext === 'txt';
+      return isReferenceFile(f.replace(/\\/g, '/'));
     });
 
     if (referenceFiles.length > 0) {
-      md += `- **Files**:\n`;
-      for (const file of referenceFiles) {
-        const normalized = file.replace(/\\/g, '/');
-        const cdnUrl = config.getFileUrl(skill.path, normalized);
-        md += `  - ${normalized} → ${cdnUrl}\n`;
+      if (config.includeFiles) {
+        md += `- **Files** (${referenceFiles.length}):\n`;
+        for (const file of referenceFiles) {
+          const normalized = file.replace(/\\/g, '/');
+          const cdnUrl = config.getFileUrl(skill.path, normalized);
+          md += `  - ${normalized} → ${cdnUrl}\n`;
+        }
+      } else {
+        const topDirs = new Set();
+        const extCount = {};
+        for (const f of referenceFiles) {
+          const normalized = f.replace(/\\/g, '/');
+          const parts = normalized.split('/');
+          if (parts.length > 1) topDirs.add(parts[0] + '/');
+          const ext = normalized.split('.').pop().toLowerCase();
+          extCount[ext] = (extCount[ext] || 0) + 1;
+        }
+        const dirStr = topDirs.size > 0 ? ` Directories: ${[...topDirs].sort().join(', ')}.` : '';
+        const extStr = Object.entries(extCount)
+          .sort((a, b) => b[1] - a[1])
+          .map(([ext, count]) => `.${ext}(${count})`)
+          .join(', ');
+        const baseUrl = getSkillUrl(skill.path).replace('SKILL.md', '');
+        md += `- **Has ${referenceFiles.length} file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: \`${baseUrl}\`${dirStr} File types: ${extStr}.\n`;
       }
     }
 
@@ -222,25 +259,26 @@ function generateIndex(skills) {
  */
 function generateSkillsJson(skills) {
   const data = skills.map(skill => {
-    const referenceFiles = skill.files.filter(f => {
-      const normalized = f.replace(/\\/g, '/');
-      if (normalized === 'SKILL.md') return false;
-      const ext = normalized.split('.').pop().toLowerCase();
-      return ext === 'md' || ext === 'txt';
-    });
-
-    return {
+    const base = {
       name: skill.name,
       description: skill.description,
       url: getSkillUrl(skill.path),
-      references: referenceFiles.map(f => {
+    };
+
+    if (config.includeFiles) {
+      const referenceFiles = skill.files.filter(f => {
+        return isReferenceFile(f.replace(/\\/g, '/'));
+      });
+      base.references = referenceFiles.map(f => {
         const normalized = f.replace(/\\/g, '/');
         return {
           path: normalized,
           url: config.getFileUrl(skill.path, normalized)
         };
-      })
-    };
+      });
+    }
+
+    return base;
   });
 
   return JSON.stringify(data, null, 2);
@@ -309,12 +347,7 @@ function main() {
   console.log(`Found ${skills.length} skill(s): ${skills.map(s => s.name).join(', ')}`);
 
   const totalReferences = skills.reduce((sum, s) => {
-    return sum + s.files.filter(f => {
-      const normalized = f.replace(/\\/g, '/');
-      if (normalized === 'SKILL.md') return false;
-      const ext = normalized.split('.').pop().toLowerCase();
-      return ext === 'md' || ext === 'txt';
-    }).length;
+    return sum + s.files.filter(f => isReferenceFile(f.replace(/\\/g, '/'))).length;
   }, 0);
 
   const indexLines = fs.readFileSync(OUTPUT_INDEX, 'utf-8').split('\n').length;

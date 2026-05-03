@@ -55,7 +55,12 @@ function getConfig() {
     syncSourceDir: process.env.SYNC_SOURCE_DIR || 'C:\\Users\\86150\\.agents\\skills',
     syncIntervalMs: parseInt(process.env.SYNC_INTERVAL_MS, 10) || 300000,
     syncTargetDir: process.env.SYNC_TARGET_DIR || path.join(__dirname, '..', 'skills'),
-    projectRoot: projectRoot
+    projectRoot: projectRoot,
+
+    includeFiles: process.env.INCLUDE_FILES === 'true',
+    fileExtensions: process.env.FILE_EXTENSIONS
+      ? process.env.FILE_EXTENSIONS.split(',').map(e => e.trim().toLowerCase())
+      : null
   };
 }
 
