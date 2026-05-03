@@ -58,6 +58,7 @@
 - **Description**: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/SKILL.md
 - **Files**:
+  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/LICENSE.txt
   - canvas-fonts/ArsenalSC-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/ArsenalSC-OFL.txt
   - canvas-fonts/BigShoulders-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/BigShoulders-OFL.txt
   - canvas-fonts/Boldonse-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/Boldonse-OFL.txt
@@ -85,7 +86,6 @@
   - canvas-fonts/Tektur-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/Tektur-OFL.txt
   - canvas-fonts/WorkSans-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/WorkSans-OFL.txt
   - canvas-fonts/YoungSerif-OFL.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/YoungSerif-OFL.txt
-  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/LICENSE.txt
 
 ### design-principles
 - **Description**: 软件设计原则审查器。用 SOLID、DRY、OCP 等经典原则对代码进行结构化审查，识别违反原则的设计并给出具体修复建议。当用户提到"设计原则"、"代码质量"、"SOLID"、"DRY"、"开闭原则"、"重构建议"、"架构审查"、"代码评审"、"设计模式"、"principles"、"code review"、"architecture review"、"代码坏味道"、"耦合"、"内聚"、"职责不清"时，必须使用此 skill。即使用户只是说"这段代码有什么问题"或"帮我看看架构合不合理"也应触发。
@@ -130,9 +130,9 @@
 - **Description**: 花叔Design（Huashu-Design）——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审的一体化设计能力。HTML是工具不是媒介，根据任务embody不同专家（UX设计师/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、设计Demo、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、设计探索、做个HTML页面、做个可视化、app原型、iOS原型、移动应用mockup、导出MP4、导出GIF、60fps视频、设计风格、设计方向、设计哲学、配色方案、视觉风格、推荐风格、选个风格、做个好看的、评审、好不好看、review this design。**主干能力**：Junior Designer工作流（先给假设+reasoning+placeholder再迭代）、反AI slop清单、React+Babel最佳实践、Tweaks变体切换、Speaker Notes演示、Starter Components（幻灯片外壳/变体画布/动画引擎/设备边框）、App原型专属守则（默认从Wikimedia/Met/Unsplash取真图、每台iPhone包AppPhone状态管理器可交互、交付前跑Playwright点击测试）、Playwright验证、HTML动画→MP4/GIF视频导出（25fps基础 + 60fps插帧 + palette优化GIF + 6首场景化BGM + 自动fade）。**需求模糊时的Fallback**：设计方向顾问模式——从5流派×20种设计哲学（Pentagram信息建筑/Field.io运动诗学/Kenya Hara东方极简/Sagmeister实验先锋等）推荐3个差异化方向，展示24个预制showcase（8场景×3风格），并行生成3个视觉Demo让用户选。**交付后可选**：专家级5维度评审（哲学一致性/视觉层级/细节执行/功能性/创新性各打10分+修复清单）。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md
 - **Files**:
-  - assets/showcases/INDEX.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/assets/showcases/INDEX.md
   - README.en.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.en.md
   - README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.md
+  - assets/showcases/INDEX.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/assets/showcases/INDEX.md
   - references/animation-best-practices.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animation-best-practices.md
   - references/animation-pitfalls.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animation-pitfalls.md
   - references/animations.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/references/animations.md
@@ -166,26 +166,26 @@
 - **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/SKILL.md
 - **Files**:
-  - forms.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/forms.md
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/LICENSE.txt
+  - forms.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/forms.md
   - reference.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/reference.md
 
 ### pptx
 - **Description**: Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/SKILL.md
 - **Files**:
-  - editing.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/editing.md
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/LICENSE.txt
+  - editing.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/editing.md
   - pptxgenjs.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/pptxgenjs.md
 
 ### skill-creator
 - **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, update or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/SKILL.md
 - **Files**:
+  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt
   - agents/analyzer.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/agents/analyzer.md
   - agents/comparator.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/agents/comparator.md
   - agents/grader.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/agents/grader.md
-  - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt
   - references/schemas.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/references/schemas.md
 
 ### ui-ux-pro-max

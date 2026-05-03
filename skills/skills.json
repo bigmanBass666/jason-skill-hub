@@ -110,6 +110,10 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/SKILL.md",
     "references": [
       {
+        "path": "LICENSE.txt",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/LICENSE.txt"
+      },
+      {
         "path": "canvas-fonts/ArsenalSC-OFL.txt",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/ArsenalSC-OFL.txt"
       },
@@ -216,10 +220,6 @@
       {
         "path": "canvas-fonts/YoungSerif-OFL.txt",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/canvas-fonts/YoungSerif-OFL.txt"
-      },
-      {
-        "path": "LICENSE.txt",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/LICENSE.txt"
       }
     ]
   },
@@ -303,16 +303,16 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md",
     "references": [
       {
-        "path": "assets/showcases/INDEX.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/assets/showcases/INDEX.md"
-      },
-      {
         "path": "README.en.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.en.md"
       },
       {
         "path": "README.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/README.md"
+      },
+      {
+        "path": "assets/showcases/INDEX.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/assets/showcases/INDEX.md"
       },
       {
         "path": "references/animation-best-practices.md",
@@ -414,12 +414,12 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/SKILL.md",
     "references": [
       {
-        "path": "forms.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/forms.md"
-      },
-      {
         "path": "LICENSE.txt",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/LICENSE.txt"
+      },
+      {
+        "path": "forms.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/forms.md"
       },
       {
         "path": "reference.md",
@@ -433,12 +433,12 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/SKILL.md",
     "references": [
       {
-        "path": "editing.md",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/editing.md"
-      },
-      {
         "path": "LICENSE.txt",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/LICENSE.txt"
+      },
+      {
+        "path": "editing.md",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/editing.md"
       },
       {
         "path": "pptxgenjs.md",
@@ -452,6 +452,10 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/SKILL.md",
     "references": [
       {
+        "path": "LICENSE.txt",
+        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt"
+      },
+      {
         "path": "agents/analyzer.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/agents/analyzer.md"
       },
@@ -462,10 +466,6 @@
       {
         "path": "agents/grader.md",
         "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/agents/grader.md"
-      },
-      {
-        "path": "LICENSE.txt",
-        "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt"
       },
       {
         "path": "references/schemas.md",
