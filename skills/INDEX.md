@@ -13,10 +13,6 @@
 3. 示例：SKILL.md 在 `.../arch-design/SKILL.md`，引用 `./references/guide.md` → `.../arch-design/references/guide.md`
 
 ## Skills
-### arch-design
-- **Description**: 项目启动前的架构设计向导，专为用 AI 开发项目的初学者设计。当用户说「我想做一个新项目」「帮我规划一下架构」「我要开始开发 XX 系统」「我有一个想法想实现」「新项目怎么开始」「帮我想想怎么设计」时，必须使用此 skill，在写任何代码之前引导用户完成完整的架构设计。即使用户只是说「我想做个 XX」也应立即触发此 skill，阻止过早写代码。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/arch-design/SKILL.md
-
 ### article-to-image-prompt
 - **Description**: 根据文章内容生成用于 ChatGPT（DALL-E）的英文绘图 prompt（封面主图）。当用户提供文章、博客、新闻、报告等文本内容，并希望生成配图、封面图、插图的绘图提示词时，必须使用此 skill。关键词触发：「生成prompt」「帮我配图」「生成封面」「文章插图」「生图提示词」「image prompt」「cover image」「ChatGPT生图」「DALL-E」。即使用户只说「帮我给这篇文章配张图」也应立即触发此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/article-to-image-prompt/SKILL.md
@@ -158,9 +154,170 @@
 - **Description**: Long-running agent implementation based on Anthropic's "Effective harnesses for long-running agents" article
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/long-running-agent/SKILL.md
 
+### master-builder
+- **Description**: Guides beginners to create top-tier software from scratch with built-in design principles. Invoke when user wants to start a new project, says 'I want to build X', or asks how to begin a project.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/SKILL.md
+- **Files**:
+  - references/edge-cases.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/references/edge-cases.md
+  - references/principles.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/references/principles.md
+  - references/project-templates.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/references/project-templates.md
+
 ### officecli
 - **Description**: Create, analyze, proofread, and modify Office documents (.docx, .xlsx, .pptx) using the officecli CLI tool. Use when the user wants to create, inspect, check formatting, find issues, add charts, or modify Office documents.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/SKILL.md
+- **Files**:
+  - CONTRIBUTING.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/CONTRIBUTING.md
+  - CONTRIBUTING.zh.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/CONTRIBUTING.zh.md
+  - examples/excel/charts-advanced.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-advanced.md
+  - examples/excel/charts-area.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-area.md
+  - examples/excel/charts-bar.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-bar.md
+  - examples/excel/charts-basic.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-basic.md
+  - examples/excel/charts-boxwhisker.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-boxwhisker.md
+  - examples/excel/charts-bubble.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-bubble.md
+  - examples/excel/charts-column.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-column.md
+  - examples/excel/charts-combo.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-combo.md
+  - examples/excel/charts-demo.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-demo.md
+  - examples/excel/charts-extended.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-extended.md
+  - examples/excel/charts-histogram.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-histogram.md
+  - examples/excel/charts-line.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-line.md
+  - examples/excel/charts-pie.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-pie.md
+  - examples/excel/charts-radar.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-radar.md
+  - examples/excel/charts-scatter.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-scatter.md
+  - examples/excel/charts-stock.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-stock.md
+  - examples/excel/charts-waterfall.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts-waterfall.md
+  - examples/excel/charts.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/charts.md
+  - examples/excel/pivot-tables.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/excel/pivot-tables.md
+  - examples/ppt/3d-model.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/3d-model.md
+  - examples/ppt/animations.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/animations.md
+  - examples/ppt/presentation.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/presentation.md
+  - examples/ppt/templates/README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/templates/README.md
+  - examples/ppt/templates/styles/product--aionui-promo/outline.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/templates/styles/product--aionui-promo/outline.md
+  - examples/ppt/video.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/ppt/video.md
+  - examples/README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/README.md
+  - examples/word/formulas.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/word/formulas.md
+  - examples/word/tables.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/word/tables.md
+  - examples/word/textbox.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/examples/word/textbox.md
+  - README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README.md
+  - README_ja.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ja.md
+  - README_ko.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_ko.md
+  - README_zh.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/README_zh.md
+  - schemas/README.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/schemas/README.md
+  - skills/morph-ppt/reference/decision-rules.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/decision-rules.md
+  - skills/morph-ppt/reference/pptx-design.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/pptx-design.md
+  - skills/morph-ppt/reference/styles/bw--brutalist-raw/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/bw--brutalist-raw/style.md
+  - skills/morph-ppt/reference/styles/bw--mono-line/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/bw--mono-line/style.md
+  - skills/morph-ppt/reference/styles/bw--swiss-bauhaus/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/bw--swiss-bauhaus/style.md
+  - skills/morph-ppt/reference/styles/bw--swiss-system/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/bw--swiss-system/style.md
+  - skills/morph-ppt/reference/styles/dark--architectural-plan/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--architectural-plan/style.md
+  - skills/morph-ppt/reference/styles/dark--aurora-softedge/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--aurora-softedge/style.md
+  - skills/morph-ppt/reference/styles/dark--blueprint-grid/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--blueprint-grid/style.md
+  - skills/morph-ppt/reference/styles/dark--circle-digital/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--circle-digital/style.md
+  - skills/morph-ppt/reference/styles/dark--cosmic-neon/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--cosmic-neon/style.md
+  - skills/morph-ppt/reference/styles/dark--cyber-future/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--cyber-future/style.md
+  - skills/morph-ppt/reference/styles/dark--diagonal-cut/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--diagonal-cut/style.md
+  - skills/morph-ppt/reference/styles/dark--editorial-story/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--editorial-story/style.md
+  - skills/morph-ppt/reference/styles/dark--investor-pitch/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--investor-pitch/style.md
+  - skills/morph-ppt/reference/styles/dark--liquid-flow/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--liquid-flow/style.md
+  - skills/morph-ppt/reference/styles/dark--luxury-minimal/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--luxury-minimal/style.md
+  - skills/morph-ppt/reference/styles/dark--midnight-blueprint/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--midnight-blueprint/style.md
+  - skills/morph-ppt/reference/styles/dark--neon-productivity/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--neon-productivity/style.md
+  - skills/morph-ppt/reference/styles/dark--obsidian-amber/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--obsidian-amber/style.md
+  - skills/morph-ppt/reference/styles/dark--premium-navy/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--premium-navy/style.md
+  - skills/morph-ppt/reference/styles/dark--sage-grain/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--sage-grain/style.md
+  - skills/morph-ppt/reference/styles/dark--space-odyssey/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--space-odyssey/style.md
+  - skills/morph-ppt/reference/styles/dark--spotlight-stage/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--spotlight-stage/style.md
+  - skills/morph-ppt/reference/styles/dark--velvet-rose/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/dark--velvet-rose/style.md
+  - skills/morph-ppt/reference/styles/INDEX.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/INDEX.md
+  - skills/morph-ppt/reference/styles/light--bold-type/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--bold-type/style.md
+  - skills/morph-ppt/reference/styles/light--firmwise-saas/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--firmwise-saas/style.md
+  - skills/morph-ppt/reference/styles/light--fluid-gradient/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--fluid-gradient/style.md
+  - skills/morph-ppt/reference/styles/light--glassmorphism-vc/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--glassmorphism-vc/style.md
+  - skills/morph-ppt/reference/styles/light--isometric-clean/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--isometric-clean/style.md
+  - skills/morph-ppt/reference/styles/light--minimal-corporate/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--minimal-corporate/style.md
+  - skills/morph-ppt/reference/styles/light--minimal-product/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--minimal-product/style.md
+  - skills/morph-ppt/reference/styles/light--project-proposal/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--project-proposal/style.md
+  - skills/morph-ppt/reference/styles/light--spring-launch/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--spring-launch/style.md
+  - skills/morph-ppt/reference/styles/light--training-interactive/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--training-interactive/style.md
+  - skills/morph-ppt/reference/styles/light--watercolor-wash/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/light--watercolor-wash/style.md
+  - skills/morph-ppt/reference/styles/mixed--bauhaus-blocks/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/mixed--bauhaus-blocks/style.md
+  - skills/morph-ppt/reference/styles/mixed--chromatic-aberration/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/mixed--chromatic-aberration/style.md
+  - skills/morph-ppt/reference/styles/mixed--duotone-split/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/mixed--duotone-split/style.md
+  - skills/morph-ppt/reference/styles/mixed--spectral-grid/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/mixed--spectral-grid/style.md
+  - skills/morph-ppt/reference/styles/vivid--bauhaus-electric/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/vivid--bauhaus-electric/style.md
+  - skills/morph-ppt/reference/styles/vivid--candy-stripe/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/vivid--candy-stripe/style.md
+  - skills/morph-ppt/reference/styles/vivid--energy-neon/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/vivid--energy-neon/style.md
+  - skills/morph-ppt/reference/styles/vivid--pink-editorial/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/vivid--pink-editorial/style.md
+  - skills/morph-ppt/reference/styles/vivid--playful-marketing/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/vivid--playful-marketing/style.md
+  - skills/morph-ppt/reference/styles/warm--bloom-academy/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--bloom-academy/style.md
+  - skills/morph-ppt/reference/styles/warm--brand-refresh/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--brand-refresh/style.md
+  - skills/morph-ppt/reference/styles/warm--coral-culture/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--coral-culture/style.md
+  - skills/morph-ppt/reference/styles/warm--earth-organic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--earth-organic/style.md
+  - skills/morph-ppt/reference/styles/warm--monument-editorial/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--monument-editorial/style.md
+  - skills/morph-ppt/reference/styles/warm--playful-organic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--playful-organic/style.md
+  - skills/morph-ppt/reference/styles/warm--sunset-mosaic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--sunset-mosaic/style.md
+  - skills/morph-ppt/reference/styles/warm--vital-bloom/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/reference/styles/warm--vital-bloom/style.md
+  - skills/morph-ppt/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt/SKILL.md
+  - skills/morph-ppt-3d/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/morph-ppt-3d/SKILL.md
+  - skills/officecli-academic-paper/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-academic-paper/SKILL.md
+  - skills/officecli-data-dashboard/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-data-dashboard/SKILL.md
+  - skills/officecli-docx/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-docx/SKILL.md
+  - skills/officecli-financial-model/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-financial-model/SKILL.md
+  - skills/officecli-pitch-deck/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-pitch-deck/SKILL.md
+  - skills/officecli-pptx/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-pptx/SKILL.md
+  - skills/officecli-word-form/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-word-form/SKILL.md
+  - skills/officecli-xlsx/SKILL.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/skills/officecli-xlsx/SKILL.md
+  - styles/bw--brutalist-raw/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/bw--brutalist-raw/style.md
+  - styles/bw--mono-line/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/bw--mono-line/style.md
+  - styles/bw--swiss-bauhaus/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/bw--swiss-bauhaus/style.md
+  - styles/bw--swiss-system/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/bw--swiss-system/style.md
+  - styles/dark--architectural-plan/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--architectural-plan/style.md
+  - styles/dark--aurora-softedge/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--aurora-softedge/style.md
+  - styles/dark--blueprint-grid/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--blueprint-grid/style.md
+  - styles/dark--circle-digital/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--circle-digital/style.md
+  - styles/dark--cosmic-neon/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--cosmic-neon/style.md
+  - styles/dark--cyber-future/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--cyber-future/style.md
+  - styles/dark--diagonal-cut/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--diagonal-cut/style.md
+  - styles/dark--editorial-story/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--editorial-story/style.md
+  - styles/dark--investor-pitch/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--investor-pitch/style.md
+  - styles/dark--liquid-flow/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--liquid-flow/style.md
+  - styles/dark--luxury-minimal/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--luxury-minimal/style.md
+  - styles/dark--midnight-blueprint/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--midnight-blueprint/style.md
+  - styles/dark--neon-productivity/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--neon-productivity/style.md
+  - styles/dark--obsidian-amber/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--obsidian-amber/style.md
+  - styles/dark--premium-navy/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--premium-navy/style.md
+  - styles/dark--sage-grain/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--sage-grain/style.md
+  - styles/dark--space-odyssey/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--space-odyssey/style.md
+  - styles/dark--spotlight-stage/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--spotlight-stage/style.md
+  - styles/dark--velvet-rose/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/dark--velvet-rose/style.md
+  - styles/INDEX.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/INDEX.md
+  - styles/light--bold-type/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--bold-type/style.md
+  - styles/light--firmwise-saas/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--firmwise-saas/style.md
+  - styles/light--fluid-gradient/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--fluid-gradient/style.md
+  - styles/light--glassmorphism-vc/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--glassmorphism-vc/style.md
+  - styles/light--isometric-clean/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--isometric-clean/style.md
+  - styles/light--minimal-corporate/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--minimal-corporate/style.md
+  - styles/light--minimal-product/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--minimal-product/style.md
+  - styles/light--project-proposal/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--project-proposal/style.md
+  - styles/light--spring-launch/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--spring-launch/style.md
+  - styles/light--training-interactive/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--training-interactive/style.md
+  - styles/light--watercolor-wash/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/light--watercolor-wash/style.md
+  - styles/mixed--bauhaus-blocks/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/mixed--bauhaus-blocks/style.md
+  - styles/mixed--chromatic-aberration/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/mixed--chromatic-aberration/style.md
+  - styles/mixed--duotone-split/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/mixed--duotone-split/style.md
+  - styles/mixed--spectral-grid/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/mixed--spectral-grid/style.md
+  - styles/vivid--bauhaus-electric/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/vivid--bauhaus-electric/style.md
+  - styles/vivid--candy-stripe/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/vivid--candy-stripe/style.md
+  - styles/vivid--energy-neon/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/vivid--energy-neon/style.md
+  - styles/vivid--pink-editorial/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/vivid--pink-editorial/style.md
+  - styles/vivid--playful-marketing/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/vivid--playful-marketing/style.md
+  - styles/warm--bloom-academy/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--bloom-academy/style.md
+  - styles/warm--brand-refresh/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--brand-refresh/style.md
+  - styles/warm--coral-culture/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--coral-culture/style.md
+  - styles/warm--earth-organic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--earth-organic/style.md
+  - styles/warm--monument-editorial/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--monument-editorial/style.md
+  - styles/warm--playful-organic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--playful-organic/style.md
+  - styles/warm--sunset-mosaic/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--sunset-mosaic/style.md
+  - styles/warm--vital-bloom/style.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/styles/warm--vital-bloom/style.md
 
 ### pdf
 - **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
@@ -179,7 +336,7 @@
   - pptxgenjs.md → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/pptxgenjs.md
 
 ### skill-creator
-- **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, update or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.
+- **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/SKILL.md
 - **Files**:
   - LICENSE.txt → https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/LICENSE.txt

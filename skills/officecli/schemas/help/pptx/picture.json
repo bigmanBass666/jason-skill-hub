@@ -1,0 +1,87 @@
+{
+  "$schema": "../_schema.json",
+  "format": "pptx",
+  "element": "picture",
+  "parent": "slide",
+  "operations": {
+    "add": true,
+    "set": true,
+    "get": true,
+    "query": true,
+    "remove": true
+  },
+  "paths": {
+    "positional": [
+      "/slide[N]/picture[M]"
+    ]
+  },
+  "note": "Aliases: image, img. 'src' (alias 'path') required. Source resolved by ImageSource — file path, URL, data-URI, raw bytes.",
+  "extends": [
+    "_shared/picture",
+    "_shared/picture.docx-pptx",
+    "_shared/picture.pptx-xlsx"
+  ],
+  "properties": {
+    "mediaType": {
+      "type": "string",
+      "description": "logical media kind derived from VideoFromFile / AudioFromFile presence under the picture. One of `picture`, `video`, `audio`. Surfaces only via the `image`/`video`/`audio`/`media` selectors.",
+      "add": false,
+      "set": false,
+      "get": true,
+      "readback": "`picture` | `video` | `audio`",
+      "enforcement": "report"
+    },
+    "x": {
+      "type": "length",
+      "description": "x offset in EMU/length form (e.g. 2cm). pptx absolute positioning.",
+      "add": true,
+      "set": true,
+      "get": true,
+      "examples": [
+        "--prop x=0",
+        "--prop x=1in"
+      ],
+      "readback": "length string (FormatEmu)",
+      "enforcement": "report"
+    },
+    "y": {
+      "type": "length",
+      "description": "y offset in EMU/length form (e.g. 2cm). pptx absolute positioning.",
+      "add": true,
+      "set": true,
+      "get": true,
+      "examples": [
+        "--prop y=0",
+        "--prop y=1in"
+      ],
+      "readback": "length string (FormatEmu)",
+      "enforcement": "report"
+    },
+    "width": {
+      "type": "length",
+      "description": "width — EMU/length form (e.g. 1.5cm). Required if not inferred from native ratio.",
+      "add": true,
+      "set": true,
+      "get": true,
+      "examples": [
+        "--prop width=5",
+        "--prop width=3in"
+      ],
+      "readback": "length string",
+      "enforcement": "report"
+    },
+    "height": {
+      "type": "length",
+      "description": "height — EMU/length form (e.g. 1.5cm). Required if not inferred from native ratio.",
+      "add": true,
+      "set": true,
+      "get": true,
+      "examples": [
+        "--prop height=5",
+        "--prop height=2in"
+      ],
+      "readback": "length string",
+      "enforcement": "report"
+    }
+  }
+}

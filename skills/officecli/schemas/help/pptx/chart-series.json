@@ -1,0 +1,25 @@
+{
+  "$schema": "../_schema.json",
+  "format": "pptx",
+  "element": "chart-series",
+  "parent": "chart",
+  "operations": {
+    "add": true,
+    "set": true,
+    "get": true,
+    "remove": true
+  },
+  "paths": {
+    "stable": [
+      "/slide[N]/chart[@id=ID]/series[@id=ID]"
+    ],
+    "positional": [
+      "/slide[N]/chart[N]/series[N]"
+    ]
+  },
+  "note": "At Add time, series are usually passed as properties of the parent `chart` element using dotted keys (series1.name, series1.values, series1.color, series1.categories). This element represents per-series Set/Get after the chart exists. Combo charts (mixed chartType per series, or secondary axis) are not supported. Create a separate chart for each chart type. lineWidth (line width in pt) and lineDash (solid/dash/dot/dashDot/longDash) are available on line/scatter series; `lineStyle` is not a recognized key (rejected as UNSUPPORTED — use lineWidth/lineDash instead).",
+  "extends": [
+    "_shared/chart-series",
+    "_shared/chart-series.pptx-xlsx"
+  ]
+}
