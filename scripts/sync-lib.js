@@ -130,15 +130,26 @@ function mirrorSync(sourceDir, targetDir, changes, dryRun) {
   return summary;
 }
 
+function getNodePath() {
+  try {
+    return process.execPath;
+  } catch {
+    return 'node';
+  }
+}
+
 function runBuild(projectRoot) {
-  log('执行构建: node scripts/scan.js');
-  execSync('node scripts/scan.js', { cwd: projectRoot, stdio: 'inherit' });
+  const nodeExe = getNodePath();
+  log(`执行构建: ${nodeExe} scripts/scan.js`);
+  execSync(`"${nodeExe}" scripts/scan.js`, { cwd: projectRoot, stdio: 'inherit' });
   log('构建完成');
 }
 
+const GIT_SAFE = '-c safe.directory=*';
+
 function gitCommitAndPush(projectRoot, targetDir) {
   const relDir = path.relative(projectRoot, targetDir).replace(/\\/g, '/');
-  const status = execSync(`git status --porcelain -- "${relDir}"`, { cwd: projectRoot }).toString().trim();
+  const status = execSync(`git ${GIT_SAFE} status --porcelain -- "${relDir}"`, { cwd: projectRoot }).toString().trim();
   if (!status) {
     log('无变更，跳过提交');
     return false;
@@ -148,24 +159,40 @@ function gitCommitAndPush(projectRoot, targetDir) {
   const dateStr = now.toISOString().replace('T', ' ').slice(0, 19);
 
   log(`执行 git add "${relDir}"`);
-  execSync(`git add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
+  execSync(`git ${GIT_SAFE} add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
 
   log(`执行 git commit -m "sync: auto-sync skills from source [${dateStr}]"`);
   try {
-    execSync(`git commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git ${GIT_SAFE} commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
   } catch (e) {
     log('commit 失败，可能因 pre-commit hook 修改了文件，重新 add 后重试');
-    execSync(`git add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
-    execSync(`git commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git ${GIT_SAFE} add "${relDir}"`, { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git ${GIT_SAFE} commit -m "sync: auto-sync skills from source [${dateStr}]"`, { cwd: projectRoot, stdio: 'inherit' });
   }
 
   log('执行 git push');
   try {
-    execSync('git push', { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git ${GIT_SAFE} push`, { cwd: projectRoot, stdio: 'inherit' });
   } catch (e) {
     log('push 被拒绝，远端有新提交，执行 pull --rebase 后重试');
-    execSync('git pull --rebase', { cwd: projectRoot, stdio: 'inherit' });
-    execSync('git push', { cwd: projectRoot, stdio: 'inherit' });
+    let hasStash = false;
+    try {
+      const stashCheck = execSync(`git ${GIT_SAFE} status --porcelain`, { cwd: projectRoot }).toString().trim();
+      if (stashCheck) {
+        log('暂存未提交的变更');
+        execSync(`git ${GIT_SAFE} stash`, { cwd: projectRoot, stdio: 'inherit' });
+        hasStash = true;
+      }
+    } catch (_) {}
+    execSync(`git ${GIT_SAFE} pull --rebase`, { cwd: projectRoot, stdio: 'inherit' });
+    execSync(`git ${GIT_SAFE} push`, { cwd: projectRoot, stdio: 'inherit' });
+    if (hasStash) {
+      try {
+        execSync(`git ${GIT_SAFE} stash pop`, { cwd: projectRoot, stdio: 'inherit' });
+      } catch (_) {
+        log('stash pop 失败，可能有冲突需要手动解决');
+      }
+    }
   }
 
   log('提交并推送完成');
