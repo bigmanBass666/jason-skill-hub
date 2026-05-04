@@ -1,6 +1,6 @@
 # Awwwards 级别网站动画模式参考手册
 
-> 涵盖 GSAP、Lenis、Barba.js 及现代 CSS 动画模式，源自 Awwwards 获奖网站的实战总结。
+> 涵盖 GSAP、Lenis、Barba.js 及现代 CSS 动画模式，源自 Awwwards SOTD 头奖网站的实战总结。
 
 ---
 
@@ -1301,20 +1301,6 @@ gsap.to(el, {
 
 ### 原则 2：will-change 最佳实践
 
-```css
-/* ✅ 正确：在动画即将开始前添加 will-change */
-.animate-soon {
-  will-change: transform;
-}
-
-/* ❌ 错误：永远不要对所有元素全局设置 */
-* {
-  will-change: transform;  /* 浪费内存，适得其反 */
-}
-
-/* ✅ 最佳实践：JS 中动态添加/移除 */
-```
-
 ```js
 // 动态管理 will-change
 function animateSafely(el, props) {
@@ -1332,6 +1318,8 @@ function animateSafely(el, props) {
   return tl;
 }
 ```
+
+> 静态 `will-change` 声明和全局滥用警告，参见 `references/performance-guide.md`。
 
 ### 原则 3：requestAnimationFrame vs 滚动事件
 
@@ -1399,39 +1387,8 @@ function observeAnimations() {
 
 ### 原则 5：防抖与节流
 
-```js
-// 防抖（Debounce）：停止触发后延迟执行
-function debounce(fn, delay = 100) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// 节流（Throttle）：固定间隔执行
-function throttle(fn, limit = 16) {
-  let inThrottle;
-  return (...args) => {
-    if (!inThrottle) {
-      fn(...args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-}
-
-// resize 事件使用防抖
-window.addEventListener('resize', debounce(() => {
-  ScrollTrigger.refresh(); // 重新计算所有 ScrollTrigger
-  horizontalScroll();      // 重新计算水平滚动宽度
-}, 250));
-
-// 鼠标跟随使用节流（~60fps）
-window.addEventListener('mousemove', throttle((e) => {
-  cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-}, 16));
-```
+> 完整的 `debounce`/`throttle` 实现参见 `scripts/performance-utils.js`。
+> 用法示例：`window.addEventListener('resize', debounce(() => ScrollTrigger.refresh(), 250));`
 
 ### 完整性能检查清单
 

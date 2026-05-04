@@ -814,56 +814,12 @@ vec3 awwwardsPalette(float t) {
 
 ### 5.1 Intersection Observer 懒初始化
 
+> 完整的 `LazyWebGL` 类实现（含 pause/resume/dispose）参见 `scripts/performance-utils.js`。以下为使用示例。
+
 ```js
-// 只在 WebGL canvas 进入视口时初始化
-class LazyWebGL {
-  constructor(containerEl, createSceneFn) {
-    this.container = containerEl;
-    this.createScene = createSceneFn;
-    this.initialized = false;
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !this.initialized) {
-            this.init();
-          }
-          // 离开视口时暂停渲染（节省 CPU/GPU）
-          if (!entry.isIntersecting && this.initialized) {
-            this.pause();
-          }
-          if (entry.isIntersecting && this.initialized) {
-            this.resume();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    this.observer.observe(containerEl);
-  }
+// 使用示例：从 scripts/performance-utils.js 导入
+import { LazyWebGL } from './scripts/performance-utils.js';
 
-  init() {
-    this.initialized = true;
-    const { renderer, scene, camera, animate } = this.createScene(this.container);
-    this.renderer = renderer;
-    this.scene = scene;
-    this.camera = camera;
-    this.animate = animate;
-    this.animate();
-  }
-
-  pause() {
-    this.running = false;
-  }
-
-  resume() {
-    if (!this.running) {
-      this.running = true;
-      this.animate();
-    }
-  }
-}
-
-// 使用
 new LazyWebGL(document.getElementById('webgl-container'), (container) => {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
@@ -877,7 +833,6 @@ new LazyWebGL(document.getElementById('webgl-container'), (container) => {
   // ... 添加场景内容 ...
 
   function animate() {
-    if (!this.running) return; // 用闭包或类的属性控制
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
@@ -928,40 +883,9 @@ async function getQualitySettings() {
 
 ### 5.3 资源释放（内存泄漏防护）
 
+> 完整的 `disposeScene()` 实现参见 `scripts/performance-utils.js`。以下为 React 中的使用示例。
+
 ```js
-function disposeScene(scene, renderer) {
-  scene.traverse((object) => {
-    if (object.geometry) {
-      object.geometry.dispose();
-    }
-    if (object.material) {
-      // 材质可能是一个数组（多材质）
-      const materials = Array.isArray(object.material)
-        ? object.material
-        : [object.material];
-
-      materials.forEach((mat) => {
-        // 释放所有纹理
-        Object.values(mat.uniforms || {}).forEach((uniform) => {
-          if (uniform.value && uniform.value.isTexture) {
-            uniform.value.dispose();
-          }
-        });
-        // 释放材质的贴图
-        if (mat.map) mat.map.dispose();
-        if (mat.normalMap) mat.normalMap.dispose();
-        if (mat.roughnessMap) mat.roughnessMap.dispose();
-        if (mat.metalnessMap) mat.metalnessMap.dispose();
-
-        mat.dispose();
-      });
-    }
-  });
-
-  renderer.dispose();
-  renderer.forceContextLoss(); // 强制释放 WebGL 上下文
-}
-
 // React 中的清理函数
 useEffect(() => {
   // ... 初始化 ...

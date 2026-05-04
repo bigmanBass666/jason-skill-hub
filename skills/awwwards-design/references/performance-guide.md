@@ -74,7 +74,7 @@ add_header Link "</hero.avif>; rel=preload; as=image; type=image/avif" early;
 }
 ```
 
-> **实战提示：** Awwwards 获奖网站通常使用 SSR/SSG 预渲染首屏 HTML，确保爬虫和首屏访问都能在 < 1s 内获得完整内容。Next.js 的 `generateStaticParams` + ISR 是常见选择。
+> **实战提示：** Awwwards SOTD 头奖网站通常使用 SSR/SSG 预渲染首屏 HTML，确保爬虫和首屏访问都能在 < 1s 内获得完整内容。Next.js 的 `generateStaticParams` + ISR 是常见选择。
 
 ---
 
@@ -141,29 +141,9 @@ INP 替代 FID，衡量所有用户交互（点击、按键、拖拽）的响应
 
 **优化策略：**
 
+> 完整的 `debounce`/`throttle` 实现参见 `scripts/performance-utils.js`。
+
 ```javascript
-// ① 事件防抖（Debounce）
-function debounce(fn, delay = 100) {
-  let timer;
-  return (...args) => {
-    cancelAnimationFrame(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// ② 事件节流（Throttle）— 使用 rAF 对齐帧率
-function throttle(fn) {
-  let busy = false;
-  return (...args) => {
-    if (busy) return;
-    busy = true;
-    requestAnimationFrame(() => {
-      fn(...args);
-      busy = false;
-    });
-  };
-}
-
 // ③ 使用示例：滚动驱动动画
 const handleScroll = throttle(() => {
   const y = window.scrollY;
@@ -538,42 +518,20 @@ window.addEventListener('scroll', () => {
 
 ### 4.3 防抖 / 节流工具库
 
+> 完整的 `debounce`/`throttle` 实现参见 `scripts/performance-utils.js`，包含 TypeScript 类型注释、cancel 功能和 leading/trailing 模式。
+
 ```javascript
-/**
- * 防抖：在最后一次调用后等待 delay 毫秒再执行
- * 适用场景：搜索输入、resize 事件
- */
-export function debounce(fn, delay = 150) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
-}
+// 使用示例：从 scripts/performance-utils.js 导入
+import { debounce, throttle } from './scripts/performance-utils.js';
 
-/**
- * 节流：保证在指定间隔内最多执行一次
- * 适用场景：滚动处理、拖拽
- */
-export function throttle(fn, interval = 16) { // ~60fps
-  let lastTime = 0;
-  return (...args) => {
-    const now = Date.now();
-    if (now - lastTime >= interval) {
-      lastTime = now;
-      fn(...args);
-    }
-  };
-}
-
-// 使用示例
 const handleResize = debounce(() => {
   recalculateLayout();
+  ScrollTrigger.refresh(); // GSAP ScrollTrigger 需要在 resize 后刷新
 }, 200);
 
 const handleMouseMove = throttle((e) => {
   updateCursor(e.clientX, e.clientY);
-}, 16);
+}, 16); // ~60fps
 ```
 
 ### 4.4 Tree-Shaking
@@ -734,56 +692,8 @@ module.exports = {
 
 ### 6.1 延迟初始化 WebGL
 
-```javascript
-class LazyWebGL {
-  constructor(container) {
-    this.container = container;
-    this.initialized = false;
-
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !this.initialized) {
-            this.init();
-            this.observer.disconnect();
-          } else if (!entry.isIntersecting && this.initialized) {
-            this.pause(); // 离开视口时暂停渲染循环
-          }
-        });
-      },
-      { threshold: 0 }
-    );
-
-    this.observer.observe(container);
-  }
-
-  async init() {
-    this.initialized = true;
-    const THREE = await import('three');
-    const scene = new THREE.Scene();
-    // ... 初始化场景、相机、渲染器
-    this.animate();
-  }
-
-  pause() {
-    this.isPaused = true;
-    // 可选：释放部分资源
-  }
-
-  resume() {
-    if (this.isPaused) {
-      this.isPaused = false;
-      this.animate();
-    }
-  }
-
-  animate() {
-    if (this.isPaused) return;
-    requestAnimationFrame(() => this.animate());
-    // 更新 & 渲染
-  }
-}
-```
+> 完整的 `LazyWebGL` 类实现（含 pause/resume）参见 `scripts/performance-utils.js`。
+> WebGL 初始化和渲染优化模式，参见 `references/webgl-patterns.md`。
 
 ### 6.2 GPU 层级检测
 
@@ -817,34 +727,7 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 
 ### 6.4 资源释放模式
 
-```javascript
-function disposeScene(scene, renderer) {
-  scene.traverse((object) => {
-    if (object.geometry) {
-      object.geometry.dispose();
-    }
-    if (object.material) {
-      // 材质可能包含多个材质
-      const materials = Array.isArray(object.material)
-        ? object.material
-        : [object.material];
-
-      materials.forEach((material) => {
-        // 释放纹理
-        Object.values(material)
-          .filter((value) => value && value.isTexture)
-          .forEach((texture) => texture.dispose());
-
-        material.dispose();
-      });
-    }
-  });
-
-  renderer.dispose();
-  renderer.forceContextLoss();
-  renderer.domElement = null;
-}
-```
+> 完整的 `disposeScene()` 实现参见 `scripts/performance-utils.js`。
 
 ### 6.5 粒子对象池
 

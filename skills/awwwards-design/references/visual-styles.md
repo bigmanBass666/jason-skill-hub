@@ -1,6 +1,6 @@
-# Awwwards 获奖网站视觉风格参考手册
+# Awwwards SOTD 头奖网站视觉风格参考手册
 
-> 本文档系统梳理 8 种主流 Awwwards 获奖视觉风格，涵盖设计哲学、配色方案、排版策略及完整 CSS 实现。
+> 本文档系统梳理 8 种主流 Awwwards 头奖视觉风格，涵盖设计哲学、配色方案、排版策略及完整 CSS 实现。
 > 最后更新：2025 年 7 月
 
 ---
@@ -22,7 +22,7 @@
 
 ### 设计哲学
 
-**"少即是多" 的终极表达。** 受 2025 年 Lando Norris SOTY（Site of the Year）获奖网站启发，新极简主义将信息压缩到极致——
+**"少即是多" 的终极表达。** 受 2025 年 Lando Norris SOTY（Site of the Year）头奖网站启发，新极简主义将信息压缩到极致——
 一张全屏字体、一根细线、一个微妙的色彩偏移，便足以构成完整的叙事体验。
 
 **适用场景：** 个人作品集、高端品牌官网、设计工作室、建筑事务所、奢侈品品牌。
@@ -52,8 +52,8 @@
 ```css
 /* 新极简主义的排版：极端尺寸对比 */
 :root {
-  --nm-font-display: 'Inter', 'Helvetica Neue', sans-serif;
-  --nm-font-body:    'Inter', sans-serif;
+  --nm-font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
+  --nm-font-body:    'Satoshi', sans-serif;
 
   /* 字号使用 clamp() 实现流式缩放 */
   --nm-size-hero:    clamp(4rem, 12vw, 14rem);    /* 主标题：巨大 */
@@ -393,7 +393,7 @@
 ```css
 :root {
   --dp-font-display: 'Space Mono', 'Courier New', monospace;
-  --dp-font-body:    'Inter', 'Helvetica Neue', sans-serif;
+  --dp-font-body:    'Satoshi', 'Helvetica Neue', sans-serif;
 
   --dp-size-hero:    clamp(3rem, 10vw, 10rem);
   --dp-size-body:    clamp(0.875rem, 1.1vw, 1rem);
@@ -828,7 +828,7 @@ Bento Grid 将内容组织为大小不一的矩形模块，类似日本便当盒
 ```css
 :root {
   --ci-font-display: 'Instrument Serif', 'Playfair Display', serif;
-  --ci-font-body:    'Inter', sans-serif;
+  --ci-font-body:    'Satoshi', sans-serif;
   --ci-font-mono:    'JetBrains Mono', monospace;
 
   --ci-size-hero:    clamp(3rem, 8vw, 7rem);
@@ -1706,7 +1706,7 @@ Bento Grid 将内容组织为大小不一的矩形模块，类似日本便当盒
 
 ## 附录：风格混搭指南
 
-优秀的 Awwwards 获奖网站往往不是纯粹使用一种风格，而是创造性地混搭：
+优秀的 Awwwards SOTD 头奖网站往往不是纯粹使用一种风格，而是创造性地混搭：
 
 | 混搭组合 | 效果 | 示例 |
 |----------|------|------|
@@ -1729,4 +1729,4 @@ Bento Grid 将内容组织为大小不一的矩形模块，类似日本便当盒
 
 ---
 
-> 本文档持续更新。参考来源：Awwwards.com、FWA、CSS Design Awards、CSS-Tricks、各获奖网站源码分析。
+> 本文档持续更新。参考来源：Awwwards.com、FWA、CSS Design Awards、CSS-Tricks、各 SOTD 头奖网站源码分析。

@@ -1,4 +1,4 @@
-# Awwwards 获奖网站交互模式参考手册
+# Awwwards SOTD 头奖网站交互模式参考手册
 
 > 基于 Awwwards 官方收藏集合及历年 SOTY（年度网站）获奖作品提炼的交互设计模式。
 > 每个模式附带可直接使用的实现代码，适用于追求极致体验的现代 Web 项目。
@@ -19,7 +19,7 @@
 
 ## 1. 自定义光标系统
 
-> **Awwwards 收藏集：466 项** — 这是获奖网站中出现频率最高的交互模式，几乎成为标配。
+> **Awwwards 收藏集：466 项** — 这是 SOTD 头奖网站中出现频率最高的交互模式，几乎成为标配。
 
 ### 核心原理
 
@@ -427,6 +427,8 @@ document.querySelectorAll('.btn-ripple').forEach(btn => {
   });
 });
 ```
+
+> 注：GSAP 高级版涟漪效果参见 `references/animation-patterns.md` §4
 
 ### 2.3 链接悬停图片预览
 
@@ -2333,7 +2335,7 @@ if (prefersReducedMotion) {
 
 ## 附录：Easing 曲线速查
 
-Awwwards 获奖网站最常用的缓动函数：
+Awwwards SOTD 头奖网站最常用的缓动函数：
 
 ```css
 /* 通用入场 — 柔和弹跳 */
