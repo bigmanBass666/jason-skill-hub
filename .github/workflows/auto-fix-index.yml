@@ -41,8 +41,12 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add skills/INDEX.md skills/skills.json _redirects
           git commit -m "chore: auto-update skill index files"
-          git pull --rebase origin master
-          git push
+          # Retry loop to handle race conditions with other pushes
+          for i in 1 2 3; do
+            git pull --rebase origin master && git push && break
+            echo "Push failed, retrying... ($i/3)"
+            sleep 2
+          done
 
       - name: Purge jsDelivr CDN cache
         if: steps.check_changes.outputs.changed == 'true'
