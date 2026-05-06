@@ -9,3 +9,4 @@ node_modules/
 # AI and spec files (not needed in repo)
 .ai/
 .trae/
+.playwright-mcp/
