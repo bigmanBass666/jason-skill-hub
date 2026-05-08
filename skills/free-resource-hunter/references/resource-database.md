@@ -1,6 +1,6 @@
 # 免费资源情报库
 
-> **重要**：本文件是增量对比的基线库。每次情报扫描前先读取此文件——不读基线直接扫描的话，所有已知模型都会被误报为新发现（eval #6 实验证实了这个后果）。扫描结果与本文件对比后的差异即为新情报。
+> **重要**：本文件是增量对比的基线库。每次情报扫描前必须读取此文件，扫描结果与本文件对比后的差异即为新情报。
 >
 > **维护规则**：每次情报扫描后，将新发现追加到"历史情报记录"。定期（每周）验证并更新各平台的"最后验证"时间。
 >
@@ -21,52 +21,41 @@
 
 这类平台提供多种模型，一个 API key 可调用多个模型。**这是最优先关注的资源类型。**
 
-### NVIDIA NIM（🔥 重点追踪：模型上新 = 最高优先级情报）
+### NVIDIA NIM
 - **URL**: build.nvidia.com
-- **模型数量**: 157+（公开 API 端点返回 136 个，SPA 页面可见 157+ 个）
+- **模型数量**: 100+
 - **免费政策**: 免费，40 RPM 速率限制，无总用量上限；rate limit increase 申请不再获批
 - **计费模式**: rate limit 制（原 credit 制已废弃，2026 年变更）
 - **API 格式**: OpenAI 兼容
 - **国内访问**: 需特殊方式
 - **上新频率**: 中
 - **风险信号**: Bot farm 滥用严重；有用户报告封号（疑似高频触发）；rate limit increase 官方明确拒绝
-- **追踪要求**: 每次情报扫描应先尝试 `scripts/scrape_nvidia_nim.py`（有 shell 时）或 agent-browser（有浏览器工具时）获取带上架日期的完整模型列表，同时执行 web-search 补盲搜索（关键词见 `search-strategies.md`），捕捉公开 API 延迟覆盖的新上架模型。**在有安装能力的云端 Agent 环境下**，应升级为方法 4（Playwright SPA 爬虫 + 认证 API，157+ 模型），详见 `search-strategies.md` 五层方案。任何基线中没有的新模型，自动标记为 🔥。特别关注第三方闭源模型（Kimi/DeepSeek/Claude/Gemma/Qwen 等）首次出现在 NIM 上的情况——这意味着该模型新增了一个免费推理渠道。
-- **已知可用模型**（Playwright 爬取确认，上架日期来自 span[aria-label]）:
+- **已知可用模型**:
 
-| 模型 | 上架日期 | 类型 | Agent 能力 | 备注 |
-|------|---------|------|-----------|------|
-| moonshotai/kimi-k2.6 | May 1, 2026 | 文本 | 未知 | 基线已有 |
-| mistralai/mistral-medium-3.5-128b | Apr 29, 2026 | 文本/编程 | 未知 | 🆕 新上架 |
-| nvidia/nemotron-3-nano-omni-30b-a3b-reasoning | Apr 28, 2026 | 推理 | 未知 | 🆕 新上架 |
-| deepseek-ai/deepseek-v4-flash | Apr 24, 2026 | 文本/MoE | 中 | 基线已有，不稳定 |
-| deepseek-ai/deepseek-v4-pro | Apr 24, 2026 | 文本/MoE | 未知 | 🆕 新上架 |
-| z-ai/glm-5.1 | Apr 18, 2026 | 文本/Agentic | 未知 | 基线已有 |
-| z-ai/glm-4.7 | Apr 17, 2026 | 文本/Agentic | 未知 | 🆕 新上架，多语言编程伙伴 |
-| minimaxai/minimax-m2.7 | Apr 12, 2026 | 文本/编程 | 未知 | 🆕 新上架，230B |
-| google/gemma-4-31b-it | Apr 2, 2026 | 文本/编程 | 未知 | 🆕 新上架 |
-| stepfun-ai/step-3.5-flash | Feb 2, 2026 | 文本/Agentic | 弱 | 用户主力模型，唯一稳定 |
-| qwen/qwen3.5-122b-a10b | Mar 5, 2026 | 文本/tool-calling | 待验证 | — |
-| qwen/qwen3.5-397b-a17b | Feb 16, 2026 | 文本/MoE | 待验证 | — |
-| 其他 100+ 模型 | 不等 | 不等 | — | 含大量非文本模型（图像/语音/嵌入等） |
+| 模型 | Agent 能力 | 稳定性 | 速度 | 备注 |
+|------|-----------|--------|------|------|
+| Step 3.5 Flash | 弱（tool calling 频繁出错） | 高 | 快 | 用户主力模型，唯一稳定的，但 agent 工作流中表现差 |
+| DeepSeek V4 Flash | 中 | 低 | 快 | 经常不稳定 |
+| GLM 5.1 | 未知 | 低 | — | 不稳定 |
+| Kimi K2.6 | 未知 | 低 | — | 不稳定 |
+| 其他 70+ 模型 | 不等 | 低 | 不等 | 用户已全部测试，仅 Step 稳定 |
 
-- **已下线模型**（从公开 API 端点消失）: meta/llama-4-maverick, deepseek/deepseek-r1
-- **最后验证**: 2026-05-07（Playwright + agent-browser + 公开 API 三路交叉验证）
-- **备注**: 用户已测试全部 80+ 文本模型，仅 Step 3.5 Flash 在高并发下稳定可用。Playwright 爬取确认 SPA 页面可见 157+ 模型，公开 API 返回 136 个。**NVIDIA NIM 本身是此 skill v1 发现的资源。**
+- **最后验证**: 2026-04-30
+- **备注**: 用户已测试全部 80+ 模型，仅 Step 3.5 Flash 在高并发下稳定可用。**NVIDIA NIM 本身是此 skill v1 发现的资源。**
 
 ### OpenRouter
 - **URL**: openrouter.ai
 - **模型数量**: 397+
-- **免费政策**: 33 个 :free 模型（2026-05-01 CostGoat 统计，从 4/26 的 ~30 回升），无余额时 50 次/天
+- **免费政策**: ~30 个 :free 模型（2026-04-26 CostGoat 统计，较之前 50+ 有下降），无余额时 50 次/天
 - **API 格式**: OpenAI 兼容
 - **国内访问**: 可直连
 - **上新频率**: 高
 - **历史事件**: 偷偷上线 Hunter-alpha 匿名推理模型（后被撤下/改收费）
-- **Stealth 匿名模型机制**: OpenRouter 已形成系统化的 Stealth 模型发布机制，累计上线 10+ 个匿名模型。通过系统提示词泄露和社区逆向识别来源。
+- **Stealth 匿名模型机制**: OpenRouter 已形成系统化的 Stealth 模型发布机制，累计上线 9 个匿名模型（Cypher/Horizon/Pony/Aurora/Hunter/Healer/Sherlock Think/Sherlock Dash/Elephant Alpha）。最新为 Elephant Alpha（4/13，蚂蚁集团 100B，免费）。通过系统提示词泄露和社区逆向识别来源。
 - **平台新功能（2026-04）**: Agent SDK（4/27）、Workspaces（4/24）、Video Generation（4/22）、Auto Exacto 自适应路由（4/15）
-- **当前活跃 Stealth 模型**: Owl Alpha (4/28 上线, agentic 定位, 1M 上下文, 原生 tool-calling, 免费) — 当前 Stealth 页面仅显示 1 个模型
-- **历史 Stealth 模型（已结束 Stealth 阶段或下线）**: Elephant Alpha (蚂蚁集团 100B), Sherlock Think/Dash Alpha (疑似 xAI Grok), Hunter Alpha, Healer Alpha, Cypher Alpha (2025-07), Optimus Alpha (2025-04), Horizon Alpha, Pony Alpha, Aurora Alpha
-- **⚠️ 即将下线**: Claude 3.7 Sonnet (2026-05-11, Anthropic 2/19 已退役)
-- **最后验证**: 2026-05-07
+- **已知 Stealth 模型**: Elephant Alpha (蚂蚁集团 100B 免费), Sherlock Think Alpha (疑似 xAI Grok, 1.8M 上下文), Sherlock Dash Alpha, Hunter Alpha (在线但状态待确认), Healer Alpha
+- **⚠️ 即将下线**: Claude 3.7 Sonnet (2026-05-05)
+- **最后验证**: 2026-04-30
 
 ### 小米 MiMo
 - **URL**: platform.xiaomimimo.com / mimo.xiaomi.com
@@ -113,32 +102,20 @@
 ### 硅基流动 SiliconCloud
 - **URL**: cloud.siliconflow.cn / api.siliconflow.cn/v1
 - **模型数量**: 200+ 开源优化模型
-- **免费政策**: 免费层（Qwen/GLM/DeepSeek 系列等开源模型免费推理）；新用户 2000 万 Token 赠金；⚠️ Pro 前缀模型消耗赠金快，需用 free-selector 工具过滤
+- **免费政策**: 免费层（Qwen/GLM/DeepSeek 系列等开源模型免费推理）
 - **API 格式**: OpenAI 兼容
 - **国内访问**: ✅ 可直连，延迟低
 - **上新频率**: 中
-- **风险**: 新模型 increasingly 只上 Pro 付费层，赠金体感缩水
-- **最后验证**: 2026-05-07
-
-### WaveSpeedAI（🆕 2026-05-07 发现）
-- **URL**: wavespeed.ai
-- **模型数量**: 290+ LLM + 1000+ 多模态（图像/视频/音频）
-- **免费政策**: 注册送 $1（无需信用卡）；Pay-as-you-go，无月费
-- **API 格式**: OpenAI 兼容
-- **Agent/工具调用能力**: 支持（需进一步验证）
-- **国内访问**: 待验证
-- **上新频率**: 高
-- **风险**: 非 unlimited 免费；$1 额度较少，适合试用
-- **最后验证**: 2026-05-07
+- **最后验证**: 2026-05-01
 
 ### 火山引擎豆包
 - **URL**: console.volcengine.com/ark
 - **模型数量**: 国内多模型
-- **免费政策**: 200 万 Tokens/天（2026-05-07 web-search 确认，极其慷慨）；⚠️ 豆包开始推付费版（Pro 模型），免费消费者层仍存在但"免费时代"可能终结
+- **免费政策**: 每日免费
 - **API 格式**: OpenAI 兼容
-- **国内访问**: ✅ 可直连
+- **国内访问**: 可直连
 - **上新频率**: 中
-- **最后验证**: 2026-05-07
+- **最后验证**: 待验证
 
 ### Cloudflare Workers AI
 - **URL**: developers.cloudflare.com/workers-ai
@@ -215,10 +192,10 @@
 ### Groq
 - **URL**: groq.com
 - **模型数量**: 开源模型
-- **免费政策**: 100 万 tokens/day + 30 RPM 免费（2026 年扩容），8K 上下文限制
+- **免费政策**: 30-60 RPM 免费
 - **国内访问**: 需特殊方式
 - **上新频率**: 中
-- **最后验证**: 2026-05-07
+- **最后验证**: 待验证
 
 ---
 
@@ -236,9 +213,9 @@
 
 | 提供商 | 模型 | 免费/优惠 | 国内访问 | Agent 能力 | 备注 |
 |--------|------|-----------|---------|-----------|------|
-| 智谱 AI | GLM-5.1, GLM-4.7, GLM-4-Flash | GLM-4-Flash 永久免费不限量；新用户 2000 万 Token 赠金；⚠️ 2026 年已涨价 3 次 | ✅ 直连 | 4-Flash agent 弱 | 涨价频繁，注意成本 |
+| 智谱 AI | GLM-5.1, GLM-4-Flash | GLM-4-Flash 永久免费不限量 | ✅ 直连 | 4-Flash agent 弱 | 5.1 和 4-Flash 完全不同级别 |
 | DeepSeek | V4 Pro, V4 Flash, V3.2 | 新用户 500 万 Token | ✅ 直连 | V4 Pro 较强 | V4 的 agent 能力比 R1 成熟 |
-| Google | Gemini 2.5 Flash/Pro | ⚠️ 免费额度缩减 50-80%（2026-04-16 再砍，Apr 1 进一步收紧），Flash 仍可免费但有量限 | 需梯子 | Flash 中等 | 额度在持续收缩 |
+| Google | Gemini 2.5 Flash/Pro | 1500 次/天 | 需梯子 | Flash 中等 | 需梯子但额度慷慨 |
 | Cerebras | Llama/Qwen 等 | 30 RPM 免费 | 需梯子 | 视模型 | 速度极快 |
 | Hugging Face | 开源模型 | 免费（有排队） | ✅ 直连 | 视模型 | 冷启动延迟 |
 
@@ -269,7 +246,7 @@
 | OpenRouter 模型列表 | `web-reader https://openrouter.ai/models`（⚠️ SPA 页面，page_reader 可能无法获取完整列表；备选：搜索 CostGoat 统计 / 直接用 OpenRouter API） | 新模型上线下线 |
 | OpenRouter Stealth 页面 | `web-reader https://openrouter.ai/provider/stealth` | 匿名/测试模型 |
 | CostGoat 免费模型统计 | `web-reader https://costgoat.com` 或搜索 | OpenRouter 免费模型数量和列表 |
-| NVIDIA NIM 模型列表 | `web-reader https://integrate.api.nvidia.com/v1/models`（公开 JSON 端点，无需 key，136 模型，`created` 字段全相同无法判断新旧）+ 优先用 `scripts/scrape_nvidia_nim.py` 获取带日期的完整列表 + `web-search` 补盲 | 返回完整模型列表 JSON，与基线逐模型 ID 对比 |
+| NVIDIA NIM 模型列表 | `web-reader https://build.nvidia.com/models` | 新模型上线下线 |
 | Twitter/X AI 圈 | `web-search site:x.com free AI model` | AI 圈大佬第一时间动态 |
 | 知乎/V2EX | `web-search site:zhihu.com/v2ex.com 免费 API` | 国内资源动态 |
 
@@ -343,62 +320,3 @@
 - 小米 MiMo：从 V2 升级到 V2.5，新增 Orbit 活动页 100t.xiaomimimo.com，URL 更新为 platform.xiaomimimo.com
 - GitHub Models：标注 Copilot 6/1 使用量计费变更风险
 - OpenRouter：新增 Qwen3 Coder 480B (free)
-
-### 2026-05-07 实时情报扫描
-
-**🔥 紧急情报：**
-- [🔥 匿名模型] Owl Alpha（4/28，OpenRouter Stealth，agentic 定位，1M 上下文，原生 tool-calling，免费）：当前唯一活跃 Stealth 模型
-- [📡 免费回升] OpenRouter :free 模型从 ~30 回升至 33（CostGoat 5/1 统计）
-- [💀 日期修正] Claude 3.7 Sonnet OpenRouter 下线日期从基线的 5/5 修正为 5/11（Anthropic 2/19 已退役）
-
-**📡 一般动态：**
-- [新增平台] WaveSpeedAI（290+ LLM + 1000+ 多模态，OpenAI 兼容，注册送 $1）
-- [⚠️ 风险更新] 硅基流动 Pro 模型陷阱：新模型 increasingly 只上 Pro 付费层，赠金消耗快；开源社区已出 free-selector 过滤工具
-- [📊 基线修正] Cerebras 免费额度从"30-60 RPM"修正为"100 万 tokens/day + 30 RPM"
-- [📊 状态确认] NVIDIA NIM 40 RPM 不可提升（4/9 至今论坛持续拒绝），政策无新变化
-- [📊 状态确认] MiMo Orbit 百万亿 Token 计划进行中，距截止 21 天
-- [📊 状态确认] GitHub Copilot 6/1 计费变更无延迟
-
-**Stealth 模型家族更新：**
-- [📊 状态更新] OpenRouter Stealth 页面当前仅显示 1 个模型（Owl Alpha）
-- [📊 历史归档] Cypher Alpha（2025-07）、Optimus Alpha（2025-04）确认非 2026 年新品，归入历史 Stealth 模型
-- [📊 基线修正] 累计 Stealth 模型从 9 个更新为 10+ 个
-
-### 2026-05-07 Skill 合规审查 + 实战验证扫描
-
-**扫描方法**：Playwright 脚本（48 模型）+ agent-browser（24 模型）+ 公开 API（136 模型）+ 5 组 web-search，三路交叉验证。
-
-**🔥 NVIDIA NIM 新上架模型**（基线中没有，Playwright span[aria-label] 确认上架日期）：
-- [🆕 新模型] qwen/qwen-image（May 1, 2026）— 图像生成
-- [🆕 新模型] qwen/qwen-image-edit（May 1, 2026）— 图像编辑
-- [🆕 新模型] mistralai/mistral-medium-3.5-128b（Apr 29）— 编程文本模型
-- [🆕 新模型] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning（Apr 28）— 推理模型
-- [🆕 新模型] deepseek-ai/deepseek-v4-pro（Apr 24）— MoE 文本模型
-- [🆕 新模型] z-ai/glm-4.7（Apr 17）— 多语言 agentic 编程伙伴
-- [🆕 新模型] minimaxai/minimax-m2.7（Apr 12）— 230B 编程推理模型
-- [🆕 新模型] google/gemma-4-31b-it（Apr 2）— 编程文本模型
-
-**💀 NVIDIA NIM 模型下线**（公开 API 端点已移除）：
-- [💀 模型下线] meta/llama-4-maverick
-- [💀 模型下线] deepseek/deepseek-r1
-
-**💀 行业免费层收缩**（web-search 发现，2026 年 4 月为分水岭）：
-- [💀 政策收紧] Google Gemini API 免费额度缩减 50-80%（2026-04-16 再砍，Apr 1 进一步收紧）
-- [💀 政策收紧] Qwen AI OAuth 免费层：1000 req/day → 100 req/day → 即将终止
-- [💀 政策收紧] OpenAI Codex 从按消息改为按 token 计费（Apr 2）
-- [💀 政策收紧] 智谱 AI 2026 年已涨价 3 次
-- [⚠️ 趋势] 豆包（火山引擎）开始推付费 Pro 版，免费消费者层仍存在但"免费时代"可能终结
-- [📡 趋势] dev.to 文章称 2026-04 为"全包式免费 AI 终结月"
-
-**🔥 重大新情报**：
-- [🔥 新模型] GPT-5.5 Instant — ChatGPT 免费用户可用，幻觉率降低 52.5%（QbitAI 5/6 报道）
-- [📡 新模型] Qwen3.5 Plus — 上线 OpenRouter（4 月），大规模多模态
-- [📡 新模型] Qwen3 Coder 480B — OpenRouter 免费，当前最强免费编程模型
-- [📡 数据更新] 火山引擎 200 万 Tokens/天（web-search 确认，极其慷慨）
-- [📡 数据更新] 智谱 AI 新用户 2000 万 Token 赠金
-
-**📊 Skill 质量验证**：
-- [✅] Playwright 脚本 classify_model bug 已修复（text-to-image 不再误分类为 text）
-- [✅] 增量对比防误报验证通过：kimi-k2.6（基线已有）未误报为新发现
-- [✅] 三路交叉验证一致：Playwright 48 模型 ≈ agent-browser 24 模型（首页重合）≈ 公开 API 136 模型（子集）
-- [✅] NVIDIA `created` 字段仍全=735790403，span[aria-label] 日期提取 100% 成功
