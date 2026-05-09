@@ -145,6 +145,55 @@ agent-browser get text "@e135"  # 任务耗时 23s
 
 ## Common Tasks
 
+### Task: Create New Project from Template
+
+TRAE SOLO CN provides 4 built-in project templates in the New Task panel:
+
+**Template 1: 应用开发 (Application Development)** @e8
+```bash
+# Click template to auto-fill prompt
+agent-browser click "@e8"
+agent-browser wait 500
+
+# The textbox will be filled with:
+# "开发一款支持多语种学习的在线教育平台，涵盖英语、日语、韩语等主流语言。
+#  平台需打造沉浸式语言学习体验，提供以下能力：
+#  1、分级课程体系
+#  2、互动式学习模块（单词记忆、语法练习、口语跟读、听力训练）
+#  3、学习进度追踪功能..."
+
+# Then send the task
+agent-browser click "@e89"  # textbox
+agent-browser keyboard type ""  # Optional: modify or add more context
+agent-browser press Enter
+```
+
+**Template 2: 项目理解 (Project Understanding)** @e9
+```
+"分析并理解这个项目仓库，生成结构化的完整的Code Wiki文档(md文件)。
+这套文档需要包括项目整体架构、主要模块职责、关键类与函数说明、
+依赖关系以及项目运行方式等关键信息"
+```
+
+**Template 3: 游戏创意 (Game Creation)** @e10
+```
+"设计并实现一个简单的像素风机甲对战小游戏。"
+```
+
+**Template 4: 工具脚本 (Tool/Script)** @e11
+```
+"设计并实现一个电商商品价格自动化采集与对比的脚本工具。"
+```
+
+### Task: Send Custom Prompt
+
+```bash
+# Click textbox and type your own prompt
+agent-browser click "@e89"  # textbox ref
+agent-browser keyboard type "你的自定义需求描述"
+agent-browser press Enter
+```
+
 ### Task: Create and Complete AI Task (Verified)
 
 ```bash
@@ -161,7 +210,7 @@ agent-browser click "@e4"
 agent-browser wait 1000
 
 # Send prompt - MUST use keyboard type for this app
-agent-browser click "@e125"  # textbox
+agent-browser click "@e89"  # textbox
 agent-browser keyboard type "分析这段代码的性能问题"
 agent-browser press Enter
 
