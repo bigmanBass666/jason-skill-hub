@@ -326,6 +326,33 @@ agent-browser find text "partial_text" click --exact
 
 ## Troubleshooting
 
+### Startup Issues
+
+| Symptom | Diagnosis | Solution |
+|---------|-----------|----------|
+| **AI requests fail / "请求失败"** | Multiple processes running | Kill all: `taskkill /F /IM "TRAE SOLO CN.exe"` |
+| **Window blank / UI not loading** | Resource conflict | Kill all processes, restart fresh instance |
+| **CDP connection refused** | App not started with debug flag | Kill and relaunch with `--remote-debugging-port=9222` |
+| **Port 9222 not listening** | Process crashed | Check: `Get-Process "TRAE SOLO CN"`, restart if missing |
+
+### Quick Diagnosis Commands
+
+```powershell
+# Check for multiple processes (should be 1 main + 7-8 subprocesses)
+Get-Process "TRAE SOLO CN" | Measure-Object
+# If Count > 10, kill all and restart
+
+# Check if CDP port is listening
+netstat -ano | findstr :9222
+# Should show: TCP 127.0.0.1:9222 LISTENING
+
+# Verify window loaded correctly
+agent-browser snapshot -i | Select-String "新建任务|技能|自动化"
+# Should find all three elements
+```
+
+### Runtime Issues
+
 | Problem | Cause | Solution |
 |---------|-------|----------|
 | "Element not found" | Ref stale | Re-snapshot, use new ref |
@@ -333,6 +360,7 @@ agent-browser find text "partial_text" click --exact
 | Input doesn't appear | Custom component | Use `keyboard type`, not `fill` |
 | Task never completes | Still running | Continue polling, or check for errors |
 | Workspace list empty | Not expanded | Click workspace button to expand |
+| Connection lost | Process crashed | Reconnect: `agent-browser connect $wsUrl` |
 
 ---
 
