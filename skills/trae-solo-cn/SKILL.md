@@ -17,13 +17,57 @@ Automate TRAE SOLO CN desktop app (ByteDance's AI coding assistant) via CDP. Cov
 
 ## Quick Start
 
+### Step 1: Clean Launch (CRITICAL)
+
 ```powershell
-# 1. Connect
+# MUST kill existing processes first to avoid conflicts
+$existing = Get-Process "TRAE SOLO CN" -ErrorAction SilentlyContinue
+if ($existing) {
+    Write-Host "Killing existing TRAE SOLO CN processes..."
+    taskkill /F /IM "TRAE SOLO CN.exe" 2>&1 | Out-Null
+    Start-Sleep -Seconds 3
+}
+
+# Verify cleanup
+$remaining = Get-Process "TRAE SOLO CN" -ErrorAction SilentlyContinue
+if ($remaining) {
+    Write-Error "Failed to kill existing processes. Please restart computer."
+    exit 1
+}
+
+# Launch fresh instance
+Start-Process "D:\apps\TRAE SOLO CN\TRAE SOLO CN.exe" -ArgumentList "--remote-debugging-port=9222"
+Start-Sleep -Seconds 5
+```
+
+### Step 2: Connect
+
+```powershell
 $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 agent-browser connect $wsUrl
 agent-browser wait 2000
+```
 
-# 2. Discover current state
+### Step 3: Health Check (Verify Window Loaded)
+
+```powershell
+# Verify TRAE SOLO window loaded correctly
+$snapshot = agent-browser snapshot -i
+
+# Check for critical UI elements
+if ($snapshot -match "新建任务" -and $snapshot -match "技能" -and $snapshot -match "自动化") {
+    Write-Host "✓ TRAE SOLO loaded successfully"
+}
+else {
+    Write-Error "✗ Window not loaded properly. Key elements missing."
+    Write-Error "Try: Kill all processes and restart"
+    exit 1
+}
+```
+
+### Step 4: Discover Current State
+
+```powershell
 agent-browser snapshot -i
 ```
 
