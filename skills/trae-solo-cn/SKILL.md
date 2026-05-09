@@ -241,7 +241,160 @@ agent-browser click "@e144"  # combobox
 agent-browser select "@e144" "GLM-5V-Turbo"
 ```
 
-### Task: Install Skill from Marketplace
+### Task: Open Local Folder and Start AI Chat (Complete Workflow)
+
+This is the **primary workflow** for starting a new project with a local folder.
+
+### Step 1: Launch & Connect
+
+```powershell
+# Kill existing instance
+Get-Process "TRAE SOLO CN" -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Seconds 2
+
+# Launch with CDP
+Start-Process "D:\apps\TRAE SOLO CN\TRAE SOLO CN.exe" -ArgumentList "--remote-debugging-port=9222"
+Start-Sleep -Seconds 5
+
+# Connect
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
+agent-browser connect $wsUrl
+agent-browser --color-scheme dark wait 2000
+```
+
+### Step 2: Open Folder Selector
+
+```bash
+# Find and click the workspace dropdown arrow (reveals "选择文件夹" button)
+agent-browser snapshot -i
+# Look for: button [ref=e35] (no text - the dropdown arrow)
+
+# Click the dropdown arrow next to current workspace
+agent-browser click "@e35"
+agent-browser wait 500
+
+# Click "选择文件夹" (Select Folder) button
+agent-browser snapshot -i
+# Look for: menuitem "选择文件夹" [ref=e2]
+
+agent-browser click "@e2"
+# This opens native OS file dialog - agent-browser cannot automate this
+```
+
+**Note**: The file dialog is a native OS component. Use the mouse or keyboard to navigate it:
+- Navigate to your desired folder
+- Click "选择文件夹" or press Enter to confirm
+
+### Step 3: Wait for Workspace to Load
+
+```bash
+# After selecting folder, wait for workspace to initialize
+agent-browser wait 3000
+
+# Take a snapshot to see the new workspace
+agent-browser snapshot -i
+```
+
+### Step 4: Start AI Chat
+
+```bash
+# 1. Ensure you're in the New Task panel
+agent-browser click "@e4"
+
+# 2. Find the textbox
+agent-browser snapshot -i
+# Look for: textbox [ref=eNNN]:
+
+# 3. Click textbox and type your prompt
+agent-browser click "@e89"  # textbox ref (varies by session)
+agent-browser keyboard type "分析这个项目的结构和功能"
+
+# 4. Send with Enter
+agent-browser press Enter
+
+# 5. Monitor completion
+for ($i = 0; $i -lt 30; $i++) {
+    agent-browser wait 5000
+    $snapshot = agent-browser snapshot -i
+    if ($snapshot -match "任务耗时") {
+        Write-Host "Task completed!"
+        break
+    }
+}
+
+# 6. Get results
+agent-browser click "@COPY_ALL_REF"  # 复制全部
+agent-browser screenshot chat-result.png
+```
+
+### Quick Reference: Folder → Chat Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Connect via CDP                                          │
+│    agent-browser connect $wsUrl                             │
+├─────────────────────────────────────────────────────────────┤
+│ 2. Click workspace dropdown arrow @e35                      │
+│    (no visible text, next to workspace name)                │
+├─────────────────────────────────────────────────────────────┤
+│ 3. Click "选择文件夹" button @e2                            │
+│    (Native file dialog opens - manual step)                  │
+├─────────────────────────────────────────────────────────────┤
+│ 4. Select folder in OS dialog → Confirm                     │
+│    (Manual action required)                                 │
+├─────────────────────────────────────────────────────────────┤
+│ 5. Wait for workspace to load                               │
+│    agent-browser wait 3000                                  │
+├─────────────────────────────────────────────────────────────┤
+│ 6. Navigate to New Task                                     │
+│    agent-browser click "@e4"                               │
+├─────────────────────────────────────────────────────────────┤
+│ 7. Click textbox, type prompt, press Enter                  │
+│    agent-browser click "@e89"                               │
+│    agent-browser keyboard type "your task"                   │
+│    agent-browser press Enter                                │
+├─────────────────────────────────────────────────────────────┤
+│ 8. Monitor and extract results                              │
+│    Poll for "任务耗时" → Click 复制全部 → Screenshot         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Finding the Folder Selector Elements
+
+```bash
+# The folder selector is hidden inside the workspace dropdown menu
+# To reveal it:
+1. Find the workspace button with your current workspace name
+2. Click the small dropdown arrow next to it (usually @e35 or similar)
+3. The menu appears with "选择文件夹" at the bottom
+
+# Alternative: Look for the dropdown in snapshot
+agent-browser snapshot -i | Select-String "选择文件夹"
+# Output: menuitem "选择文件夹" [ref=e2]
+```
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| "选择文件夹" not visible | Workspace dropdown not opened | Click the dropdown arrow first |
+| File dialog not responding | Native OS component | Use mouse/keyboard directly |
+| Workspace not switching | Folder already exists | Select existing workspace instead |
+| Input textbox not found | Panel navigation issue | Click "新建任务" @e4 first |
+
+### Task: Switch Between Workspaces
+
+If the folder is already open as a workspace:
+
+```bash
+# Click the workspace name in the dropdown menu
+agent-browser snapshot -i | Select-String "menuitem.*workspace-name"
+
+# Or click workspace button in sidebar
+agent-browser click "@WORKSPACE_NAME"
+```
+
+## Task: Install Skill from Marketplace
 
 ```bash
 # Open Skills panel
