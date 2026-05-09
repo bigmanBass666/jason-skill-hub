@@ -30,22 +30,25 @@ Start-Sleep -Seconds 5
 # Verify port
 netstat -ano | findstr :9222
 
-# Get WebSocket URL (REQUIRED - not just port 9222)
+# Get WebSocket URL (CRITICAL for Electron apps)
 $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 
-# Connect
+# Connect via WebSocket URL
 agent-browser connect $wsUrl
 
-# Verify
-agent-browser snapshot -i
+# Set dark mode (TRAE SOLO uses dark theme)
+agent-browser --color-scheme dark snapshot -i
 ```
 
-**Critical**: Always use full WebSocket URL, not `connect 9222`. TRAE SOLO CN uses Electron's browser-level CDP target which doesn't support tab creation.
+**Critical**: 
+- Always use full WebSocket URL from `/json/version`, not just port 9222
+- TRAE SOLO CN uses Electron's browser-level CDP target which doesn't support tab creation
+- Always set `--color-scheme dark` to match the app's dark theme
 
 ## Core Workflow
 
 ```
-1. Initialize    Launch app, connect CDP, verify session
+1. Initialize    Launch app, connect CDP, set color scheme, verify session
 2. Navigate      Switch workspace or panel
 3. Interact      Send prompts, manage tasks, install skills
 4. Monitor       Poll for task completion, capture results
@@ -59,7 +62,7 @@ agent-browser snapshot -i
 $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 agent-browser connect $wsUrl
 agent-browser wait 2000
-agent-browser snapshot -i
+agent-browser --color-scheme dark snapshot -i
 ```
 
 ### 2. Navigate
@@ -88,11 +91,15 @@ agent-browser click @e4
 # 2. Find input (textbox near bottom of center panel)
 agent-browser snapshot -i
 
-# 3. Type prompt
+# 3. Type prompt (use keyboard type for Electron apps if fill doesn't work)
 agent-browser fill @INPUT_REF "你的指令内容"
+# OR if fill doesn't work:
+# agent-browser click @INPUT_REF
+# agent-browser keyboard type "你的指令内容"
 
-# 4. Click send
+# 4. Click send or press Enter
 agent-browser click @SEND_REF
+# OR: agent-browser press Enter
 
 # 5. Wait for response (see Monitoring section)
 ```
@@ -139,6 +146,7 @@ agent-browser get text @DURATION_REF
 
 ```bash
 # Full workflow
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 agent-browser connect $wsUrl
 
 # Switch to target workspace (optional)
@@ -177,7 +185,7 @@ agent-browser snapshot -i
 agent-browser click @MODEL_SELECTOR_REF
 
 # Select from dropdown
-agent-browser select_option @MODEL_DROPDOWN_REF ["GLM-5.1", "Claude", "GPT-4"]
+agent-browser select @MODEL_DROPDOWN_REF "GLM-5.1"
 ```
 
 ### Task: Install Skill from Marketplace
@@ -208,6 +216,9 @@ $prompts = @(
     "重构这个函数"
 )
 
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
+agent-browser connect $wsUrl
+
 foreach ($prompt in $prompts) {
     # Create new task
     agent-browser click @e4
@@ -235,6 +246,25 @@ foreach ($prompt in $prompts) {
         Write-Host "Completed: $prompt"
     }
 }
+```
+
+## Tab Management
+
+TRAE SOLO CN may have multiple windows or webviews. Use tab commands to manage them:
+
+```bash
+# List all available targets
+agent-browser tab
+
+# Example output:
+#   0: [page]    TRAE SOLO CN - Main Window
+#   1: [webview] Embedded Content
+
+# Switch to a specific tab
+agent-browser tab 1
+
+# Switch by URL pattern
+agent-browser tab --url "*settings*"
 ```
 
 ## Element Reference Strategy
@@ -275,6 +305,25 @@ Some elements can be found by partial text matching:
 - Task results: Look for "任务耗时" or "复制全部"
 - Input area: Usually the only `textbox` in the center panel bottom area
 
+## Input Methods for Electron Apps
+
+If `fill` doesn't work (common in Electron apps), try these alternatives:
+
+```bash
+# Method 1: Click then keyboard type
+agent-browser click @INPUT_REF
+agent-browser keyboard type "your text"
+
+# Method 2: Use inserttext (bypasses key events)
+agent-browser click @INPUT_REF
+agent-browser keyboard inserttext "your text"
+
+# Method 3: Press keys individually
+agent-browser press Control+a  # Select all
+agent-browser press Delete     # Clear
+agent-browser keyboard type "new text"
+```
+
 ## Application Architecture
 
 ```
@@ -311,11 +360,13 @@ Some elements can be found by partial text matching:
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
-| "CDP error: Target.createTarget: Not supported" | Used `connect 9222` instead of WebSocket URL | Use `connect $wsUrl` with full URL |
+| "CDP error: Target.createTarget: Not supported" | Used `connect 9222` instead of WebSocket URL | Use `connect $wsUrl` with full URL from `/json/version` |
 | "Connection refused" | App not launched with debug flag | Kill and relaunch with `--remote-debugging-port` |
 | "Auto-launch failed" | agent-browser tried to launch Chrome | Use `connect $wsUrl` not `--cdp` |
 | Port 9222 not listening | App running without debug flag | Kill process, relaunch with flag |
 | Multiple CDP targets | TRAE SOLO opened multiple windows | Use `agent-browser tab` to list and switch |
+| Input not working | Electron custom input component | Use `keyboard type` instead of `fill` |
+| Wrong color scheme | Default is light | Use `--color-scheme dark` |
 
 ## Important Warnings
 
@@ -325,6 +376,8 @@ Some elements can be found by partial text matching:
 4. **Don't click too fast** — add `wait 1000` between actions for UI to settle
 5. **App must be relaunched with `--remote-debugging-port`** after restart or update
 6. **Multiple windows possible** — use `agent-browser tab` to manage
+7. **Use `--color-scheme dark`** — TRAE SOLO uses dark theme
+8. **Try `keyboard type` if `fill` fails** — common in Electron apps
 
 ## Application Info
 
@@ -334,10 +387,12 @@ Some elements can be found by partial text matching:
 | Framework | Electron 39.2.7 |
 | Engine | Chromium 142.0.7444.235 |
 | Install Path | `D:\apps\TRAE SOLO CN\` |
+| Executable | `TRAE SOLO CN.exe` |
 | Debug Port | 9222 (configurable) |
 | CDP Endpoint | `http://127.0.0.1:9222/json/version` |
 | Language | Chinese (Simplified) |
 | Default Model | GLM-5.1 |
+| Color Scheme | Dark |
 
 ## References
 
