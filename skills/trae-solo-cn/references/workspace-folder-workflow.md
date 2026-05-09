@@ -10,269 +10,209 @@ Dynamic workspace selection patterns for TRAE SOLO CN. **Do not hardcode workspa
 
 ## Contents
 
+- [Understanding the Flow](#understanding-the-flow)
+- [Scenario 1: New Folder (Not in Solo)](#scenario-1-new-folder-not-in-solo)
+- [Scenario 2: Existing Workspace](#scenario-2-existing-workspace)
+- [Scenario 3: Check Current Workspace](#scenario-3-check-current-workspace)
 - [Discovering Workspaces](#discovering-workspaces)
-- [Selecting a Workspace](#selecting-a-workspace)
-- [Understanding Workspace Structure](#understanding-workspace-structure)
-- [Opening Local Folders](#opening-local-folders)
 
 ---
 
-## Discovering Workspaces
+## Understanding the Flow
 
-### Step 1: Take Snapshot
+### The Three Scenarios
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ User says: "Use folder X for AI chat"                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Is folder X already a workspace in Solo?                      │
+│         ↓                                                       │
+│    ┌─────────┐    ┌─────────┐                                  │
+│    │   YES   │    │   NO    │                                  │
+│    └────┬────┘    └────┬────┘                                  │
+│         ↓              ↓                                        │
+│  Click "New task"   Click "选择文件夹"                          │
+│  inside workspace   (opens native dialog)                      │
+│         ↓              ↓                                        │
+│  Direct to chat     Auto-creates workspace                     │
+│                     ↓                                           │
+│                     Already in chat                            │
+│                     (NO need to click "新建任务")               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Critical Insight**: 
+- **选择文件夹** = 新建工作区 + 新建对话（一步完成）
+- **Existing workspace** = 点击其中的 "New task" 进入对话
+- **不要重复点击 "新建任务"** — 选择文件夹后已经在对话界面了
+
+---
+
+## Scenario 1: New Folder (Not in Solo)
+
+**When**: User specifies a local folder not yet in Solo's workspace list
+
+### Flow
 
 ```bash
+# Step 1: Start Solo (clean launch)
+# ... (see SKILL.md for clean launch)
+
+# Step 2: Open folder selector
 agent-browser snapshot -i
-```
-
-### Step 2: Identify Workspace Pattern
-
-Workspaces appear as buttons with this pattern:
-
-```
-button "WORKSPACE_NAME New task task1 task2..." [ref=e18]
-    - generic "WORKSPACE_NAME" [ref=e26]
-    - button [ref=e27]           # Dropdown arrow
-    - button "New task" [ref=e28] # Click to enter workspace
-    - generic "Task 1" [ref=e29] # Existing tasks
-    - generic "Task 2" [ref=e30]
-```
-
-### Step 3: Find Your Target Workspace
-
-```bash
-# Search for a specific workspace name
-agent-browser snapshot -i | Select-String "TARGET_WORKSPACE_NAME"
-
-# Get all workspace buttons
-agent-browser snapshot -i | Select-String "New task task"
-```
-
----
-
-## Selecting a Workspace
-
-### Method: Click "New task" Inside Workspace
-
-**The key insight**: To enter a workspace, click its **"New task" button** (not the workspace name).
-
-```bash
-# 1. Find the workspace button
-agent-browser snapshot -i | Select-String "MyTargetWorkspace"
-
-# Example output:
-#   button "MyTargetWorkspace New task Task1 Task2" [ref=e18]
-
-# 2. Within that button, find "New task"
-# It will be: button "New task" [ref=e28]
-
-# 3. Click "New task" to enter the workspace
-agent-browser find text "New task" click
-```
-
-### Why This Works
-
-Clicking "New task" inside a workspace section:
-1. Expands/enters that workspace
-2. Shows the chat interface for that workspace
-3. Sets it as the active workspace
-
-### Alternative: Click Workspace Button Directly
-
-```bash
-# If you know the ref from current snapshot:
-agent-browser click "@e18"  # The workspace button itself
-agent-browser wait 500
-```
-
----
-
-## Understanding Workspace Structure
-
-### Hierarchy
-
-```
-Sidebar
-├── Navigation
-│   ├── 新建任务 (New Task panel)
-│   ├── 技能 (Skills panel)
-│   └── 自动化 (Automation panel)
-│
-└── Workspaces (expandable buttons)
-    └── button "WORKSPACE_NAME New task task1..." [ref=eXX]
-        ├── generic "WORKSPACE_NAME" [ref=eYY]      # Name label
-        ├── button [ref=eZZ]                        # Dropdown arrow
-        ├── button "New task" [ref=eWW]             # Enter workspace
-        └── generic "Task Name" [ref=eVV]          # Existing tasks
-```
-
-### Workspace Button Identification
-
-Each workspace button contains:
-- **Workspace name** at the start
-- **"New task"** as first child item
-- **List of existing tasks** below
-
-Example for workspace "MyProject":
-```
-button "MyProject New task API Development Bug Fixes..." [ref=e18]
-    - generic "MyProject" [ref=e26]
-    - button [ref=e27]              # Dropdown
-    - button "New task" [ref=e28]
-    - generic "API Development" [ref=e29]
-    - generic "Bug Fixes" [ref=e30]
-```
-
----
-
-## Opening Local Folders (选择文件夹)
-
-### The Complete Flow
-
-**Important**: After selecting a folder, Solo automatically creates a workspace and opens the **New Task interface** — no need to click "新建任务" again!
-
-```bash
-# 1. Open the dropdown menu
-agent-browser click "@e27"  # Dropdown arrow next to any workspace
+# Find dropdown arrow next to any workspace
+agent-browser click "@e27"  # dropdown arrow
 agent-browser wait 500
 
-# 2. Click "选择文件夹"
+# Step 3: Click "选择文件夹"
 agent-browser find text "选择文件夹" click
+# ⚠️ NATIVE FILE DIALOG OPENS — manual step
 
-# [MANUAL STEP] User selects folder in native OS dialog
+# Step 4: [USER] Selects folder in OS dialog
 
-# 3. Wait for Solo to create workspace and open New Task interface
+# Step 5: Verify new workspace created
 agent-browser wait 3000
+agent-browser snapshot -i | Select-String "NEW_WORKSPACE_NAME"
 
-# 4. Verify we're in New Task interface
-agent-browser snapshot -i | Select-String "应用开发|项目理解|游戏创意|工具脚本"
-# Should see the 4 template cards
-
-# 5. Directly start chatting (no need to click "新建任务")
+# Step 6: ✅ ALREADY IN CHAT INTERFACE
+# NO need to click "新建任务"!
+# Directly start chatting:
 agent-browser find role textbox click
 agent-browser keyboard type "分析这个项目的代码"
 agent-browser press Enter
 ```
 
-### What Happens After Selection
+### Why No "新建任务"?
 
-After user selects a folder:
-1. ✅ Solo creates new workspace named after the folder
-2. ✅ Automatically opens "新建任务" interface
-3. ✅ Shows 4 template cards (应用开发, 项目理解, 游戏创意, 工具脚本)
-4. ✅ Ready for immediate chat input
+Because **选择文件夹** already:
+1. ✅ Creates the workspace
+2. ✅ Opens the chat interface
+3. ✅ Sets it as active
 
-**No additional navigation needed!**
+Clicking "新建任务" again would be redundant.
 
-### For Existing Workspaces
+---
 
-If folder is already a workspace:
+## Scenario 2: Existing Workspace
+
+**When**: User says "Use workspace XYZ" and XYZ is in the list
+
+### Flow
 
 ```bash
-# 1. Find the workspace
-agent-browser snapshot -i | Select-String "MyExistingWorkspace"
+# Step 1: Discover workspaces
+agent-browser snapshot -i
 
-# 2. Click "New task" inside that workspace
+# Step 2: Find target workspace
+agent-browser snapshot -i | Select-String "XYZ"
+# Output: button "XYZ New task Task1 Task2..." [ref=e18]
+
+# Step 3: Click "New task" INSIDE that workspace
+# This enters the workspace and opens chat
 agent-browser find text "New task" click
 
-# 3. Now in chat interface for that workspace
+# Step 4: ✅ Now in chat interface
 agent-browser find role textbox click
 agent-browser keyboard type "你的问题"
+agent-browser press Enter
+```
+
+### Key Difference
+
+| Action | Result |
+|--------|--------|
+| 选择文件夹 | Creates workspace + Opens chat (one step) |
+| Click "New task" in workspace | Opens chat for existing workspace |
+
+---
+
+## Scenario 3: Check Current Workspace
+
+**When**: User says "Continue working on current project"
+
+### Flow
+
+```bash
+# Step 1: Check current workspace (bottom bar)
+agent-browser snapshot -i | Select-String "·"
+# Output: generic "CurrentWorkspaceName · 16:30" [ref=e13]
+
+# Step 2: Verify it's the right one
+# If yes → continue
+# If no → switch (Scenario 2)
+
+# Step 3: Continue chatting
+agent-browser find role textbox click
+agent-browser keyboard type "继续刚才的话题..."
+agent-browser press Enter
+```
+
+---
+
+## Discovering Workspaces
+
+### List All Available Workspaces
+
+```bash
+# Get all workspace buttons
+agent-browser snapshot -i | Select-String "New task task"
+
+# Extract workspace names
+agent-browser snapshot -i | ForEach-Object {
+    if ($_ -match '^button "(.+?) New task') {
+        $matches[1]
+    }
+}
+```
+
+### Check if Folder is Already a Workspace
+
+```bash
+# Search for folder name
+$folderName = "MyWebApp"
+agent-browser snapshot -i | Select-String $folderName
+
+# If found → Scenario 2 (existing)
+# If not found → Scenario 1 (new folder)
 ```
 
 ---
 
 ## Quick Reference
 
-### Dynamic Discovery Commands
+### Decision Tree
 
-```bash
-# Find ALL workspaces
-agent-browser snapshot -i | Select-String "New task task"
-
-# Find specific workspace
-agent-browser snapshot -i | Select-String "WORKSPACE_NAME"
-
-# Enter workspace (click New task inside it)
-agent-browser find text "New task" click
-
-# Get current workspace name (check bottom bar)
-agent-browser snapshot -i | Select-String "·"
-# Output: generic "WorkspaceName · timestamp" [ref=e13]
+```
+User: "Use [folder/workspace] X"
+         ↓
+    Is X in workspace list?
+         ↓
+    ┌────────┴────────┐
+    YES              NO
+    ↓                 ↓
+Click "New task"   选择文件夹
+in workspace       (native dialog)
+    ↓                 ↓
+Chat interface    Chat interface
+    ↓                 ↓
+Start typing      Start typing
 ```
 
-### Pattern Matching
+### Common Mistakes
 
-```bash
-# Match workspace by partial name
-agent-browser snapshot -i | Select-String "partial"
-
-# Match exact workspace name
-agent-browser find text "ExactName" click --exact
-```
-
----
-
-## Common Patterns
-
-### Pattern: User Says "Use workspace XYZ"
-
-```bash
-# 1. User specifies target workspace
-# 2. Find it in snapshot
-agent-browser snapshot -i | Select-String "XYZ"
-
-# 3. Click "New task" inside that workspace
-agent-browser find text "New task" click
-
-# 4. Now you're in workspace XYZ
-```
-
-### Pattern: Switch Between Workspaces
-
-```bash
-# 1. Take snapshot to see all workspaces
-agent-browser snapshot -i
-
-# 2. Click "New task" inside target workspace
-agent-browser find text "New task" click
-
-# 3. Verify by checking bottom bar
-agent-browser snapshot -i | Select-String "·"
-# Should show: generic "TARGET_WORKSPACE · time"
-```
-
-### Pattern: List All Available Workspaces
-
-```bash
-# Get all workspace-containing buttons
-agent-browser snapshot -i | Select-String "New task task"
-
-# Extract just the names
-agent-browser snapshot -i | Select-String "New task" | ForEach-Object {
-    if ($_ -match "^button \"(.+?) New task") {
-        $matches[1]
-    }
-}
-```
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| Workspace not found | Check exact spelling in snapshot |
-| "New task" clicks wrong workspace | Use `find text --exact` or ref from snapshot |
-| Dropdown not showing | Click the arrow button first |
-| "选择文件夹" not visible | Open dropdown menu first |
-| Wrong workspace active | Click "New task" inside target workspace |
+| Mistake | Why Wrong | Correct |
+|---------|-----------|---------|
+| 选择文件夹后点 "新建任务" | 已经在对话界面了 | 直接开始打字 |
+| 点击工作区名称 | 不会进入对话 | 点击其中的 "New task" |
+| 不检查当前工作区 | 可能在错误项目工作 | 先 `snapshot -i` 检查底部栏 |
 
 ---
 
 ## Key Rules
 
-1. **Never hardcode workspace names** — always `snapshot -i` first
-2. **Click "New task" inside workspace** — not the workspace name itself
-3. **Refs change every session** — what worked last time may not work now
-4. **Verify after clicking** — check bottom bar for current workspace
+1. **选择文件夹后 = 已经在对话界面** — 不要再点 "新建任务"
+2. **Existing workspace = 点击其中的 "New task"** — 不是工作区名称
+3. **Always check current workspace first** — 底部栏显示当前项目
+4. **Never hardcode** — 动态发现工作区列表
