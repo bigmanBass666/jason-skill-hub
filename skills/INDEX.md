@@ -78,6 +78,15 @@
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/SKILL.md
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/` File types: .txt(1).
 
+### frontend-skill
+- **Description**: Use when the task asks for a visually strong landing page, website, app, prototype, demo, or game UI. This skill enforces restrained composition, image-led hierarchy, cohesive content structure, and tasteful motion while avoiding generic cards, weak branding, and UI clutter.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-skill/SKILL.md
+- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-skill/` Directories: agents/. File types: .yaml(1), .txt(1).
+
+### gh-cli
+- **Description**: GitHub CLI (gh) comprehensive reference for repositories, issues, pull requests, Actions, projects, releases, gists, codespaces, organizations, extensions, and all GitHub operations from the command line.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/gh-cli/SKILL.md
+
 ### git-commit
 - **Description**: Execute git commit with conventional commit message analysis, intelligent staging, and message generation. Use when user asks to commit changes, create a git commit, or mentions "/commit". Supports: (1) Auto-detecting type and scope from changes, (2) Generating conventional commit messages from diff, (3) Interactive commit with optional type/scope/description overrides, (4) Intelligent file staging for logical grouping
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/git-commit/SKILL.md
@@ -117,7 +126,7 @@
 ### officecli
 - **Description**: Create, analyze, proofread, and modify Office documents (.docx, .xlsx, .pptx) using the officecli CLI tool. Use when the user wants to create, inspect, check formatting, find issues, add charts, or modify Office documents.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/SKILL.md
-- **Has 669 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/` Directories: .github/, examples/, schemas/, skills/, src/, styles/. File types: .cs(194), .md(152), .json(136), .sh(79), .xml(79), .py(19), .js(3), .yml(1), .license(1), .glb(1), .ps1(1), .slnx(1), .css(1), .csproj(1).
+- **Has 669 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/` Directories: .github/, examples/, schemas/, skills/, src/, styles/. File types: .cs(194), .md(152), .json(136), .sh(79), .xml(79), .py(19), .js(3), .yml(1), .glb(1), .ps1(1), .license(1), .slnx(1), .csproj(1), .css(1).
 
 ### pdf
 - **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
