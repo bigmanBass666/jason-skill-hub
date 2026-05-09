@@ -1,211 +1,231 @@
 # Workspace & Folder Management
 
-Complete guide for managing workspaces and selecting local folders in TRAE SOLO CN.
+Dynamic workspace selection patterns for TRAE SOLO CN. **Do not hardcode workspace names** — always discover from snapshot.
 
-## ⚠️ Official Rules
+## ⚠️ Key Principle
 
-- **Refs are ephemeral** — Always `snapshot -i` before using refs
-- **Use `find` commands** — Semantic positioning is more reliable than hardcoded refs
-- **Use `wait --text`** — Instead of bare waits for monitoring
+**All workspace names are DYNAMIC** — they come from the user's Solo instance. Always discover via `snapshot -i`.
+
+---
 
 ## Contents
 
-- [Opening a Local Folder](#opening-a-local-folder)
-- [Switching Workspaces](#switching-workspaces)
+- [Discovering Workspaces](#discovering-workspaces)
+- [Selecting a Workspace](#selecting-a-workspace)
 - [Understanding Workspace Structure](#understanding-workspace-structure)
-- [Quick Reference](#quick-reference)
+- [Opening Local Folders](#opening-local-folders)
 
 ---
 
-## Opening a Local Folder
+## Discovering Workspaces
 
-### The Complete Workflow (Official Pattern)
-
-**Step 1: Connect**
-```powershell
-$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
-agent-browser connect $wsUrl
-agent-browser --color-scheme dark wait 2000
-```
-
-**Step 2: Open Folder Selector**
-
-⚠️ **The folder selector is in a dropdown menu:**
+### Step 1: Take Snapshot
 
 ```bash
-# 1. Click the dropdown arrow (use find to locate it)
 agent-browser snapshot -i
-# Look for a button with no text near the workspace name
-
-# 2. Alternative: Use find text if you can see "选择文件夹"
-agent-browser find text "选择文件夹" click
-
-# 3. If that doesn't work, open the dropdown first
-agent-browser find text "jerry_ZhuanShengBen" click
-agent-browser wait 500
-# Then look for 选择文件夹 in the menu
 ```
 
-**Step 3: Handle Native File Dialog**
+### Step 2: Identify Workspace Pattern
 
-⚠️ **This is a native OS dialog — agent-browser cannot automate this:**
+Workspaces appear as buttons with this pattern:
 
 ```
-Manual action required:
-1. Use mouse/keyboard to navigate to your folder
-2. Click "选择文件夹" or press Enter
-3. TRAE SOLO creates a workspace for that folder
+button "WORKSPACE_NAME New task task1 task2..." [ref=e18]
+    - generic "WORKSPACE_NAME" [ref=e26]
+    - button [ref=e27]           # Dropdown arrow
+    - button "New task" [ref=e28] # Click to enter workspace
+    - generic "Task 1" [ref=e29] # Existing tasks
+    - generic "Task 2" [ref=e30]
 ```
 
-**Step 4: Verify Workspace Loaded**
+### Step 3: Find Your Target Workspace
+
 ```bash
-agent-browser wait 3000
-agent-browser snapshot -i
-# Look for your folder name in the workspace list
+# Search for a specific workspace name
+agent-browser snapshot -i | Select-String "TARGET_WORKSPACE_NAME"
+
+# Get all workspace buttons
+agent-browser snapshot -i | Select-String "New task task"
 ```
 
 ---
 
-## Switching Workspaces
+## Selecting a Workspace
 
-### Official Pattern: Use find text
+### Method: Click "New task" Inside Workspace
+
+**The key insight**: To enter a workspace, click its **"New task" button** (not the workspace name).
 
 ```bash
-# Find and click workspace by name
-agent-browser find text "Android" click
-agent-browser wait 1000
+# 1. Find the workspace button
+agent-browser snapshot -i | Select-String "MyTargetWorkspace"
 
-# Or use the full name
-agent-browser find text "jerry_ZhuanShengBen" click
-agent-browser wait 1000
+# Example output:
+#   button "MyTargetWorkspace New task Task1 Task2" [ref=e18]
+
+# 2. Within that button, find "New task"
+# It will be: button "New task" [ref=e28]
+
+# 3. Click "New task" to enter the workspace
+agent-browser find text "New task" click
 ```
 
-### Alternative: Dropdown Menu
+### Why This Works
+
+Clicking "New task" inside a workspace section:
+1. Expands/enters that workspace
+2. Shows the chat interface for that workspace
+3. Sets it as the active workspace
+
+### Alternative: Click Workspace Button Directly
 
 ```bash
-# Open dropdown (find the arrow button)
-agent-browser snapshot -i
-# Look for: button [ref=e35] (no text)
-
-# Click it
-agent-browser click "@e35"
+# If you know the ref from current snapshot:
+agent-browser click "@e18"  # The workspace button itself
 agent-browser wait 500
-
-# Find workspace in dropdown
-agent-browser find text "Android" click
 ```
 
 ---
 
 ## Understanding Workspace Structure
 
-### Sidebar Structure
+### Hierarchy
 
 ```
-┌─────────────────────────────────────────┐
-│ 新建任务  (clickable)                   │
-│ 技能     (clickable)                   │
-│ 自动化    (clickable)                   │
-├─────────────────────────────────────────┤
-│ ▼ jerry_ZhuanShengBen    [dropdown]    │
-│   ├─ New task                         │
-│   ├─ 电商商品价格采集对比工具           │
-│   ├─ Test Folder Path                  │
-│   └─ ...                              │
-│ ▼ Android                             │
-│ ▼ trae-solo-unlock                   │
-│ ▼ 默认                               │
-└─────────────────────────────────────────┘
+Sidebar
+├── Navigation
+│   ├── 新建任务 (New Task panel)
+│   ├── 技能 (Skills panel)
+│   └── 自动化 (Automation panel)
+│
+└── Workspaces (expandable buttons)
+    └── button "WORKSPACE_NAME New task task1..." [ref=eXX]
+        ├── generic "WORKSPACE_NAME" [ref=eYY]      # Name label
+        ├── button [ref=eZZ]                        # Dropdown arrow
+        ├── button "New task" [ref=eWW]             # Enter workspace
+        └── generic "Task Name" [ref=eVV]          # Existing tasks
 ```
 
-### Available Workspaces
+### Workspace Button Identification
 
-| Workspace | How to Select |
-|-----------|---------------|
-| jerry_ZhuanShengBen | `find text "jerry_ZhuanShengBen" click` |
-| Android | `find text "Android" click` |
-| trae-solo-unlock | `find text "trae-solo-unlock" click` |
-| 默认 | `find text "默认" click` |
+Each workspace button contains:
+- **Workspace name** at the start
+- **"New task"** as first child item
+- **List of existing tasks** below
+
+Example for workspace "MyProject":
+```
+button "MyProject New task API Development Bug Fixes..." [ref=e18]
+    - generic "MyProject" [ref=e26]
+    - button [ref=e27]              # Dropdown
+    - button "New task" [ref=e28]
+    - generic "API Development" [ref=e29]
+    - generic "Bug Fixes" [ref=e30]
+```
+
+---
+
+## Opening Local Folders
+
+### The "选择文件夹" Flow
+
+To add a NEW local folder as a workspace:
+
+```bash
+# 1. Find the dropdown arrow next to any workspace
+agent-browser snapshot -i | Select-String "button \[ref=e27\]"
+
+# 2. Click the dropdown arrow
+agent-browser click "@e27"  # or find the specific one
+agent-browser wait 500
+
+# 3. Look for "选择文件夹" in the dropdown menu
+agent-browser snapshot -i | Select-String "选择文件夹"
+
+# 4. Click "选择文件夹"
+agent-browser find text "选择文件夹" click
+```
+
+**Note**: This opens the native OS file dialog — manual step required.
+
+### For Existing Local Folders
+
+If the folder is already open in Solo, it will appear in the workspace list. Just select it using the **"New task" method** above.
 
 ---
 
 ## Quick Reference
 
-### Complete Folder → Chat Flow (Copy-Paste Ready)
-
-```powershell
-# === FOLDER → AI CHAT (Official Pattern) ===
-
-# 1. Connect
-$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
-agent-browser connect $wsUrl
-agent-browser wait 2000
-
-# 2. Open folder selector
-agent-browser find text "选择文件夹" click
-# [MANUAL] Select folder in OS dialog
-
-# 3. Wait and navigate
-agent-browser wait 3000
-agent-browser find text "新建任务" click
-agent-browser wait 500
-
-# 4. Start chatting
-agent-browser find textbox click
-agent-browser keyboard type "你的任务描述"
-agent-browser press Enter
-
-# 5. Monitor completion
-agent-browser wait --text "任务耗时"
-
-# 6. Get results
-agent-browser find text "复制全部" click
-agent-browser screenshot --annotate result.png
-```
-
-### Essential find Commands
+### Dynamic Discovery Commands
 
 ```bash
-# Navigation
-agent-browser find text "新建任务" click    # New Task panel
-agent-browser find text "技能" click       # Skills panel
-agent-browser find text "自动化" click     # Automation panel
+# Find ALL workspaces
+agent-browser snapshot -i | Select-String "New task task"
 
-# Workspace
-agent-browser find text "workspace_name" click  # Switch workspace
+# Find specific workspace
+agent-browser snapshot -i | Select-String "WORKSPACE_NAME"
 
-# Actions
-agent-browser find text "选择文件夹" click     # Open folder selector
-agent-browser find text "复制全部" click        # Copy results
-agent-browser find text "重试" click           # Retry task
+# Enter workspace (click New task inside it)
+agent-browser find text "New task" click
 
-# Monitoring
-agent-browser find text "任务耗时" get text     # Get duration
-agent-browser find text "正在执行命令" click    # Check running
+# Get current workspace name (check bottom bar)
+agent-browser snapshot -i | Select-String "·"
+# Output: generic "WorkspaceName · timestamp" [ref=e13]
 ```
 
-### Snapshot Before Interacting
+### Pattern Matching
 
 ```bash
-# ALWAYS do this before using refs:
+# Match workspace by partial name
+agent-browser snapshot -i | Select-String "partial"
+
+# Match exact workspace name
+agent-browser find text "ExactName" click --exact
+```
+
+---
+
+## Common Patterns
+
+### Pattern: User Says "Use workspace XYZ"
+
+```bash
+# 1. User specifies target workspace
+# 2. Find it in snapshot
+agent-browser snapshot -i | Select-String "XYZ"
+
+# 3. Click "New task" inside that workspace
+agent-browser find text "New task" click
+
+# 4. Now you're in workspace XYZ
+```
+
+### Pattern: Switch Between Workspaces
+
+```bash
+# 1. Take snapshot to see all workspaces
 agent-browser snapshot -i
-# Now use refs from THIS snapshot only
 
-# Example: Find textbox
-agent-browser snapshot -i
-# Output shows: textbox [ref=e89]
-agent-browser click "@e89"  # Use ref from current snapshot!
+# 2. Click "New task" inside target workspace
+agent-browser find text "New task" click
+
+# 3. Verify by checking bottom bar
+agent-browser snapshot -i | Select-String "·"
+# Should show: generic "TARGET_WORKSPACE · time"
 ```
 
-### Better Waiting
+### Pattern: List All Available Workspaces
 
 ```bash
-# ✅ CORRECT: Wait for content
-agent-browser wait --text "任务耗时"         # Wait for completion
-agent-browser wait --text "正在执行命令"     # Wait for running
+# Get all workspace-containing buttons
+agent-browser snapshot -i | Select-String "New task task"
 
-# ❌ AVOID: Bare waits
-agent-browser wait 5000  # Slow and unreliable
+# Extract just the names
+agent-browser snapshot -i | Select-String "New task" | ForEach-Object {
+    if ($_ -match "^button \"(.+?) New task") {
+        $matches[1]
+    }
+}
 ```
 
 ---
@@ -214,8 +234,17 @@ agent-browser wait 5000  # Slow and unreliable
 
 | Problem | Solution |
 |---------|----------|
-| "选择文件夹" not found | Open dropdown first, then find |
-| Workspace not switching | Use `find text "name"` not hardcoded ref |
-| Element not found | Re-snapshot — refs are stale |
-| Task never completes | Use `wait --text "任务耗时"` |
-| Input doesn't work | Use `keyboard type` not `fill` |
+| Workspace not found | Check exact spelling in snapshot |
+| "New task" clicks wrong workspace | Use `find text --exact` or ref from snapshot |
+| Dropdown not showing | Click the arrow button first |
+| "选择文件夹" not visible | Open dropdown menu first |
+| Wrong workspace active | Click "New task" inside target workspace |
+
+---
+
+## Key Rules
+
+1. **Never hardcode workspace names** — always `snapshot -i` first
+2. **Click "New task" inside workspace** — not the workspace name itself
+3. **Refs change every session** — what worked last time may not work now
+4. **Verify after clicking** — check bottom bar for current workspace

@@ -1,495 +1,384 @@
-# TRAE SOLO CN Common Tasks & Patterns
+# TRAE SOLO CN Task Patterns
 
-Reference guide for common automation patterns and task recipes when interacting with TRAE SOLO CN.
+Common automation task patterns for TRAE SOLO CN. **All patterns use dynamic discovery** — no hardcoded refs or names.
+
+## ⚠️ Key Principle
+
+**All element refs change every session. All workspace/task names come from the user's instance. Always use `snapshot -i` to discover current state.**
+
+---
 
 ## Contents
 
-- [Task Patterns](#task-patterns)
-- [Monitoring Patterns](#monitoring-patterns)
+- [Sending Messages](#sending-messages)
+- [Monitoring Tasks](#monitoring-tasks)
+- [Extracting Results](#extracting-results)
+- [Task Templates](#task-templates)
 - [Error Handling](#error-handling)
-- [Element Finding Strategies](#element-finding-strategies)
-- [Batch Operations](#batch-operations)
-- [State Detection](#state-detection)
 
 ---
 
-## Task Patterns
+## Sending Messages
 
-### Pattern: Send Single Prompt and Wait
+### Standard Pattern
 
-**Goal:** Send one message to AI and capture the complete response.
+```bash
+# 1. Navigate to chat area (click New task if needed)
+agent-browser find text "新建任务" click
+agent-browser wait 500
 
-```powershell
-function Send-SoloPrompt {
-    param([string]$Prompt, [int]$TimeoutSeconds = 120)
-    
-    # Navigate to New Task
-    agent-browser click @e4
-    agent-browser wait 1000
-    
-    # Send prompt
-    agent-browser fill @INPUT_REF $Prompt
-    agent-browser click @SEND_REF
-    
-    # Monitor completion
-    $startTime = Get-Date
-    $completed = $false
-    
-    while (-not $completed) {
-        agent-browser wait 5000
-        $snapshot = agent-browser snapshot -i
-        
-        # Check completion indicators
-        if ($snapshot -match "任务耗时|复制全部") {
-            $completed = $true
-            Write-Host "Task completed!"
-        }
-        
-        # Check timeout
-        if ((Get-Date) - $startTime).TotalSeconds -gt $TimeoutSeconds) {
-            Write-Warning "Timeout waiting for task completion"
-            return $null
-        }
-        
-        # Check for failure
-        if ($snapshot -match "重试") {
-            Write-Warning "Task failed - retry button detected"
-            return $null
-        }
-    }
-    
-    # Extract result
-    agent-browser click @COPY_ALL_REF
-    agent-browser screenshot task-result.png
-    
-    return @{
-        Success = $true
-        Screenshot = "task-result.png"
-    }
-}
+# 2. Find and focus the textbox
+agent-browser find role textbox click
+
+# 3. Type message (NOT fill - use keyboard type)
+agent-browser keyboard type "你的问题或任务描述"
+
+# 4. Send
+agent-browser press Enter
+```
+
+### Multi-Part Message
+
+```bash
+# Type in parts if message is long
+agent-browser find role textbox click
+agent-browser keyboard type "第一部分内容"
+agent-browser press Shift+Enter  # Newline
+
+# Continue typing
+agent-browser keyboard type "第二部分内容"
+agent-browser press Enter
+```
+
+### With Context (Multi-turn)
+
+```bash
+# After first response, continue in same thread
+agent-browser find role textbox click
+agent-browser keyboard type "针对你刚才的回答，有一个跟进问题..."
+agent-browser press Enter
 ```
 
 ---
 
-### Pattern: Multi-Turn Conversation
+## Monitoring Tasks
 
-**Goal:** Have a back-and-forth conversation with context preserved.
+### Poll Until Completion
 
-```powershell
-# Start conversation
-agent-browser click @e4
-agent-browser wait 1000
-
-# First message
-agent-browser fill @INPUT_REF "解释什么是依赖注入"
-agent-browser click @SEND_REF
-
-# Wait for first response
-Wait-SoloTaskComplete
-
-# Follow-up (context preserved in same task)
-agent-browser fill @INPUT_REF "能给一个C#的例子吗？"
-agent-browser click @SEND_REF
-
-Wait-SoloTaskComplete
-
-# Another follow-up
-agent-browser fill @INPUT_REF "这个和工厂模式有什么区别？"
-agent-browser click @SEND_REF
-
-Wait-SoloTaskComplete
-```
-
-**Key Point:** Keep sending messages in the same task window to maintain context.
-
----
-
-### Pattern: Compare Multiple AI Models
-
-**Goal:** Send the same prompt to different models and compare outputs.
-
-```powershell
-$models = @("GLM-5.1", "Claude", "GPT-4")
-$prompt = "优化这段代码的性能"
-$results = @{}
-
-foreach ($model in $models) {
-    # Create new task
-    agent-browser click @e4
-    agent-browser wait 1000
-    
-    # Switch model
-    agent-browser click @MODEL_SELECTOR_REF
-    agent-browser select_option @MODEL_DROPDOWN_REF $model
-    agent-browser wait 500
-    
-    # Send prompt
-    agent-browser fill @INPUT_REF $prompt
-    agent-browser click @SEND_REF
-    
-    # Wait and capture
-    Wait-SoloTaskComplete
-    agent-browser click @COPY_ALL_REF
-    agent-browser screenshot "result-$model.png"
-    
-    $results[$model] = "result-$model.png"
-}
-```
-
----
-
-## Monitoring Patterns
-
-### Pattern: Poll with State Machine
-
-**Goal:** Robustly detect task state with clear transitions.
-
-```powershell
-enum TaskState {
-    Unknown
-    Running
-    Completed
-    Failed
-    Timeout
-}
-
-function Get-TaskState {
-    $snapshot = agent-browser snapshot -i
-    
-    if ($snapshot -match "正在执行命令|正在思考") {
-        return [TaskState]::Running
-    }
-    elseif ($snapshot -match "任务耗时|复制全部") {
-        return [TaskState]::Completed
-    }
-    elseif ($snapshot -match "重试") {
-        return [TaskState]::Failed
-    }
-    else {
-        return [TaskState]::Unknown
-    }
-}
-
-# Usage
-$state = [TaskState]::Unknown
+```bash
+# Pattern: Keep checking until "任务耗时" appears
+$completed = $false
 $attempts = 0
 $maxAttempts = 30
 
-while ($state -ne [TaskState]::Completed -and $attempts -lt $maxAttempts) {
+while (-not $completed -and $attempts -lt $maxAttempts) {
     agent-browser wait 5000
-    $state = Get-TaskState
-    $attempts++
-    
-    Write-Host "State: $state (attempt $attempts/$maxAttempts)"
-    
-    if ($state -eq [TaskState]::Failed) {
-        Write-Error "Task failed!"
-        break
+    $snapshot = agent-browser snapshot -i
+
+    if ($snapshot -match "任务耗时") {
+        Write-Host "Task completed!"
+        $completed = $true
     }
+    elseif ($snapshot -match "重试") {
+        Write-Host "Task failed - retry available"
+        $completed = $true
+    }
+    elseif ($snapshot -match "正在") {
+        Write-Host "Task still running..."
+    }
+
+    $attempts++
 }
+
+if (-not $completed) {
+    Write-Warning "Timeout waiting for task completion"
+}
+```
+
+### Check Current Status
+
+```bash
+# Quick status check
+agent-browser snapshot -i | Select-String "正在|任务耗时|重试"
+
+# Possible outputs:
+# - "正在梳理问题..." = AI is thinking
+# - "正在执行命令..." = Task is running
+# - "任务耗时 23s" = Completed with duration
+# - "重试" = Failed, retry available
+```
+
+### Progress Indicators
+
+| Indicator | Meaning | Action |
+|-----------|---------|--------|
+| `正在梳理问题…` | AI analyzing | Wait |
+| `正在执行命令…` | Task running | Wait |
+| `任务耗时 XXs` | Completed | Extract results |
+| `重试` | Failed | Retry or debug |
+
+---
+
+## Extracting Results
+
+### Copy All Output
+
+```bash
+# Find and click "复制全部"
+agent-browser find text "复制全部" click
+
+# Or use ref if found
+agent-browser click "@e129"
+```
+
+### Take Screenshot
+
+```bash
+# Annotated screenshot (shows element refs)
+agent-browser screenshot --annotate result.png
+
+# Regular screenshot
+agent-browser screenshot result.png
+```
+
+### Get Task Duration
+
+```bash
+# Find and get text of duration element
+agent-browser find text "任务耗时" get text
+
+# Example output: "任务耗时 23s"
+```
+
+### Read Clipboard (After Copy)
+
+```bash
+# After clicking "复制全部", read clipboard
+# PowerShell:
+Get-Clipboard
+
+# Or in bash (if available):
+powershell -Command "Get-Clipboard"
 ```
 
 ---
 
-### Pattern: Progress Logging
+## Task Templates
 
-**Goal:** Track task progress with periodic snapshots.
+### Template: Code Analysis
 
-```powershell
-$taskId = [Guid]::NewGuid().ToString().Substring(0, 8)
-$outputDir = "solo-tasks/$taskId"
-New-Item -ItemType Directory -Path $outputDir -Force
+```bash
+# 1. Navigate
+agent-browser find text "新建任务" click
+agent-browser wait 500
 
-# Start task
-agent-browser click @e4
-agent-browser fill @INPUT_REF "分析大型代码库"
-agent-browser click @SEND_REF
+# 2. Send prompt
+agent-browser find role textbox click
+agent-browser keyboard type "分析这段代码的性能问题和潜在bug:
+\`\`\`
+$PCODE
+\`\`\`
 
-# Log progress every 10 seconds
-$counter = 0
-while ($true) {
-    agent-browser wait 10000
-    $timestamp = Get-Date -Format "HHmmss"
-    
-    # Save snapshot
-    agent-browser snapshot -i | Out-File "$outputDir/snapshot-$timestamp.txt"
-    
-    # Save screenshot every 30 seconds
-    if ($counter % 3 -eq 0) {
-        agent-browser screenshot "$outputDir/progress-$timestamp.png"
-    }
-    
-    # Check completion
-    $snapshot = Get-Content "$outputDir/snapshot-$timestamp.txt" -Raw
-    if ($snapshot -match "任务耗时") {
-        agent-browser screenshot "$outputDir/final-$timestamp.png"
-        agent-browser click @COPY_ALL_REF
-        Write-Host "Task complete! Output in $outputDir"
-        break
-    }
-    
-    $counter++
-}
+请指出:
+1. 性能问题
+2. 代码坏味道
+3. 安全漏洞
+4. 改进建议"
+agent-browser press Enter
+
+# 3. Monitor
+# ... (use poll pattern above)
+
+# 4. Extract
+agent-browser find text "复制全部" click
+```
+
+### Template: Bug Investigation
+
+```bash
+# 1. Navigate
+agent-browser find text "新建任务" click
+
+# 2. Send
+agent-browser find role textbox click
+agent-browser keyboard type "调查以下错误:
+\`\`\`
+$ERROR_LOG
+\`\`\`
+
+可能的原因是什么？如何修复？"
+agent-browser press Enter
+
+# 3. Monitor & extract
+```
+
+### Template: Code Generation
+
+```bash
+# 1. Navigate
+agent-browser find text "新建任务" click
+
+# 2. Send with requirements
+agent-browser find role textbox click
+agent-browser keyboard type "用$LANGUAGE实现以下功能:
+$REQUIREMENTS
+
+要求:
+1. 生产级代码质量
+2. 包含适当的错误处理
+3. 添加注释说明"
+agent-browser press Enter
+
+# 3. Monitor & extract
 ```
 
 ---
 
 ## Error Handling
 
-### Pattern: Retry with Backoff
-
-**Goal:** Handle transient failures gracefully.
-
-```powershell
-function Invoke-SoloActionWithRetry {
-    param(
-        [scriptblock]$Action,
-        [int]$MaxRetries = 3,
-        [int]$BaseDelayMs = 1000
-    )
-    
-    for ($i = 0; $i -lt $MaxRetries; $i++) {
-        try {
-            & $Action
-            return $true
-        }
-        catch {
-            $delay = $BaseDelayMs * [Math]::Pow(2, $i)
-            Write-Warning "Attempt $($i+1) failed: $_"
-            Write-Host "Waiting ${delay}ms before retry..."
-            Start-Sleep -Milliseconds $delay
-        }
-    }
-    
-    throw "Failed after $MaxRetries attempts"
-}
-
-# Usage
-Invoke-SoloActionWithRetry -Action {
-    agent-browser click @SEND_REF
-}
-```
-
----
-
-### Pattern: Session Health Check
-
-**Goal:** Verify CDP connection is still alive.
-
-```powershell
-function Test-SoloConnection {
-    try {
-        $result = agent-browser get url 2>&1
-        if ($result -match "error|failed") {
-            return $false
-        }
-        return $true
-    }
-    catch {
-        return $false
-    }
-}
-
-# Auto-reconnect pattern
-if (-not (Test-SoloConnection)) {
-    Write-Host "Connection lost, reconnecting..."
-    $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
-    agent-browser connect $wsUrl
-}
-```
-
----
-
-## Element Finding Strategies
-
-### Strategy: Find by Text Content
-
-**Goal:** Locate elements by their visible text when refs change.
-
-```powershell
-# Get snapshot as JSON for parsing
-$snapshot = agent-browser snapshot --json | ConvertFrom-Json
-
-# Find element by text pattern
-$targetRef = $snapshot | 
-    Where-Object { $_.name -match "新建任务" } |
-    Select-Object -First 1 -ExpandProperty ref
-
-if ($targetRef) {
-    agent-browser click "@$targetRef"
-}
-```
-
----
-
-### Strategy: Find by Role and Position
-
-**Goal:** Locate elements by their type and relative position.
+### Connection Lost
 
 ```bash
-# Get all buttons
-agent-browser snapshot -i | grep "button"
+# If commands start failing
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
+agent-browser connect $wsUrl
+agent-browser wait 2000
 
-# Find textbox in center panel (usually only one)
-agent-browser snapshot -i | grep "textbox"
-
-# Find send button (near input, often last button in that area)
-agent-browser snapshot -i | grep -A2 -B2 "textbox"
+# Resume from last state
+agent-browser snapshot -i
 ```
 
----
+### Element Not Found
 
-### Strategy: Hierarchical Navigation
+```bash
+# If find fails, re-snapshot
+agent-browser snapshot -i
 
-**Goal:** Navigate UI by parent-child relationships.
+# Search again with new snapshot
+agent-browser snapshot -i | Select-String "target_element"
 
-```
-# Example snapshot structure:
-- group [ref=e1]
-  - button "新建任务" [ref=e2]
-  - button "技能" [ref=e3]
-  - button "自动化" [ref=e4]
-- group [ref=e5]
-  - textbox [ref=e6]
-  - button [ref=e7]  # Send button
+# Try again with updated ref
 ```
 
-```powershell
-# Find send button (sibling of textbox)
-$snapshot = agent-browser snapshot --json | ConvertFrom-Json
+### Task Timeout
 
-$textbox = $snapshot | Where-Object { $_.role -eq "textbox" }
-$parent = $snapshot | Where-Object { $_.ref -eq $textbox.parent }
-$sendButton = $parent.children | Where-Object { $_.role -eq "button" } | Select-Object -First 1
-```
+```bash
+# If task takes too long
+$timeout = 180  # seconds
+$startTime = Get-Date
 
----
-
-## Batch Operations
-
-### Pattern: Process File List
-
-**Goal:** Send multiple files for analysis.
-
-```powershell
-$files = Get-ChildItem "src/*.cs" | Select-Object -First 5
-
-foreach ($file in $files) {
-    $content = Get-Content $file.FullName -Raw
-    $prompt = @"
-分析这个文件的代码质量:
-
-文件名: $($file.Name)
-
-```csharp
-$content
-```
-
-请指出:
-1. 潜在的性能问题
-2. 代码风格问题
-3. 安全漏洞
-"@
-    
-    # Send and wait
-    agent-browser click @e4
-    agent-browser wait 1000
-    agent-browser fill @INPUT_REF $prompt
-    agent-browser click @SEND_REF
-    
-    Wait-SoloTaskComplete
-    
-    # Save result with filename
-    agent-browser screenshot "analysis-$($file.BaseName).png"
+# In loop:
+if ((Get-Date) - $startTime).TotalSeconds -gt $timeout {
+    Write-Warning "Task timeout"
+    # Take screenshot for debugging
+    agent-browser screenshot timeout.png
+    break
 }
 ```
 
----
+### Retry Failed Task
 
-### Pattern: Workspace Audit
+```bash
+# Check if retry button exists
+agent-browser snapshot -i | Select-String "重试"
 
-**Goal:** Check all workspaces for activity.
+# If found, click it
+agent-browser find text "重试" click
 
-```powershell
-# Get list of workspaces from sidebar
-$snapshot = agent-browser snapshot -i
-$workspaces = $snapshot | Select-String "button.*trae-solo|button.*jerry_|button.*默认"
+# Or use ref
+agent-browser click "@e130"
 
-$report = @()
-
-foreach ($ws in $workspaces) {
-    # Extract ref and name
-    if ($ws -match "\[ref=(e\d+)\].*button \"(.+?)\"") {
-        $ref = $matches[1]
-        $name = $matches[2]
-        
-        # Click workspace
-        agent-browser click "@$ref"
-        agent-browser wait 2000
-        
-        # Check for activity
-        $wsSnapshot = agent-browser snapshot -i
-        $hasActivity = $wsSnapshot -match "任务耗时|正在执行"
-        
-        $report += [PSCustomObject]@{
-            Workspace = $name
-            HasActivity = $hasActivity
-            Screenshot = "workspace-$name.png"
-        }
-        
-        agent-browser screenshot "workspace-$name.png"
-    }
-}
-
-$report | Format-Table -AutoSize
+# Monitor the retry
 ```
 
 ---
 
-## State Detection
+## Common Patterns
 
-### Task State Indicators
-
-| State | Text Indicators | Visual Indicators |
-|-------|-----------------|-------------------|
-| **Idle/Ready** | Input visible, no loading | Send button active |
-| **Running** | `正在执行命令…`, `正在思考` | Loading spinner |
-| **Completed** | `任务耗时`, `复制全部` | Result displayed |
-| **Failed** | `重试` | Error message |
-| **Waiting** | (no specific text) | Input disabled |
-
-### Console Error Detection
+### Pattern: Complete Chat Workflow
 
 ```powershell
-# Check for JS errors
-$errors = agent-browser errors
-if ($errors) {
-    Write-Warning "Console errors detected:"
-    $errors | ForEach-Object { Write-Host "  - $_" }
+# === COMPLETE WORKFLOW ===
+
+# 1. Connect
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
+agent-browser connect $wsUrl
+agent-browser wait 2000
+
+# 2. Enter target workspace
+agent-browser find text "New task" click
+agent-browser wait 500
+
+# 3. Send message
+agent-browser find role textbox click
+agent-browser keyboard type $UserPrompt
+agent-browser press Enter
+
+# 4. Monitor
+do {
+    agent-browser wait 5000
+    $snapshot = agent-browser snapshot -i
+} until ($snapshot -match "任务耗时" -or $snapshot -match "重试")
+
+# 5. Extract results
+if ($snapshot -match "任务耗时") {
+    agent-browser find text "复制全部" click
+    agent-browser screenshot result.png
+    Write-Host "Success!"
 }
+else {
+    Write-Host "Task failed"
+}
+```
+
+### Pattern: Quick Status Check
+
+```bash
+# Single command to check if task is done
+agent-browser snapshot -i | Select-String "任务耗时|正在|重试"
+```
+
+### Pattern: Navigate to Specific Task
+
+```bash
+# User wants to continue existing task
+agent-browser snapshot -i | Select-String "TaskName"
+# Find the task ref
+
+agent-browser find text "TaskName" click
 ```
 
 ---
 
-## Tips & Best Practices
+## Key Rules
 
-1. **Always snapshot before clicking** - Refs change between sessions
-2. **Use `--annotate` for debugging** - Shows element numbers on screenshots
-3. **Add delays between rapid actions** - Let UI settle with `wait 1000`
-4. **Save snapshots periodically** - For debugging and audit trails
-5. **Check console for errors** - Many issues only appear in console
-6. **Use session names for multiple tasks** - `agent-browser --session task1`
-7. **Type slowly for video recording** - Use `type` instead of `fill` during recording
+1. **No hardcoded refs** — `snapshot -i` before every action
+2. **Use `keyboard type`** — not `fill`
+3. **Use `press Enter`** — to send messages
+4. **Poll for "任务耗时"** — to detect completion
+5. **Handle errors gracefully** — reconnect, retry, timeout
 
 ---
 
-## Common Pitfalls
+## Quick Reference
 
-| Pitfall | Solution |
-|---------|----------|
-| Using wrong ref | Always snapshot first |
-| Clicking too fast | Add `wait 1000` between actions |
-| Not waiting for completion | Poll for `任务耗时` or `复制全部` |
-| Ignoring failures | Check for `重试` button |
-| Session timeout | Implement health check and reconnect |
-| Wrong workspace | Verify workspace before sending task |
+```bash
+# Navigation
+agent-browser find text "新建任务" click    # New Task
+agent-browser find text "技能" click       # Skills
+agent-browser find text "自动化" click      # Automation
+
+# Input
+agent-browser find role textbox click     # Focus textbox
+agent-browser keyboard type "message"      # Type (NOT fill)
+agent-browser press Enter                 # Send
+
+# Output
+agent-browser find text "复制全部" click   # Copy results
+agent-browser screenshot --annotate .png  # Screenshot
+
+# Status
+agent-browser snapshot -i | Select-String "任务耗时"  # Done?
+agent-browser snapshot -i | Select-String "正在"      # Running?
+agent-browser snapshot -i | Select-String "重试"      # Failed?
+```
