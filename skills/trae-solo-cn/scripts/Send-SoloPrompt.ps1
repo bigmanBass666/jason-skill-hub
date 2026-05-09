@@ -6,6 +6,9 @@
     Automates sending a single prompt to TRAE SOLO CN AI and captures the result.
     Handles connection, task monitoring, and result extraction.
 
+    IMPORTANT: This app uses custom input components where 'fill' doesn't work.
+    Uses 'click + keyboard type' instead.
+
 .PARAMETER Prompt
     The prompt text to send to the AI.
 
@@ -25,7 +28,7 @@
     .\Send-SoloPrompt.ps1 -Prompt "解释什么是依赖注入"
 
 .EXAMPLE
-    .\Send-SoloPrompt.ps1 -Prompt "优化这段代码" -Model "Claude" -TimeoutSeconds 180
+    .\Send-SoloPrompt.ps1 -Prompt "优化这段代码" -TimeoutSeconds 180
 
 .EXAMPLE
     $result = .\Send-SoloPrompt.ps1 -Prompt "分析性能" -Workspace "my-project"
@@ -66,7 +69,7 @@ function Write-Log {
 # Connect to TRAE SOLO CN
 function Connect-Solo {
     Write-Log "Connecting to TRAE SOLO CN..."
-    
+
     try {
         $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version" -TimeoutSec 5).webSocketDebuggerUrl
         agent-browser connect $wsUrl 2>&1 | Out-Null
@@ -86,14 +89,27 @@ function Get-Snapshot {
     return agent-browser snapshot -i 2>&1
 }
 
+# Find textbox ref
+function Find-TextboxRef {
+    $snapshot = Get-Snapshot
+    if ($snapshot -match "textbox \[ref=(e\d+)\]:") {
+        return "@$($matches[1])"
+    }
+    # Fallback pattern
+    if ($snapshot -match "textbox \[ref=(e\d+)\]") {
+        return "@$($matches[1])"
+    }
+    return $null
+}
+
 # Check task state
 function Get-TaskState {
     param([string]$Snapshot)
-    
-    if ($Snapshot -match "正在执行命令|正在思考|Running") {
+
+    if ($Snapshot -match "正在执行命令|正在思考|正在梳理") {
         return "Running"
     }
-    elseif ($Snapshot -match "任务耗时|复制全部") {
+    elseif ($Snapshot -match "任务耗时") {
         return "Completed"
     }
     elseif ($Snapshot -match "重试") {
@@ -110,9 +126,13 @@ function Find-ElementRef {
         [string]$Pattern,
         [string]$Role = "button"
     )
-    
+
     $snapshot = Get-Snapshot
-    if ($snapshot -match "$role.*$Pattern.*\[ref=(e\d+)\]") {
+    if ($snapshot -match "$Role.*$Pattern.*\[ref=(e\d+)\]") {
+        return "@$($matches[1])"
+    }
+    # Fallback: match text anywhere in element description
+    if ($snapshot -match "\[ref=(e\d+)\].*$Pattern") {
         return "@$($matches[1])"
     }
     return $null
@@ -123,16 +143,16 @@ try {
     $startTime = Get-Date
     Write-Log "Starting Solo automation session"
     Write-Log "Prompt: $Prompt"
-    
+
     # Connect
     if (-not (Connect-Solo)) {
         exit 1
     }
-    
+
     # Switch workspace if specified
     if ($Workspace) {
         Write-Log "Switching to workspace: $Workspace"
-        $wsRef = Find-ElementRef -Pattern $Workspace
+        $wsRef = Find-ElementRef -Pattern $Workspace -Role "generic"
         if ($wsRef) {
             agent-browser click $wsRef
             agent-browser wait 2000
@@ -141,20 +161,10 @@ try {
             Write-Log "Workspace '$Workspace' not found, continuing with current" "WARN"
         }
     }
-    
-    # Switch model if specified
-    if ($Model) {
-        Write-Log "Switching to model: $Model"
-        $snapshot = Get-Snapshot
-        if ($snapshot -match "button \"(.+?)\".*\[ref=(e\d+)\]" -and $matches[1] -match "GLM|Claude|GPT") {
-            agent-browser click "@$($matches[2])"
-            agent-browser wait 500
-        }
-    }
-    
+
     # Navigate to New Task panel
     Write-Log "Opening New Task panel"
-    $newTaskRef = Find-ElementRef -Pattern "新建任务"
+    $newTaskRef = Find-ElementRef -Pattern "新建任务" -Role "generic"
     if ($newTaskRef) {
         agent-browser click $newTaskRef
     }
@@ -162,48 +172,54 @@ try {
         agent-browser click "@e4"
     }
     agent-browser wait 1000
-    
+
     # Find input and send
-    Write-Log "Sending prompt..."
-    $snapshot = Get-Snapshot
-    
-    if ($snapshot -match "textbox.*\[ref=(e\d+)\]") {
-        $inputRef = "@$($matches[1])"
-        agent-browser fill $inputRef $Prompt
-        agent-browser press Enter
-    }
-    else {
+    Write-Log "Finding input textbox..."
+    $textboxRef = Find-TextboxRef
+    if (-not $textboxRef) {
         throw "Could not find input textbox"
     }
-    
+    Write-Log "Found textbox at $textboxRef"
+
+    # Click to focus, then type (VERIFIED METHOD for this app)
+    agent-browser click $textboxRef
+    agent-browser wait 500
+
+    Write-Log "Sending prompt..."
+    agent-browser keyboard type $Prompt
+    agent-browser wait 500
+
+    # Press Enter to send
+    agent-browser press Enter
+
     # Monitor task progress
     Write-Log "Waiting for task completion (timeout: ${TimeoutSeconds}s)..."
     $taskStart = Get-Date
     $state = "Unknown"
     $pollCount = 0
-    
+
     while ($state -ne "Completed" -and $state -ne "Failed") {
         Start-Sleep -Seconds 5
         $pollCount++
-        
+
         $snapshot = Get-Snapshot
         $state = Get-TaskState -Snapshot $snapshot
         $elapsed = [math]::Round(((Get-Date) - $taskStart).TotalSeconds)
-        
+
         Write-Log "Poll #$pollCount`: State=$state, Elapsed=${elapsed}s"
-        
+
         if ($pollCount % 3 -eq 0) {
             $snapshot | Out-File "$sessionDir/snapshot-$pollCount.txt"
             agent-browser screenshot "$sessionDir/progress-$pollCount.png" 2>&1 | Out-Null
         }
-        
+
         if ($elapsed -gt $TimeoutSeconds) {
             Write-Log "Timeout reached!" "ERROR"
             $state = "Timeout"
             break
         }
     }
-    
+
     # Capture result
     $result = @{
         Success = $false
@@ -212,16 +228,17 @@ try {
         TotalTime = [math]::Round(((Get-Date) - $startTime).TotalSeconds)
         OutputDir = $sessionDir
     }
-    
+
     if ($state -eq "Completed") {
         Write-Log "Task completed successfully!"
-        
+
+        # Find and click "复制全部" button
         $copyRef = Find-ElementRef -Pattern "复制全部"
         if ($copyRef) {
             agent-browser click $copyRef
             Write-Log "Output copied to clipboard"
         }
-        
+
         agent-browser screenshot "$sessionDir/final-result.png"
         $result.Success = $true
         $result.Screenshot = "$sessionDir/final-result.png"
@@ -230,12 +247,12 @@ try {
         Write-Log "Task ended with state: $state" "WARN"
         agent-browser screenshot "$sessionDir/failed-state.png"
     }
-    
+
     # Save final snapshot
     Get-Snapshot | Out-File "$sessionDir/final-snapshot.txt"
-    
+
     Write-Log "Session complete. Output in: $sessionDir"
-    
+
     return $result
 }
 catch {
