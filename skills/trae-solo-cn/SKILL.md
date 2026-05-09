@@ -8,12 +8,73 @@ allowed-tools: Bash(agent-browser:*), Bash(npx agent-browser:*)
 
 Automate TRAE SOLO CN desktop app (ByteDance's AI coding assistant) via CDP. Covers workspace management, AI chat, task automation, skills marketplace, and exploratory testing.
 
-## ⚠️ CRITICAL RULES
+## ⚠️ CRITICAL RULES (Official Pattern)
 
-1. **No hardcoded refs** — `snapshot -i` before EVERY interaction, refs change every session
-2. **No hardcoded workspace names** — Discover from snapshot, use `find text "name"`
-3. **No hardcoded element refs** — Always use semantic `find` commands
-4. **Use `keyboard type` not `fill`** — TRAE SOLO's input components require keyboard input
+### Rule 1: ALWAYS Snapshot First
+
+**NEVER** click, type, or interact without taking a snapshot first!
+
+```bash
+# ❌ WRONG: Blind action
+agent-browser click "@e5"
+
+# ✅ CORRECT: Look first, then act
+agent-browser snapshot -i
+# [Read and understand the page structure]
+agent-browser click "@e5"  # Now you know what you're clicking
+```
+
+### Rule 2: Re-Snapshot After Every Navigation
+
+```bash
+# After clicking anything that changes the page:
+agent-browser click "@e10"
+agent-browser wait 500
+agent-browser snapshot -i  # MUST re-snapshot to see new state
+```
+
+### Rule 3: Understand Before Acting
+
+```bash
+# Before: Take snapshot
+agent-browser snapshot -i
+
+# During: Read and understand
+# - What workspace am I in?
+# - What panel is open?
+# - What elements are available?
+# - What is the current state?
+
+# After: Then act based on understanding
+```
+
+---
+
+## The OBSERVE-UNDERSTAND-ACT Pattern (Official)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. OBSERVE                                                  │
+│    agent-browser snapshot -i                               │
+│    → See the full page structure                           │
+├─────────────────────────────────────────────────────────────┤
+│ 2. UNDERSTAND                                               │
+│    → What is the current state?                            │
+│    → What elements are available?                          │
+│    → What is my goal?                                      │
+├─────────────────────────────────────────────────────────────┤
+│ 3. ACT                                                      │
+│    → Choose action based on observation                    │
+│    → Execute with confidence                               │
+├─────────────────────────────────────────────────────────────┤
+│ 4. VERIFY                                                   │
+│    agent-browser snapshot -i                               │
+│    → Confirm action succeeded                              │
+│    → See new state before next action                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Quick Start
 
@@ -48,7 +109,20 @@ agent-browser connect $wsUrl
 agent-browser wait 2000
 ```
 
-### Step 3: Health Check (Verify Window Loaded)
+### Step 3: OBSERVE - First Snapshot (MANDATORY)
+
+```powershell
+# ALWAYS start with snapshot
+agent-browser snapshot -i
+
+# Read the output to understand:
+# - What workspaces are available?
+# - What is the current workspace? (check bottom bar)
+# - What panel is open?
+# - What elements can I interact with?
+```
+
+### Step 4: Health Check
 
 ```powershell
 # Verify TRAE SOLO window loaded correctly
@@ -65,313 +139,176 @@ else {
 }
 ```
 
-### Step 4: Discover Current State
+---
 
-```powershell
-agent-browser snapshot -i
-```
+## State Awareness Checklist
+
+Before any action, answer these questions:
+
+1. **What workspace am I in?**
+   ```bash
+   agent-browser snapshot -i | Select-String "·"
+   # Output: generic "WorkspaceName · 16:30" [ref=e13]
+   ```
+
+2. **What panel is open?**
+   - 新建任务 (New Task)?
+   - 技能 (Skills)?
+   - 自动化 (Automation)?
+   - Chat interface?
+
+3. **What elements are available?**
+   - Look for: buttons, textboxes, generic elements
+   - Note their refs from current snapshot
+
+4. **What is my goal?**
+   - Send message to AI?
+   - Switch workspace?
+   - Check task status?
 
 ---
 
-## Core Workflow
+## Complete Workflow Example
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ 1. CONNECT                                                  │
-│    $wsUrl = Get WebSocket URL → agent-browser connect      │
-├─────────────────────────────────────────────────────────────┤
-│ 2. DISCOVER                                                 │
-│    agent-browser snapshot -i                               │
-│    → See available workspaces, elements, current state     │
-├─────────────────────────────────────────────────────────────┤
-│ 3. NAVIGATE (based on user requirement)                    │
-│    agent-browser find text "target_workspace" click        │
-│    agent-browser find text "New task" click               │
-├─────────────────────────────────────────────────────────────┤
-│ 4. INTERACT                                                 │
-│    agent-browser find role textbox click                  │
-│    agent-browser keyboard type "user's prompt"             │
-│    agent-browser press Enter                               │
-├─────────────────────────────────────────────────────────────┤
-│ 5. MONITOR                                                  │
-│    Poll snapshot until "任务耗时" appears                  │
-├─────────────────────────────────────────────────────────────┤
-│ 6. EXTRACT                                                  │
-│    agent-browser find text "复制全部" click                │
-│    agent-browser screenshot --annotate result.png          │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Step-by-Step Operations
-
-### Step 1: Connect
+### Example: Send Message to AI in Specific Workspace
 
 ```powershell
-# Kill existing TRAE SOLO CN
-Get-Process "TRAE SOLO CN" -ErrorAction SilentlyContinue | Stop-Process -Force
-Start-Sleep -Seconds 2
+# === OBSERVE-UNDERSTAND-ACT WORKFLOW ===
 
-# Launch with CDP port
-Start-Process "D:\apps\TRAE SOLO CN\TRAE SOLO CN.exe" -ArgumentList "--remote-debugging-port=9222"
-Start-Sleep -Seconds 5
+# 1. OBSERVE: Take snapshot to see current state
+Write-Host "=== Step 1: OBSERVE ==="
+$snapshot = agent-browser snapshot -i
 
-# Connect via WebSocket URL
-$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
-agent-browser connect $wsUrl
-agent-browser wait 2000
-```
+# 2. UNDERSTAND: Analyze the snapshot
+Write-Host "=== Step 2: UNDERSTAND ==="
+# - What workspaces are available?
+# - What is the current workspace?
+# - Is the chat interface open?
 
-### Step 2: Discover Available Workspaces
+# Check current workspace (bottom bar)
+$currentWorkspace = $snapshot | Select-String "·"
+Write-Host "Current workspace: $currentWorkspace"
 
-```bash
-# ALWAYS start with snapshot to see current state
-agent-browser snapshot -i
+# 3. ACT: Based on observation
+Write-Host "=== Step 3: ACT ==="
 
-# To find available workspaces, look for patterns like:
-#   button "WORKSPACE_NAME New task task1 task2..." [ref=e18]
-#   generic "WORKSPACE_NAME" [ref=e26]
-
-# Example output:
-#   button "MyProject New task Task1 Task2" [ref=e18]
-#       generic "MyProject" [ref=e26]
-#   button "AnotherProject New task ..." [ref=e19]
-#       generic "AnotherProject" [ref=e36]
-```
-
-### Step 3: Select Target Workspace
-
-**Based on user's requirement** (e.g., "use MyProject workspace"):
-
-```bash
-# Method: Click "New task" inside the target workspace
-# 1. First, find which workspace button contains your target
-agent-browser snapshot -i
-# Look for: button "TARGET_WORKSPACE New task ..." [ref=eXX]
-
-# 2. Find the "New task" button inside that workspace section
-# It will be a child of the workspace button, like:
-#   button "WORKSPACE_NAME New task task1..." [ref=e18]
-#       ...
-#       button "New task" [ref=e28]  <- This is the one to click
-
-# 3. Click "New task" to enter that workspace
+# If not in target workspace, navigate there
+# Find "New task" button in target workspace section
 agent-browser find text "New task" click
+agent-browser wait 500
 
-# Or use ref if found in snapshot:
-agent-browser click "@e28"
-```
+# 4. VERIFY: Re-snapshot to confirm navigation
+Write-Host "=== Step 4: VERIFY ==="
+agent-browser snapshot -i | Select-String "·"
+# Should show target workspace
 
-**Key insight**: Click the **workspace's "New task" button**, not the workspace name itself.
-
-### Step 4: Send AI Chat Message
-
-```bash
-# 1. Find and click the textbox
-agent-browser find role textbox click
-
-# 2. Type your prompt (NOT fill - use keyboard type)
-agent-browser keyboard type "你的问题或任务描述"
-
-# 3. Send with Enter
-agent-browser press Enter
-```
-
-### Step 5: Monitor Task Progress
-
-```bash
-# Poll until task completes (look for "任务耗时" = task duration)
-for ($i = 0; $i -lt 30; $i++) {
-    agent-browser wait 5000
-    $snapshot = agent-browser snapshot -i
-
-    if ($snapshot -match "任务耗时") {
-        Write-Host "Task completed!"
-        break
-    }
-
-    if ($snapshot -match "重试") {
-        Write-Host "Task failed"
-        break
-    }
-}
-```
-
-### Step 6: Extract Results
-
-```bash
-# Copy all output
-agent-browser find text "复制全部" click
-
-# Take screenshot
-agent-browser screenshot --annotate result.png
-
-# Get task duration
-agent-browser find text "任务耗时" get text
+# 5. Continue with OBSERVE-UNDERSTAND-ACT for each step
+# ...
 ```
 
 ---
 
-## Semantic Find Commands (Always Use These)
-
-```bash
-# Navigation
-agent-browser find text "新建任务" click    # New Task panel
-agent-browser find text "技能" click       # Skills panel
-agent-browser find text "自动化" click     # Automation panel
-
-# Workspace (USER-SPECIFIC - discover from snapshot)
-# Do NOT hardcode - always discover from snapshot first
-# Look for: button "WORKSPACE_NAME New task ..." [ref=eXX]
-
-# Element finding
-agent-browser find role textbox click     # Input textbox
-agent-browser find role button click      # Generic button
-
-# Actions
-agent-browser find text "复制全部" click   # Copy results
-agent-browser find text "重试" click      # Retry failed task
-```
-
----
-
-## Common Workflows
+## Common Workflows (With Mandatory Snapshots)
 
 ### Workflow: Select Workspace and Send Message
 
 ```powershell
-# User says: "Use workspace XYZ to analyze this code"
-
-# 1. Connect
-$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
-agent-browser connect $wsUrl
-agent-browser wait 2000
-
-# 2. Discover workspaces
+# OBSERVE: See available workspaces
 agent-browser snapshot -i
+# Look for: button "WORKSPACE_NAME New task ..." [ref=eXX]
 
-# 3. User specifies target workspace (e.g., "XYZ")
-# 4. Find and click "New task" inside that workspace section
-#    Look in snapshot for: button "XYZ New task ..." [ref=eXX]
-#    Then find its child: button "New task" [ref=eYY]
-agent-browser find text "New task" click
+# UNDERSTAND: Identify target workspace
+# User wants: "MyProject"
+# Found: button "MyProject New task ..." [ref=e18]
 
-# 5. Send message
+# ACT: Click "New task" inside that workspace
+agent-browser click "@e18"  # Or: find text "New task" click
+agent-browser wait 500
+
+# VERIFY: Confirm we're in chat interface
+agent-browser snapshot -i
+# Should see: textbox, input area
+
+# OBSERVE: Find textbox
+agent-browser snapshot -i | Select-String "textbox"
+# Found: textbox [ref=e98]
+
+# ACT: Send message
 agent-browser find role textbox click
-agent-browser keyboard type "analyze this code"
+agent-browser keyboard type "分析代码性能"
 agent-browser press Enter
 
-# 6. Monitor
-for ($i = 0; $i -lt 30; $i++) {
-    agent-browser wait 5000
-    $snapshot = agent-browser snapshot -i
-    if ($snapshot -match "任务耗时") { break }
-}
-
-# 7. Get results
-agent-browser find text "复制全部" click
-```
-
-### Workflow: Switch Between Existing Tasks
-
-```bash
-# User wants to continue a specific task
-# 1. Discover tasks in current workspace
-agent-browser snapshot -i
-
-# 2. Look for: generic "Task Name" [ref=eXX]
-# 3. Click to select
-agent-browser find text "Task Name" click
+# VERIFY: Check task is running
+agent-browser snapshot -i | Select-String "正在|任务耗时"
 ```
 
 ---
 
-## Snapshot Pattern (MUST FOLLOW)
+## Snapshot Commands (Use These Frequently)
 
 ```bash
-# BEFORE every click/type action:
+# Basic snapshot (always use this)
 agent-browser snapshot -i
 
-# Example - finding the textbox:
-# Output: textbox [ref=e133]:
-agent-browser click "@e133"  # Use ref from THIS snapshot ONLY
+# Snapshot with search
+agent-browser snapshot -i | Select-String "keyword"
 
-# NEVER use refs from a previous snapshot!
-# ALWAYS re-snapshot before critical actions
-```
+# JSON snapshot (for parsing)
+agent-browser snapshot --json > state.json
 
----
-
-## Element Discovery Pattern
-
-**How to find ANY element dynamically:**
-
-```bash
-# 1. Take snapshot
-agent-browser snapshot -i
-
-# 2. Search for your target
-agent-browser snapshot -i | Select-String "target_text"
-
-# 3. Use the ref shown in current snapshot
-agent-browser click "@eNN"  # eNN from current snapshot
-
-# OR use find (preferred)
-agent-browser find text "exact_text" click
-agent-browser find text "partial_text" click --exact
+# Screenshot (visual confirmation)
+agent-browser screenshot --annotate current-state.png
 ```
 
 ---
 
 ## Troubleshooting
 
-### Startup Issues
+### Problem: "I don't know what to click"
 
-| Symptom | Diagnosis | Solution |
-|---------|-----------|----------|
-| **AI requests fail / "请求失败"** | Multiple processes running | Kill all: `taskkill /F /IM "TRAE SOLO CN.exe"` |
-| **Window blank / UI not loading** | Resource conflict | Kill all processes, restart fresh instance |
-| **CDP connection refused** | App not started with debug flag | Kill and relaunch with `--remote-debugging-port=9222` |
-| **Port 9222 not listening** | Process crashed | Check: `Get-Process "TRAE SOLO CN"`, restart if missing |
+**Solution**: You didn't observe first!
 
-### Quick Diagnosis Commands
+```bash
+# ALWAYS do this first:
+agent-browser snapshot -i
 
-```powershell
-# Check for multiple processes (should be 1 main + 7-8 subprocesses)
-Get-Process "TRAE SOLO CN" | Measure-Object
-# If Count > 10, kill all and restart
-
-# Check if CDP port is listening
-netstat -ano | findstr :9222
-# Should show: TCP 127.0.0.1:9222 LISTENING
-
-# Verify window loaded correctly
-agent-browser snapshot -i | Select-String "新建任务|技能|自动化"
-# Should find all three elements
+# Then read the output to understand the page
 ```
 
-### Runtime Issues
+### Problem: "Element not found"
 
-| Problem | Cause | Solution |
-|---------|-------|----------|
-| "Element not found" | Ref stale | Re-snapshot, use new ref |
-| "New task" not working | Wrong location | Click "New task" inside workspace section |
-| Input doesn't appear | Custom component | Use `keyboard type`, not `fill` |
-| Task never completes | Still running | Continue polling, or check for errors |
-| Workspace list empty | Not expanded | Click workspace button to expand |
-| Connection lost | Process crashed | Reconnect: `agent-browser connect $wsUrl` |
+**Solution**: Ref is stale, re-snapshot!
+
+```bash
+# ❌ WRONG: Using old ref
+agent-browser click "@e5"  # From 5 minutes ago
+
+# ✅ CORRECT: Fresh snapshot
+agent-browser snapshot -i
+# Find current ref
+agent-browser click "@e25"  # Current ref
+```
+
+### Problem: "Clicked wrong thing"
+
+**Solution**: Didn't understand the page structure
+
+```bash
+# Before clicking, always:
+agent-browser snapshot -i
+# Read and understand what each element is
+# Then click with confidence
+```
 
 ---
 
-## Important Rules Summary
+## Key Principles Summary
 
-1. **ALWAYS `snapshot -i` BEFORE using refs**
-2. **Use `find text` for navigation** — more reliable than hardcoded refs
-3. **Use `keyboard type` NOT `fill`** — verified for this app
-4. **Use `press Enter` to send** — more reliable than clicking send button
-5. **Poll for "任务耗时" to detect completion** — don't use fixed timeouts
-6. **Discover workspaces from snapshot** — don't assume they're hardcoded
+1. **Snapshot First** — Always `snapshot -i` before any action
+2. **Re-Snapshot Often** — After every navigation or state change
+3. **Understand Before Acting** — Read snapshot output, understand page structure
+4. **Verify After Acting** — Re-snapshot to confirm action succeeded
+5. **No Blind Actions** — Never click/type without knowing what you're interacting with
 
 ---
 
@@ -388,5 +325,5 @@ agent-browser snapshot -i | Select-String "新建任务|技能|自动化"
 
 | Reference | Purpose |
 |----------|---------|
-| [references/workspace-folder-workflow.md](references/workspace-folder-workflow.md) | Dynamic workspace selection patterns |
-| [references/trae-solo-tasks.md](references/trae-solo-tasks.md) | Common automation task patterns |
+| [references/workspace-folder-workflow.md](references/workspace-folder-workflow.md) | Workspace selection with OBSERVE-ACT pattern |
+| [references/trae-solo-tasks.md](references/trae-solo-tasks.md) | Task patterns with mandatory snapshots |
