@@ -125,32 +125,60 @@ button "MyProject New task API Development Bug Fixes..." [ref=e18]
 
 ---
 
-## Opening Local Folders
+## Opening Local Folders (选择文件夹)
 
-### The "选择文件夹" Flow
+### The Complete Flow
 
-To add a NEW local folder as a workspace:
+**Important**: After selecting a folder, Solo automatically creates a workspace and opens the **New Task interface** — no need to click "新建任务" again!
 
 ```bash
-# 1. Find the dropdown arrow next to any workspace
-agent-browser snapshot -i | Select-String "button \[ref=e27\]"
-
-# 2. Click the dropdown arrow
-agent-browser click "@e27"  # or find the specific one
+# 1. Open the dropdown menu
+agent-browser click "@e27"  # Dropdown arrow next to any workspace
 agent-browser wait 500
 
-# 3. Look for "选择文件夹" in the dropdown menu
-agent-browser snapshot -i | Select-String "选择文件夹"
-
-# 4. Click "选择文件夹"
+# 2. Click "选择文件夹"
 agent-browser find text "选择文件夹" click
+
+# [MANUAL STEP] User selects folder in native OS dialog
+
+# 3. Wait for Solo to create workspace and open New Task interface
+agent-browser wait 3000
+
+# 4. Verify we're in New Task interface
+agent-browser snapshot -i | Select-String "应用开发|项目理解|游戏创意|工具脚本"
+# Should see the 4 template cards
+
+# 5. Directly start chatting (no need to click "新建任务")
+agent-browser find role textbox click
+agent-browser keyboard type "分析这个项目的代码"
+agent-browser press Enter
 ```
 
-**Note**: This opens the native OS file dialog — manual step required.
+### What Happens After Selection
 
-### For Existing Local Folders
+After user selects a folder:
+1. ✅ Solo creates new workspace named after the folder
+2. ✅ Automatically opens "新建任务" interface
+3. ✅ Shows 4 template cards (应用开发, 项目理解, 游戏创意, 工具脚本)
+4. ✅ Ready for immediate chat input
 
-If the folder is already open in Solo, it will appear in the workspace list. Just select it using the **"New task" method** above.
+**No additional navigation needed!**
+
+### For Existing Workspaces
+
+If folder is already a workspace:
+
+```bash
+# 1. Find the workspace
+agent-browser snapshot -i | Select-String "MyExistingWorkspace"
+
+# 2. Click "New task" inside that workspace
+agent-browser find text "New task" click
+
+# 3. Now in chat interface for that workspace
+agent-browser find role textbox click
+agent-browser keyboard type "你的问题"
+```
 
 ---
 
