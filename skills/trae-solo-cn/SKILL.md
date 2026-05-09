@@ -8,277 +8,313 @@ allowed-tools: Bash(agent-browser:*), Bash(npx agent-browser:*)
 
 Automate TRAE SOLO CN desktop app (ByteDance's AI coding assistant) via CDP. Covers workspace management, AI chat, task automation, skills marketplace, and exploratory testing.
 
-## ⚠️ IMPORTANT: Refs Are Ephemeral
+## ⚠️ CRITICAL RULES
 
-**官方规范**: element refs (`@e1`, `@e2`, ...) are assigned **fresh on every snapshot**. They become **stale the moment the page changes**. Always `snapshot -i` before interacting.
-
-**推荐方式**: Use `agent-browser find` commands for semantic定位 instead of hardcoded refs.
-
-## Prerequisites
-
-- agent-browser installed (`npm i -g agent-browser && agent-browser install`)
-- TRAE SOLO CN installed at `D:\apps\TRAE SOLO CN\`
-- App launched with `--remote-debugging-port=9222`
+1. **No hardcoded refs** — `snapshot -i` before EVERY interaction, refs change every session
+2. **No hardcoded workspace names** — Discover from snapshot, use `find text "name"`
+3. **No hardcoded element refs** — Always use semantic `find` commands
+4. **Use `keyboard type` not `fill`** — TRAE SOLO's input components require keyboard input
 
 ## Quick Start
 
-### Launch & Connect
+```powershell
+# 1. Connect
+$wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
+agent-browser connect $wsUrl
+agent-browser wait 2000
+
+# 2. Discover current state
+agent-browser snapshot -i
+```
+
+---
+
+## Core Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. CONNECT                                                  │
+│    $wsUrl = Get WebSocket URL → agent-browser connect      │
+├─────────────────────────────────────────────────────────────┤
+│ 2. DISCOVER                                                 │
+│    agent-browser snapshot -i                               │
+│    → See available workspaces, elements, current state     │
+├─────────────────────────────────────────────────────────────┤
+│ 3. NAVIGATE (based on user requirement)                    │
+│    agent-browser find text "target_workspace" click        │
+│    agent-browser find text "New task" click               │
+├─────────────────────────────────────────────────────────────┤
+│ 4. INTERACT                                                 │
+│    agent-browser find role textbox click                  │
+│    agent-browser keyboard type "user's prompt"             │
+│    agent-browser press Enter                               │
+├─────────────────────────────────────────────────────────────┤
+│ 5. MONITOR                                                  │
+│    Poll snapshot until "任务耗时" appears                  │
+├─────────────────────────────────────────────────────────────┤
+│ 6. EXTRACT                                                  │
+│    agent-browser find text "复制全部" click                │
+│    agent-browser screenshot --annotate result.png          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Step-by-Step Operations
+
+### Step 1: Connect
 
 ```powershell
-# Kill existing instance
+# Kill existing TRAE SOLO CN
 Get-Process "TRAE SOLO CN" -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Seconds 2
 
-# Launch with CDP
+# Launch with CDP port
 Start-Process "D:\apps\TRAE SOLO CN\TRAE SOLO CN.exe" -ArgumentList "--remote-debugging-port=9222"
 Start-Sleep -Seconds 5
 
 # Connect via WebSocket URL
 $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 agent-browser connect $wsUrl
-
-# Set dark mode (TRAE SOLO uses dark theme)
-agent-browser --color-scheme dark snapshot -i
+agent-browser wait 2000
 ```
 
-## Core Workflow
-
-```
-1. Connect      → Get WebSocket URL, connect
-2. Navigate    → Use find commands, NOT hardcoded refs
-3. Interact    → find → snapshot → click/type → wait → snapshot
-4. Monitor     → Use wait --text instead of bare waits
-5. Extract     → Copy results, screenshot
-```
-
-## Sending Messages (Official Pattern)
-
-### Step 1: Find Elements Using Semantic Commands
+### Step 2: Discover Available Workspaces
 
 ```bash
-# Navigate to New Task panel (recommended way)
-agent-browser find text "新建任务" click
-agent-browser wait 500
-
-# Find the textbox using semantic search
+# ALWAYS start with snapshot to see current state
 agent-browser snapshot -i
-# Look for: textbox element
 
-# OR use find directly (preferred)
-agent-browser find textbox click  # Click the textbox
+# To find available workspaces, look for patterns like:
+#   button "WORKSPACE_NAME New task task1 task2..." [ref=e18]
+#   generic "WORKSPACE_NAME" [ref=e26]
+
+# Example output:
+#   button "MyProject New task Task1 Task2" [ref=e18]
+#       generic "MyProject" [ref=e26]
+#   button "AnotherProject New task ..." [ref=e19]
+#       generic "AnotherProject" [ref=e36]
 ```
 
-### Step 2: Type Using keyboard Commands
+### Step 3: Select Target Workspace
 
-TRAE SOLO uses custom input components where `fill` may not work:
+**Based on user's requirement** (e.g., "use MyProject workspace"):
 
 ```bash
-# Focus the textbox first
-agent-browser focus "@eN"  # Use ref from latest snapshot
+# Method: Click "New task" inside the target workspace
+# 1. First, find which workspace button contains your target
+agent-browser snapshot -i
+# Look for: button "TARGET_WORKSPACE New task ..." [ref=eXX]
 
-# Type using keyboard (REQUIRED)
-agent-browser keyboard type "你的指令内容"
+# 2. Find the "New task" button inside that workspace section
+# It will be a child of the workspace button, like:
+#   button "WORKSPACE_NAME New task task1..." [ref=e18]
+#       ...
+#       button "New task" [ref=e28]  <- This is the one to click
 
-# Send with Enter
+# 3. Click "New task" to enter that workspace
+agent-browser find text "New task" click
+
+# Or use ref if found in snapshot:
+agent-browser click "@e28"
+```
+
+**Key insight**: Click the **workspace's "New task" button**, not the workspace name itself.
+
+### Step 4: Send AI Chat Message
+
+```bash
+# 1. Find and click the textbox
+agent-browser find role textbox click
+
+# 2. Type your prompt (NOT fill - use keyboard type)
+agent-browser keyboard type "你的问题或任务描述"
+
+# 3. Send with Enter
 agent-browser press Enter
 ```
 
-### Step 3: Monitor Using wait --text
+### Step 5: Monitor Task Progress
 
 ```bash
-# ✅ CORRECT: Wait for completion indicator
-agent-browser wait --text "任务耗时"
+# Poll until task completes (look for "任务耗时" = task duration)
+for ($i = 0; $i -lt 30; $i++) {
+    agent-browser wait 5000
+    $snapshot = agent-browser snapshot -i
 
-# ❌ WRONG: Bare wait
-# agent-browser wait 5000  # Avoid this
+    if ($snapshot -match "任务耗时") {
+        Write-Host "Task completed!"
+        break
+    }
+
+    if ($snapshot -match "重试") {
+        Write-Host "Task failed"
+        break
+    }
+}
 ```
 
-### Step 4: Extract Results
+### Step 6: Extract Results
 
 ```bash
-# Find and click "复制全部" button
+# Copy all output
 agent-browser find text "复制全部" click
 
-# Take annotated screenshot
+# Take screenshot
 agent-browser screenshot --annotate result.png
 
 # Get task duration
 agent-browser find text "任务耗时" get text
 ```
 
-## Complete Workflow: Folder → AI Chat
+---
+
+## Semantic Find Commands (Always Use These)
+
+```bash
+# Navigation
+agent-browser find text "新建任务" click    # New Task panel
+agent-browser find text "技能" click       # Skills panel
+agent-browser find text "自动化" click     # Automation panel
+
+# Workspace (USER-SPECIFIC - discover from snapshot)
+# Do NOT hardcode - always discover from snapshot first
+# Look for: button "WORKSPACE_NAME New task ..." [ref=eXX]
+
+# Element finding
+agent-browser find role textbox click     # Input textbox
+agent-browser find role button click      # Generic button
+
+# Actions
+agent-browser find text "复制全部" click   # Copy results
+agent-browser find text "重试" click      # Retry failed task
+```
+
+---
+
+## Common Workflows
+
+### Workflow: Select Workspace and Send Message
 
 ```powershell
-# === FOLDER → AI CHAT (Official Pattern) ===
+# User says: "Use workspace XYZ to analyze this code"
 
 # 1. Connect
 $wsUrl = (Invoke-RestMethod "http://127.0.0.1:9222/json/version").webSocketDebuggerUrl
 agent-browser connect $wsUrl
 agent-browser wait 2000
 
-# 2. Open folder selector (find by semantic text)
-agent-browser find text "选择文件夹" click
-# NOTE: This opens native OS dialog - manual step required
-agent-browser wait 3000
-
-# 3. Go to New Task panel
-agent-browser find text "新建任务" click
-agent-browser wait 500
-
-# 4. Find and use textbox
+# 2. Discover workspaces
 agent-browser snapshot -i
-agent-browser find textbox click
-agent-browser keyboard type "分析这个项目的结构和功能"
 
-# 5. Send
+# 3. User specifies target workspace (e.g., "XYZ")
+# 4. Find and click "New task" inside that workspace section
+#    Look in snapshot for: button "XYZ New task ..." [ref=eXX]
+#    Then find its child: button "New task" [ref=eYY]
+agent-browser find text "New task" click
+
+# 5. Send message
+agent-browser find role textbox click
+agent-browser keyboard type "analyze this code"
 agent-browser press Enter
 
-# 6. Wait for completion (use wait --text)
-agent-browser wait --text "任务耗时"
+# 6. Monitor
+for ($i = 0; $i -lt 30; $i++) {
+    agent-browser wait 5000
+    $snapshot = agent-browser snapshot -i
+    if ($snapshot -match "任务耗时") { break }
+}
 
 # 7. Get results
 agent-browser find text "复制全部" click
-agent-browser screenshot --annotate chat-result.png
 ```
 
-## Semantic Find Commands (Recommended)
+### Workflow: Switch Between Existing Tasks
 
 ```bash
-# Find by text content (MOST USEFUL)
-agent-browser find text "新建任务" click
-agent-browser find text "应用开发" click
-agent-browser find text "复制全部" click
-agent-browser find text "任务耗时" get text
+# User wants to continue a specific task
+# 1. Discover tasks in current workspace
+agent-browser snapshot -i
 
-# Find by role
-agent-browser find textbox click
-agent-browser find button click
-agent-browser find generic click
-
-# Find with exact match
-agent-browser find text "Sign In" click --exact
-
-# Find by partial text
-agent-browser find text "新建" click  # Matches "新建任务"
-
-# Chained: find then get
-agent-browser find text "任务耗时" get text
+# 2. Look for: generic "Task Name" [ref=eXX]
+# 3. Click to select
+agent-browser find text "Task Name" click
 ```
 
-## Snapshot Pattern
+---
 
-**ALWAYS snapshot before interacting with new refs:**
+## Snapshot Pattern (MUST FOLLOW)
+
+```bash
+# BEFORE every click/type action:
+agent-browser snapshot -i
+
+# Example - finding the textbox:
+# Output: textbox [ref=e133]:
+agent-browser click "@e133"  # Use ref from THIS snapshot ONLY
+
+# NEVER use refs from a previous snapshot!
+# ALWAYS re-snapshot before critical actions
+```
+
+---
+
+## Element Discovery Pattern
+
+**How to find ANY element dynamically:**
 
 ```bash
 # 1. Take snapshot
 agent-browser snapshot -i
 
-# 2. Look for your element in output
-# Example output:
-#   @e1 generic "新建任务" [ref=e4]
-#   @e2 textbox [ref=e89]
+# 2. Search for your target
+agent-browser snapshot -i | Select-String "target_text"
 
-# 3. Use the ref shown in THAT snapshot
-agent-browser click "@e89"  # Only use refs from current snapshot!
+# 3. Use the ref shown in current snapshot
+agent-browser click "@eNN"  # eNN from current snapshot
+
+# OR use find (preferred)
+agent-browser find text "exact_text" click
+agent-browser find text "partial_text" click --exact
 ```
 
-## Waiting Strategies (Official)
-
-```bash
-# ✅ BEST: Wait for specific content
-agent-browser wait --text "任务耗时"           # Wait for completion
-agent-browser wait --text "正在执行命令"        # Wait for running indicator
-
-# ✅ GOOD: Wait for element
-agent-browser wait "@e5"                      # Wait for element to appear
-
-# ✅ GOOD: Wait for URL (if navigating)
-agent-browser wait --url "**/dashboard"
-
-# ✅ GOOD: Wait for network idle (SPA navigation)
-agent-browser wait --load networkidle
-
-# ❌ AVOID: Bare wait (makes scripts slow and flaky)
-agent-browser wait 5000  # Only use for debugging
-```
-
-## Switching Workspaces
-
-```bash
-# Method 1: Find workspace by name
-agent-browser find text "jerry_ZhuanShengBen" click
-agent-browser wait 1000
-
-# Method 2: Use dropdown
-agent-browser find text "选择文件夹" click  # Opens dropdown
-agent-browser wait 500
-agent-browser find text "Android" click      # Select workspace
-```
-
-## Switching Panels
-
-```bash
-# Navigate between panels using find
-agent-browser find text "新建任务" click     # New Task panel
-agent-browser find text "技能" click        # Skills panel
-agent-browser find text "自动化" click       # Automation panel
-```
-
-## Application Architecture
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Top Bar: [编辑] [帮助]                                     │
-├──────────┬────────────────────────────┬──────────────────────┤
-│ Sidebar  │  Center Area               │  Right Panel         │
-│          │                            │                      │
-│ 新建任务  │  ┌──────────────────────┐  │  (Task results)     │
-│ 技能     │  │ 4 Template Cards     │  │                      │
-│ 自动化    │  │ 应用开发/项目理解/...│  │                      │
-│          │  ├──────────────────────┤  │                      │
-│ Workspaces│  │ Input: [textbox]    │  │                      │
-│ □ ws-1   │  │ Model: [combobox]   │  │                      │
-│ □ ws-2   │  └──────────────────────┘  │                      │
-├──────────┴────────────────────────────┴──────────────────────┤
-│  Bottom: User info | 本地/工作树/云端                       │
-└──────────────────────────────────────────────────────────────┘
-```
+---
 
 ## Troubleshooting
 
 | Problem | Cause | Solution |
 |---------|-------|----------|
-| "Element not found" | Ref stale from old snapshot | Re-snapshot and use new ref |
-| "选择文件夹" not visible | Dropdown not opened | Click the dropdown arrow first |
-| Input not working | Custom input component | Use `keyboard type` not `fill` |
-| Task never completes | Using wrong wait | Use `wait --text "任务耗时"` |
-| Wrong workspace | Using old ref | Use `find text "workspace_name"` |
+| "Element not found" | Ref stale | Re-snapshot, use new ref |
+| "New task" not working | Wrong location | Click "New task" inside workspace section |
+| Input doesn't appear | Custom component | Use `keyboard type`, not `fill` |
+| Task never completes | Still running | Continue polling, or check for errors |
+| Workspace list empty | Not expanded | Click workspace button to expand |
 
-## Important Rules
+---
 
-1. **Always `snapshot -i` before using a ref** — refs expire after page changes
-2. **Use `find text "..."` instead of hardcoded refs** — more reliable
-3. **Use `wait --text` instead of bare waits** — faster and more reliable
-4. **Use `keyboard type` not `fill`** — TRAE SOLO's input components require it
-5. **Set `--color-scheme dark`** — TRAE SOLO uses dark theme
+## Important Rules Summary
+
+1. **ALWAYS `snapshot -i` BEFORE using refs**
+2. **Use `find text` for navigation** — more reliable than hardcoded refs
+3. **Use `keyboard type` NOT `fill`** — verified for this app
+4. **Use `press Enter` to send** — more reliable than clicking send button
+5. **Poll for "任务耗时" to detect completion** — don't use fixed timeouts
+6. **Discover workspaces from snapshot** — don't assume they're hardcoded
+
+---
 
 ## Application Info
 
 | Property | Value |
 |----------|-------|
-| App Name | TRAE SOLO CN |
-| Framework | Electron 39.2.7 |
-| Engine | Chromium 142.0.7444.235 |
-| Install Path | `D:\apps\TRAE SOLO CN\` |
+| Framework | Electron |
 | Debug Port | 9222 |
 | CDP Endpoint | `http://127.0.0.1:9222/json/version` |
-| Language | Chinese (Simplified) |
-| Default Model | GLM-5V-Turbo |
 | Color Scheme | Dark |
 
 ## References
 
-| Reference | When to Read |
-|-----------|--------------|
-| [references/trae-solo-tasks.md](references/trae-solo-tasks.md) | Common automation patterns and task recipes |
-| [references/workspace-folder-workflow.md](references/workspace-folder-workflow.md) | Opening folders, switching workspaces |
+| Reference | Purpose |
+|----------|---------|
+| [references/workspace-folder-workflow.md](references/workspace-folder-workflow.md) | Dynamic workspace selection patterns |
+| [references/trae-solo-tasks.md](references/trae-solo-tasks.md) | Common automation task patterns |
