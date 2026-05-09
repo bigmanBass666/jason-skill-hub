@@ -576,6 +576,7 @@ agent-browser keyboard type "new text"
 | Reference | When to Read |
 |-----------|--------------|
 | [references/trae-solo-tasks.md](references/trae-solo-tasks.md) | Common automation patterns and task recipes |
+| [references/workspace-folder-workflow.md](references/workspace-folder-workflow.md) | Opening folders, switching workspaces |
 
 ## Templates
 
