@@ -84,25 +84,28 @@ agent-browser click @e4
 
 ### 3. Interact - Send Message to AI
 
+**Important**: TRAE SOLO uses custom input components where `fill` may not work. Use `keyboard type` instead:
+
 ```bash
 # 1. Ensure in New Task panel
-agent-browser click @e4
+agent-browser click "@e4"
 
 # 2. Find input (textbox near bottom of center panel)
 agent-browser snapshot -i
 
-# 3. Type prompt (use keyboard type for Electron apps if fill doesn't work)
-agent-browser fill @INPUT_REF "你的指令内容"
-# OR if fill doesn't work:
-# agent-browser click @INPUT_REF
-# agent-browser keyboard type "你的指令内容"
+# 3. Click input field to focus
+agent-browser click "@e125"  # textbox ref
 
-# 4. Click send or press Enter
-agent-browser click @SEND_REF
-# OR: agent-browser press Enter
+# 4. Type prompt using keyboard type (REQUIRED for this app)
+agent-browser keyboard type "你的指令内容"
 
-# 5. Wait for response (see Monitoring section)
+# 5. Press Enter to send (send button often disabled until text entered)
+agent-browser press Enter
+
+# 6. Wait for response (see Monitoring section)
 ```
+
+**PowerShell Note**: In PowerShell, always quote refs like `"@e125"` to avoid array interpretation.
 
 ### 4. Monitor Task Progress
 
