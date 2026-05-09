@@ -84,7 +84,7 @@
 - **Has 4 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/` Directories: evals/, references/. File types: .md(3), .json(1).
 
 ### memu-android-guide
-- **Description**: 
+- **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/memu-android-guide/SKILL.md
 
 ### officecli
