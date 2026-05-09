@@ -145,13 +145,10 @@ try {
     # Switch model if specified
     if ($Model) {
         Write-Log "Switching to model: $Model"
-        # Find and click model selector
         $snapshot = Get-Snapshot
         if ($snapshot -match "button \"(.+?)\".*\[ref=(e\d+)\]" -and $matches[1] -match "GLM|Claude|GPT") {
             agent-browser click "@$($matches[2])"
             agent-browser wait 500
-            # Select from dropdown (simplified - may need adjustment)
-            agent-browser select_option "@e$(([int]$matches[2].Substring(1)) + 1)" $Model 2>&1 | Out-Null
         }
     }
     
@@ -162,7 +159,6 @@ try {
         agent-browser click $newTaskRef
     }
     else {
-        # Fallback to common ref
         agent-browser click "@e4"
     }
     agent-browser wait 1000
@@ -171,21 +167,10 @@ try {
     Write-Log "Sending prompt..."
     $snapshot = Get-Snapshot
     
-    # Find textbox (usually the only one in center panel)
     if ($snapshot -match "textbox.*\[ref=(e\d+)\]") {
         $inputRef = "@$($matches[1])"
         agent-browser fill $inputRef $Prompt
-        
-        # Find send button (usually near input)
-        if ($snapshot -match "button.*\[ref=(e\d+)\].*\n.*textbox" -or 
-            $snapshot -match "textbox.*\n.*button.*\[ref=(e\d+)\]") {
-            $sendRef = "@$($matches[1])"
-            agent-browser click $sendRef
-        }
-        else {
-            # Press Enter as fallback
-            agent-browser press Enter
-        }
+        agent-browser press Enter
     }
     else {
         throw "Could not find input textbox"
@@ -207,13 +192,11 @@ try {
         
         Write-Log "Poll #$pollCount`: State=$state, Elapsed=${elapsed}s"
         
-        # Save periodic snapshots
         if ($pollCount % 3 -eq 0) {
             $snapshot | Out-File "$sessionDir/snapshot-$pollCount.txt"
             agent-browser screenshot "$sessionDir/progress-$pollCount.png" 2>&1 | Out-Null
         }
         
-        # Check timeout
         if ($elapsed -gt $TimeoutSeconds) {
             Write-Log "Timeout reached!" "ERROR"
             $state = "Timeout"
@@ -233,8 +216,30 @@ try {
     if ($state -eq "Completed") {
         Write-Log "Task completed successfully!"
         
-        # Copy output
         $copyRef = Find-ElementRef -Pattern "复制全部"
         if ($copyRef) {
             agent-browser click $copyRef
             Write-Log "Output copied to clipboard"
+        }
+        
+        agent-browser screenshot "$sessionDir/final-result.png"
+        $result.Success = $true
+        $result.Screenshot = "$sessionDir/final-result.png"
+    }
+    else {
+        Write-Log "Task ended with state: $state" "WARN"
+        agent-browser screenshot "$sessionDir/failed-state.png"
+    }
+    
+    # Save final snapshot
+    Get-Snapshot | Out-File "$sessionDir/final-snapshot.txt"
+    
+    Write-Log "Session complete. Output in: $sessionDir"
+    
+    return $result
+}
+catch {
+    Write-Log "Error: $_" "ERROR"
+    agent-browser screenshot "$sessionDir/error-state.png" 2>&1 | Out-Null
+    throw
+}
