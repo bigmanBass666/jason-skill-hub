@@ -130,6 +130,11 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/tdd/SKILL.md"
   },
   {
+    "name": "trae-config-locator",
+    "description": "",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-config-locator/SKILL.md"
+  },
+  {
     "name": "trae-solo-cn",
     "description": "Automate the TRAE SOLO CN desktop app (ByteDance's AI coding assistant) using agent-browser via Chrome DevTools Protocol. Use when the user needs to interact with TRAE SOLO CN, automate AI chat tasks, manage workspaces, install skills, configure automation jobs, or perform dogfooding/QA on the Solo application. Triggers include 'automate Solo', 'control TRAE SOLO', 'interact with Solo app', 'send prompt to Solo AI', 'switch Solo workspace', 'install Solo skill', 'configure Solo automation', 'dogfood TRAE SOLO', 'test TRAE SOLO CN', or any task requiring automation of the TRAE SOLO CN desktop application. Also trigger when the user mentions 'Solo桌面版', 'Trae Solo', 'TRAE SOLO', 'solo-cn', 'Solo AI', or asks to do anything with the Solo AI coding assistant.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-solo-cn/SKILL.md"
