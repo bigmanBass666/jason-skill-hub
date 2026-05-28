@@ -223,32 +223,6 @@ function gitCommitAndPush(projectRoot, targetDir) {
   return true;
 }
 
-function purgeCdnCache(projectRoot, targetDir) {
-  const https = require('https');
-  const relDir = path.relative(projectRoot, targetDir).replace(/\/g, '/');
-  const owner = 'bigmanBass666';
-  const repo = 'jason-skill-hub';
-  const branch = 'master';
-
-  try {
-    const files = walkDir(targetDir);
-    const mdFiles = files.filter(f => f.endsWith('.md') || f.endsWith('.json'));
-    let purged = 0;
-    for (const file of mdFiles) {
-      const url = `https://purge.jsdelivr.net/gh/${owner}/${repo}@${branch}/${relDir}/${file.replace(/\/g, '/')}`;
-      try {
-        https.get(url, (res) => {
-          res.resume();
-        }).on('error', () => {});
-        purged++;
-      } catch {}
-    }
-    log(`CDN 缓存清除: ${purged} 个文件`);
-  } catch (e) {
-    log(`CDN 缓存清除失败: ${e.message}`);
-  }
-}
-
 async function fullSync({ dryRun, projectRoot, sourceDir, targetDir }) {
   log('=== 开始完整同步流程 ===');
 
@@ -263,10 +237,7 @@ async function fullSync({ dryRun, projectRoot, sourceDir, targetDir }) {
     runBuild(projectRoot);
 
     log('步骤 4/4: 提交并推送');
-    const pushed = gitCommitAndPush(projectRoot, targetDir);
-    if (pushed) {
-      purgeCdnCache(projectRoot, targetDir);
-    }
+    gitCommitAndPush(projectRoot, targetDir);
   } else {
     log('[DRY-RUN] 跳过构建和提交');
   }

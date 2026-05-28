@@ -8,6 +8,8 @@
 3. 输出格式：https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/references/push-format.md
 4. 完整工作流和评估框架：https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/SKILL.md
 
+**CDN 缓存说明**：jsdelivr CDN 会缓存文件。如果发现内容明显过时（如格式仍是旧版），在 URL 末尾加 `?t=当前时间戳` 强制获取最新版本。
+
 读取后，严格按照 SKILL.md 中的工作流 1（情报扫描）执行全部步骤。
 
 ## 关键规则
