@@ -116,6 +116,11 @@
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/SKILL.md
 - **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/` File types: .md(3).
 
+### kaggle-run
+- **Description**: Kaggle-Run v4.0 — Ultimate Kaggle integration. Thin router + fat scripts for zero token waste. Deploy notebooks, auto-fix errors, compete, earn badges, analyze leaderboards. Windows/Mac/Linux.
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/kaggle-run/SKILL.md
+- **Has 7 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/kaggle-run/` Directories: scripts/. File types: .py(7).
+
 ### karing
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/karing/SKILL.md

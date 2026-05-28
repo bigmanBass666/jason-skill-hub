@@ -110,6 +110,11 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/SKILL.md"
   },
   {
+    "name": "kaggle-run",
+    "description": "Kaggle-Run v4.0 — Ultimate Kaggle integration. Thin router + fat scripts for zero token waste. Deploy notebooks, auto-fix errors, compete, earn badges, analyze leaderboards. Windows/Mac/Linux.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/kaggle-run/SKILL.md"
+  },
+  {
     "name": "karing",
     "description": ">",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/karing/SKILL.md"
