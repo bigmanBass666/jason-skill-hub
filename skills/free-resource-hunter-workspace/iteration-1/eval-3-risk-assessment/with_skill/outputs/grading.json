@@ -1,0 +1,31 @@
+{
+  "eval_id": 3,
+  "run": "with_skill",
+  "expectations": [
+    {
+      "text": "has-conclusion",
+      "passed": true,
+      "evidence": "结论明确：「需警惕」— 平台本身靠谱且在快速发展，但免费层对 agent 工作流存在多重限制，不能作为生产环境主方案。末尾综合判定表也有逐维度评级。"
+    },
+    {
+      "text": "covers-pricing-history",
+      "passed": true,
+      "evidence": "第 2 节「免费层变更历史」列出 6 个时间节点的变更（2025-04 至 2026-05），结论是「免费层缩水是确定性趋势」。"
+    },
+    {
+      "text": "covers-charge-risk",
+      "passed": true,
+      "evidence": "第 4 节「用户被意外收费的风险」分析了预付 credits 不可退款、365 天过期、5.5% 手续费，并引用 OpenClaw 收费 bug 案例。"
+    },
+    {
+      "text": "covers-platform-survival",
+      "passed": true,
+      "evidence": "第 1 节「平台存续风险：低」列出融资数据（$1.3B 估值、CapitalG/NVIDIA/a16z）、8M 用户、25T 周 token。"
+    },
+    {
+      "text": "migration-guidance",
+      "passed": true,
+      "evidence": "最终建议明确：开发测试可用（充值 $10），生产环境不要依赖免费层。给出方案 A（付费层）、方案 A（NIM+硅基+OR 补充）。第 5 节有迁移风险表（6 项具体风险），第 7 节评估迁出难度为「低」。"
+    }
+  ]
+}

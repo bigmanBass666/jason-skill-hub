@@ -1,0 +1,6 @@
+{
+  "eval_id": 1,
+  "eval_name": "intel-scan",
+  "prompt": "扫一下最近有什么新的免费 AI 资源，我主要是做 agent 开发的，关注能跑 function calling 的模型",
+  "assertions": []
+}

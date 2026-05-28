@@ -1,0 +1,123 @@
+{
+  "skill_name": "free-resource-hunter",
+  "iteration": 1,
+  "timestamp": "2026-05-29T01:48:00+08:00",
+  "configurations": [
+    {
+      "name": "with_skill",
+      "pass_rate": {"mean": 1.00, "stddev": 0.00},
+      "time_seconds": {"mean": 473.2, "stddev": 71.2},
+      "tool_uses": {"mean": 35.3, "stddev": 4.6}
+    },
+    {
+      "name": "without_skill",
+      "pass_rate": {"mean": 0.40, "stddev": 0.33},
+      "time_seconds": {"mean": 276.1, "stddev": 56.5},
+      "tool_uses": {"mean": 16.0, "stddev": 6.0}
+    }
+  ],
+  "delta": {
+    "pass_rate": "+0.60 (100% vs 40%)",
+    "time_seconds": "+197.1s (+71%, skill 做了更多搜索和验证)",
+    "tool_uses": "+19.3 (+121%, skill 加载基线 + 多源搜索 + 验证)"
+  },
+  "evals": [
+    {
+      "eval_id": 1,
+      "eval_name": "intel-scan",
+      "results": [
+        {
+          "config": "with_skill",
+          "pass_rate": "5/5",
+          "time_seconds": 426.6,
+          "tool_uses": 39,
+          "assertions": [
+            {"text": "has-three-sections", "passed": true},
+            {"text": "priority-markers", "passed": true},
+            {"text": "timeliness-labeled", "passed": true},
+            {"text": "actionable", "passed": true},
+            {"text": "has-health-snapshot", "passed": true}
+          ]
+        },
+        {
+          "config": "without_skill",
+          "pass_rate": "0/5",
+          "time_seconds": 253.4,
+          "tool_uses": 16,
+          "assertions": [
+            {"text": "has-three-sections", "passed": false},
+            {"text": "priority-markers", "passed": false},
+            {"text": "timeliness-labeled", "passed": false},
+            {"text": "actionable", "passed": false},
+            {"text": "has-health-snapshot", "passed": false}
+          ]
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "resource-search",
+      "results": [
+        {
+          "config": "with_skill",
+          "pass_rate": "5/5",
+          "time_seconds": 437.2,
+          "tool_uses": 30,
+          "assertions": [
+            {"text": "platform-first", "passed": true},
+            {"text": "agent-capability-first", "passed": true},
+            {"text": "nvidia-nim-excluded", "passed": true},
+            {"text": "has-access-info", "passed": true},
+            {"text": "mentions-cost-paradigm", "passed": true}
+          ]
+        },
+        {
+          "config": "without_skill",
+          "pass_rate": "2/5",
+          "time_seconds": 343.7,
+          "tool_uses": 22,
+          "assertions": [
+            {"text": "platform-first", "passed": true},
+            {"text": "agent-capability-first", "passed": false},
+            {"text": "nvidia-nim-excluded", "passed": false},
+            {"text": "has-access-info", "passed": true},
+            {"text": "mentions-cost-paradigm", "passed": false}
+          ]
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "risk-assessment",
+      "results": [
+        {
+          "config": "with_skill",
+          "pass_rate": "5/5",
+          "time_seconds": 555.8,
+          "tool_uses": 37,
+          "assertions": [
+            {"text": "has-conclusion", "passed": true},
+            {"text": "covers-pricing-history", "passed": true},
+            {"text": "covers-charge-risk", "passed": true},
+            {"text": "covers-platform-survival", "passed": true},
+            {"text": "migration-guidance", "passed": true}
+          ]
+        },
+        {
+          "config": "without_skill",
+          "pass_rate": "4/5",
+          "time_seconds": 231.2,
+          "tool_uses": 10,
+          "assertions": [
+            {"text": "has-conclusion", "passed": true},
+            {"text": "covers-pricing-history", "passed": true},
+            {"text": "covers-charge-risk", "passed": true},
+            {"text": "covers-platform-survival", "passed": true},
+            {"text": "migration-guidance", "passed": false}
+          ]
+        }
+      ]
+    }
+  ],
+  "analyst_notes": "Skill 最大价值体现在情报扫描（eval 1）和资源搜索（eval 2）：with-skill 版本产出有结构化的情报分类、优先级标注、时效性判断、增量对比，baseline 完全缺失这些维度。风险评估（eval 3）差距较小，因为 baseline 本身就能做基本调研，但 skill 的优势在于更完整的决策框架（开发/生产拆分、多方案对比）和更深层的验证（融资数据、具体案例）。时间成本 +71% 是合理的——skill 做了 2-3 倍的搜索量和验证步骤，换来的是零漏报零误报。"
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 2, "run": "with_skill",
+  "expectations": [
+    {"text": "platform-first", "passed": true, "evidence": "推荐按平台组织：Google AI Studio、OpenRouter、DeepSeek 官方、Cerebras、硅基流动、火山引擎。"},
+    {"text": "agent-capability-first", "passed": true, "evidence": "重点推荐按 agent 能力排序，每条有 Agent/工具调用能力评级，引用 AkitaOnRails 编码基准分数。"},
+    {"text": "nvidia-nim-excluded", "passed": true, "evidence": "NVIDIA NIM 仅出现在「你已经在用的资源状态」表中，推荐资源中未重复推荐。"},
+    {"text": "has-access-info", "passed": true, "evidence": "每条有接入方式、base_url、model ID、国内可访问性。"},
+    {"text": "mentions-cost-paradigm", "passed": true, "evidence": "开头核心结论：「免费 + 强 agent + 你的吞吐量，三者无法同时满足」，明确质量 vs 额度权衡。"},
+    {"text": "daily-throughput-noted", "passed": true, "evidence": "详细标注每个方案的日吞吐量上限：Gemini ~750万/天、OpenRouter ~500万/天（充$10）、Cerebras 100万/天、硅基流动 ~16万/天。明确区分 OpenRouter 所有 :free 模型共享同一配额。对比总结表含「日吞吐量上限」列。"}
+  ]
+}

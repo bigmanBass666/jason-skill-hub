@@ -272,10 +272,15 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 基线文件 `resource-database.json` 存放在专用私有仓库 `bigmanBass666/skill-baselines`，**不维护本地副本**。
 
-- **读取**：通过 GitHub MCP 的 `get_file_contents` 工具读取
-  - 路径：`free-resource-hunter/resource-database.json`
-  - 仓库：`bigmanBass666/skill-baselines`（branch: `main`）
-- **写入**：通过 GitHub MCP 的 `create_or_update_file` 写入（需先读取获取 sha）
+仓库信息：`bigmanBass666/skill-baselines`（branch: `main`），路径：`free-resource-hunter/resource-database.json`
+
+**本地交互场景（Claude Code 等有 MCP 的环境）：**
+- 读取：GitHub MCP `get_file_contents`
+- 写入：GitHub MCP `create_or_update_file`（需先读取获取 sha）
+
+**定时任务 / 无 MCP 环境（有 GITHUB_TOKEN 的 agent）：**
+- 读取：`gh api repos/bigmanBass666/skill-baselines/contents/free-resource-hunter/resource-database.json?ref=main --jq '.content' | base64 -d`
+- 写入：先读取 sha，再 `gh api ... -X PUT -f message="update baseline" -f content="$(base64)" -f sha="$SHA" -f branch=main`
 
 原因：基线是云端数据，多个 agent 共享同一份。专用仓库彻底解耦，JSON 格式便于增量操作。
 
