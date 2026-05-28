@@ -348,8 +348,9 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - `references/resource-database.json` — 已知资源平台和情报源的完整档案（增量对比的基线库）
   - **仓库**: `bigmanBass666/skill-baselines`（private）
   - **路径**: `free-resource-hunter/resource-database.json`
-  - **读取方式**: GitHub MCP `get_file_contents`
-  - **写入方式**: GitHub MCP `create_or_update_file`（需先获取 sha）
+  - **读取方式**: 本地用 GitHub MCP `get_file_contents`；定时任务用 `gh api`
+  - **写入方式**: 本地用 GitHub MCP `create_or_update_file`；定时任务用 `gh api -X PUT`
+  - 详见「原则 0」中的分场景说明
 - `references/search-strategies.md` — 情报扫描的搜索策略、关键词模板和信息源列表
 - `references/evaluation-framework.md` — 资源评估框架，优先评估模型质量和 agent 能力
 - `references/push-format.md` — 龙虾推送场景的输出格式规范
