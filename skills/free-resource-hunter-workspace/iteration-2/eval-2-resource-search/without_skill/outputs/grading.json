@@ -1,0 +1,11 @@
+{
+  "eval_id": 2, "run": "without_skill",
+  "expectations": [
+    {"text": "platform-first", "passed": true, "evidence": "推荐了 NVIDIA NIM、Cerebras、Google Gemini、Groq、硅基流动、火山引擎等平台。"},
+    {"text": "agent-capability-first", "passed": false, "evidence": "评估以吞吐量和免费额度为主，Agent 能力仅简要提及。"},
+    {"text": "nvidia-nim-excluded", "passed": false, "evidence": "NVIDIA NIM 被推荐为吞吐量最高的免费选择（用户已在用）。"},
+    {"text": "has-access-info", "passed": true, "evidence": "每条有平台名称和基本接入方式。"},
+    {"text": "mentions-cost-paradigm", "passed": false, "evidence": "未提及质量 vs 额度的权衡逻辑。"},
+    {"text": "daily-throughput-noted", "passed": true, "evidence": "提到了 1-2 亿 tokens/天需求、NVIDIA NIM 40 RPM 约 1.15 亿/天、Cerebras 100万/天、Gemini 1500 req/天。但未区分同一平台不同模型额度差异。"}
+  ]
+}
