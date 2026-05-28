@@ -26,7 +26,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 触发场景：
 - 「最近有什么新东西」「扫一下」「跑一次」「有什么动态」
-- 定时触发（如龙虾推送场景）
+- 定时触发（如定时推送场景）
 - 「有没有新上线的免费模型」「哪个平台有新变动」
 - 「有没有什么新的」「新上线」「新动态」
 
@@ -142,26 +142,32 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 **第 4 步：输出情报简报**
 
-按照 `references/push-format.md` 中定义的格式输出。每次扫描必须包含：
+按照 `references/push-format.md` 中定义的标准 Markdown 格式输出。每次扫描包含：
 
 ```markdown
 ## 情报扫描报告 | [日期]
 
-### 🔥 紧急情报（14天内新发现的重磅资源）
+### 🔥 紧急情报
 
-1. [资源/模型名称] — [一句话描述]
-   - 来源：[平台]
-   - 模型信息：[参数量/类型/能力]
-   - Agent/工具调用能力：[强/中/弱/未知]
-   - 免费/优惠详情：[具体额度，必须包含 tokens/day 或 requests/day，区分模型间差异]
-   - 接入方式：[API格式/注册链接]
-   - 时效性判断：[永久/限时(截止MM-DD)/测试期/未知]
-   - 推荐行动：[立即注册/持续关注/可以忽略]
+**1. [资源/模型名称] — [一句话描述]**
 
-### 📡 一般动态（平台变动 + 基线遗漏补充）
-> 免费额度调整、新限制、下线通知、超过14天的基线遗漏
+- 来源：[平台]
+- 模型信息：[参数量/类型/能力]
+- Agent/工具调用能力：[强/中/弱/未知]
+- 免费详情：[具体额度，必须包含 tokens/day 或 requests/day]
+- 接入方式：[API格式/注册链接]
+- 时效性：[永久/限时(截止MM-DD)/测试期]
+- 推荐行动：[立即注册/持续关注/可以忽略]
 
-### 📊 已知资源状态快照
+### 📡 一般动态
+
+- **[平台]** [变动描述] — [影响] [时效性标记]
+
+### 📊 已知资源健康
+
+| 平台 | 状态 | 备注 |
+|------|------|------|
+| [平台名] | ✅ | [简要状态] |
 ```
 
 **输出格式要求**：
@@ -234,9 +240,9 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 ---
 
-### 工作流 5：龙虾推送模式
+### 工作流 5：定时推送模式
 
-触发：定时任务 / 被龙虾定时触发
+触发：定时任务 / 自动推送
 
 这是工作流 1 的自动化版本，适用于定时推送场景。与手动触发的区别：
 - **严格遵循 `references/push-format.md` 的格式规范**（总长度 ≤50 行）
@@ -345,7 +351,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 | 2 资源搜索 | resource-database.json, search-strategies.md | evaluation-framework.md |
 | 3 深度调研/避坑 | resource-database.json | evaluation-framework.md |
 | 4 资源追踪库管理 | resource-database.json | — |
-| 5 龙虾推送 | resource-database.json, push-format.md | search-strategies.md |
+| 5 定时推送 | resource-database.json, push-format.md | search-strategies.md |
 
 - `references/resource-database.json` — 已知资源平台和情报源的完整档案（增量对比的基线库）
   - **仓库**: `bigmanBass666/skill-baselines`（private）
@@ -355,4 +361,4 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
   - 详见「原则 0」中的分场景说明
 - `references/search-strategies.md` — 情报扫描的搜索策略、关键词模板和信息源列表
 - `references/evaluation-framework.md` — 资源评估框架，优先评估模型质量和 agent 能力
-- `references/push-format.md` — 龙虾推送场景的输出格式规范
+- `references/push-format.md` — 定时推送场景的输出格式规范
