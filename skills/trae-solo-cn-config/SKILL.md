@@ -1,4 +1,4 @@
----
+﻿---
 name: trae-solo-cn-config
 description: |
   TRAE 系列应用配置快速定位助手。当用户需要查找 TRAE SOLO CN、Trae CN (国内版)、Trae (国际版) 的配置文件、设置、MCP 服务器配置、工作区配置、历史记录或任何与 TRAE 相关的配置信息时，必须使用此 skill。触发关键词包括："TRAE SOLO CN 配置"、"Trae CN 配置"、"Trae 配置"、"Solo 配置"、"trae solo 设置"、"MCP 配置"、"找配置文件"、"配置在哪里"、"历史记录位置"、"工作区配置"、"skill 配置"、"工具配置"等。此 skill 提供三个版本的完整配置目录结构映射，帮助 AI 快速定位到具体配置文件路径，避免版本混淆和盲目搜索。
@@ -10,11 +10,11 @@ description: |
 
 ## 三个版本的区别
 
-| 版本 | 目录名称 | 特点 |
-|------|---------|------|
-| **TRAE SOLO CN** | `TRAE SOLO CN` | 字节跳动国内 Solo 版本，有独立的 AI Agent 工具系统 |
-| **Trae CN** | `Trae CN` | 字节跳动国内主版本，功能最完整 |
-| **Trae (国际版)** | `Trae` | 国际版本，面向海外用户 |
+| 版本 | 目录名称 | 特点 | .trae-cn 使用情况 |
+|------|---------|------|------------------|
+| **TRAE SOLO CN** | `TRAE SOLO CN` | 字节跳动国内 Solo 版本，有独立的 AI Agent 工具系统 | ✅ Agent PATH 引用 `.trae-cn\sdks\versions\node\current` |
+| **Trae CN** | `Trae CN` | 字节跳动国内主版本，功能最完整 | ✅ 主应用 SDK 管理和工具存储 |
+| **Trae (国际版)** | `Trae` | 国际版本，面向海外用户 | ❌ 不使用此目录 |
 
 ## 配置根目录
 
@@ -22,6 +22,27 @@ description: |
 - TRAE SOLO CN: `C:\Users\{用户名}\AppData\Roaming\TRAE SOLO CN`
 - Trae CN: `C:\Users\{用户名}\AppData\Roaming\Trae CN`
 - Trae (国际版): `C:\Users\{用户名}\AppData\Roaming\Trae`
+
+## Trae CN SDK 管理目录 (.trae-cn)
+
+此目录是 Trae CN 系列应用的 SDK 和工具管理目录。SOLO Agent 的 RunCommand 工具会引用此目录下的路径。
+
+- **根路径**: `C:\Users\{用户名}\.trae-cn\`
+- **关键子目录**:
+  - `.trae-cn\tools\trae-gopls\current\` - Go 语言服务器
+  - `.trae-cn\sdks\versions\node\current\` - Node.js SDK 路径（SOLO Agent PATH 引用此路径）
+  - `.trae-cn\sdks\workspaces\{hash}\versions\node\current\` - 工作区级 Node.js 路径
+  - `.trae-cn\builtin\skills\` - 内置 skills 目录（包含 code/, trae/, work/ 子目录）
+  - `.trae-cn\builtin\version.json` - 内置 skills 版本信息
+  - `.trae-cn\argv.json` - 全局配置文件（包含 locale、crash-reporter 配置）
+
+### .trae-cn 目录使用情况对比
+
+| 应用版本 | 是否使用 .trae-cn/ | 使用方式 |
+|---------|-------------------|---------|
+| **TRAE SOLO CN** | ✅ 是 | Agent 的 RunCommand 工具 PATH 会引用 `.trae-cn\sdks\versions\node\current`（默认为空目录） |
+| **Trae CN** | ✅ 是 | 主应用使用此目录进行 SDK 管理、工具存储和内置 skills 管理 |
+| **Trae (国际版)** | ❌ 否 | 不使用此目录 |
 
 ---
 
@@ -51,13 +72,16 @@ SOLO 的核心是 AI Agent 系统，包含以下组件：
 
 #### 1.2 内置 Python 环境
 - **路径**: `ModularData\ai-agent\vm\tools\python\`
-- **Python 版本**: 内置完整 Python 发行版
+- **Python 版本**: 3.10.11 (见 `tools/config/version.json`)
 - **预装包**: PIL/Pillow, numpy, pandas, matplotlib, opencv-python, pypdf, python-docx, python-pptx, beautifulsoup4, lxml, requests, click, colorama, chardet, certifi, cffi, csvkit, agate, dbfread, dateutil, decorator, defusedxml, docx, dotenv, fontTools, idna, isodate, jedi, leather, magika, markdown, mpmath, odfpy, packaging, parso, pdfminer, pdfplumber, pip, pptx, pygments, pyparsing, pypdfium2, pytz, PyYAML, IPython, pickleshare
 - **可执行文件**: `python.exe`, `python3.exe`
 
 #### 1.3 内置 Node.js 环境
 - **路径**: `ModularData\ai-agent\vm\tools\node\`
-- **包含**: node.exe, npm, npx, pnpm, yarn, corepack
+- **Node.js 版本**: v22.16.0 (见 `tools/config/version.json`)
+- **npm 版本**: 10.9.4
+- **包含**: node.exe, npm.cmd, npx.cmd, pnpm.CMD, yarn.CMD, corepack
+- **Agent 引用路径**: `.trae-cn\sdks\versions\node\current` (默认空目录)
 - **MCP 相关**: 
   - `mcp_prewarm/` - MCP 预热工具
   - `mcp_proxy_bootstrap/` - MCP 代理启动器
@@ -345,6 +369,10 @@ SOLO 使用 `AI.toolcall.v2.command.allowList` 控制 AI 可调用的命令，�
 | "SOLO 的 CKG 日志" | `ModularData\ckg_server\codekg.log.{日期}_{小时}` |
 | "SOLO 的工具调用白名单" | `User\settings.json` (AI.toolcall.v2.command.allowList) |
 | "SOLO 的 Shell 环境变量" | `User\settings.json` (solo.shell.env) |
+| ".trae-cn 目录在哪" | `C:\Users\{用户名}\.trae-cn\` |
+| "Agent 用的 Node.js SDK 路径" | `.trae-cn\sdks\versions\node\current` (默认空目录) |
+| "SOLO 内置 Node.js 实际位置" | `ModularData\ai-agent\vm\tools\node\` |
+| "Go 语言服务器路径" | `.trae-cn\tools\trae-gopls\current` |
 
 ### Trae CN 特有
 

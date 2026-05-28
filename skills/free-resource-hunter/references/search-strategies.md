@@ -180,7 +180,7 @@
 社区出现讨论（Reddit/Twitter/HN）
 → 搜索该话题，收集线索
 → 用 web-reader 访问官方页面验证
-→ 与 resource-database.md 对比
+→ 与 resource-database.json（远程仓库）对比
 → 确认为新情报 → 输出
 ```
 
@@ -192,7 +192,7 @@
 ```
 直接访问平台模型列表页面（web-reader）
 → 提取当前模型列表
-→ 与 resource-database.md 中的记录对比
+→ 与 resource-database.json（远程仓库）中的记录对比
 → 发现差异（新增/消失）→ 验证
 → 确认为新情报 → 输出
 ```
@@ -242,7 +242,7 @@
 
 ```
 第 0 步：加载基线
-└─ 读取 references/resource-database.md，建立已知资源清单
+└─ 通过 GitHub MCP 读取 resource-database.json（远程仓库），建立已知资源清单
 
 第 1a 步：社区信号搜索（5-8 个搜索）
 ├─ Reddit r/LocalLLaMA 最新帖 + 时效性关键词
@@ -255,7 +255,7 @@
 第 1b 步：平台直采
 ├─ web-reader OpenRouter 模型列表
 ├─ web-reader NVIDIA NIM 模型列表
-└─ 其他核心平台（根据 resource-database.md 中的列表）
+└─ 其他核心平台（根据 resource-database.json 中的列表）
 
 第 1c 步：官方渠道巡查
 ├─ 各平台 blog/changelog 搜索
@@ -275,7 +275,7 @@
 第 4 步：输出情报简报
 ├─ 按 push-format.md 格式输出
 ├─ 只输出增量（新变化）
-└─ 将新发现回写到 resource-database.md
+└─ 将新发现通过 GitHub MCP 回写到 resource-database.json（远程仓库）
 ```
 
 ### 资源搜索流程（工作流 2）

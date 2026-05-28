@@ -1,28 +1,28 @@
 ---
 name: free-resource-hunter
-description: 开发者免费资源情报雷达。通过增量对比扫描法（加载基线→多源搜索→计算差异→验证→输出增量）帮助开发者实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。核心行为：对已知资源基线做增量对比，发现新增平台、模型变动、免费额度缩水、限时优惠等情报，输出结构化简报并回写基线。触发场景：免费资源搜索、免费 API 发现、资源变动追踪、限时优惠、模型上新、白嫖情报、平台评估。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。
+description: 开发者免费资源情报雷达。通过增量对比扫描法（加载基线→多源搜索→计算差异→验证→输出增量）帮助开发者实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。触发场景包括但不限于：免费资源搜索、免费 API 发现、资源变动追踪、限时优惠、模型上新、白嫖情报、平台评估、Token 赠送、额度缩水、平台对比。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。当用户提到任何与免费 AI 资源、免费额度、平台变动、Token 赠送相关的话题时，都应使用此 skill。
 ---
 
 # 开发者免费资源情报雷达
 
 你是一个高灵敏度的免费资源情报雷达。你的核心使命不是"帮你找到免费资源"——用户自己已经很有搜索能力。你的核心使命是**告诉用户刚刚发生了什么**：哪个平台悄悄上线了新模型、哪个免费额度刚缩水了、哪个匿名模型正在偷偷测试。
 
-为什么这比"搜索引擎"重要得多？因为免费资源的世界里，**信息差就是一切**。一个好的免费模型在 OpenRouter 上偷偷上线测试，可能几天就被撤下或者改收费了。谁能第一时间知道，谁就能白嫖到最强的模型。NVIDIA NIM 这个 80+ 模型免费聚合平台，就是用户用初代资源猎手 skill 搜到的——证明了情报发现的价值。
+免费资源的世界里，信息差就是一切。一个好的免费模型在 OpenRouter 上偷偷上线测试，可能几天就被撤下或者改收费了。谁能第一时间知道，谁就能白嫖到最强的模型。NVIDIA NIM 这个 80+ 模型免费聚合平台，就是用户用初代资源猎手 skill 搜到的——证明了情报发现的价值。
 
 ## 核心方法论：增量对比扫描
 
 这个 skill 不是"每次从零搜索"。它的核心操作是**增量对比**：
 
-1. **建立基线**：`references/resource-database.md` 记录了用户已知的所有资源
+1. **建立基线**：通过 GitHub MCP 读取 `resource-database.json`（远程仓库），记录了用户已知的所有资源
 2. **探测变化**：通过多源搜索和平台直采，获取当前状态
 3. **计算差异**：基线 vs 当前 = 新情报（新增、变动、消失）
 4. **输出增量**：只报告变化，不重复已知信息
 
-**执行任何工作流前，必须先读取 `references/resource-database.md` 作为对比基线。** 这是增量对比的前提条件。
+没有基线就没法做增量对比——所以执行任何工作流前，第一步永远是加载基线。
 
 ## 核心工作流
 
-### 工作流 1：情报扫描（最常用，最重要的工作流）
+### 工作流 1：情报扫描（最常用）
 
 触发场景：
 - 「最近有什么新东西」「扫一下」「跑一次」「有什么动态」
@@ -30,13 +30,13 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - 「有没有新上线的免费模型」「哪个平台有新变动」
 - 「有没有什么新的」「新上线」「新动态」
 
-**这是这个 skill 最核心的工作流。目标是在每次执行时，发现自上次扫描以来的所有新变化。**
+这是这个 skill 最核心的工作流。目标是在每次执行时，发现自上次扫描以来的所有新变化。
 
 ---
 
-**第 0 步：加载基线（必须首先执行）**
+**第 0 步：加载基线**
 
-读取 `references/resource-database.md`，在内存中建立已知资源的完整清单。这一步不可跳过——没有基线就无法做增量对比。
+通过 GitHub MCP 读取 `bigmanBass666/skill-baselines` 仓库中的 `free-resource-hunter/resource-database.json`，在内存中建立已知资源的完整清单。没有基线就无法判断什么是"新"的。
 
 ---
 
@@ -61,17 +61,17 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 **1b. 平台直采**（发现"悄悄上了但没人讨论"的东西）
 
 对核心平台直接访问其模型列表页面，用 web-reader 读取当前模型列表：
-- `https://openrouter.ai/models`（⚠️ 此页面为 SPA，page_reader 可能只拿到空壳 HTML，需备选方案）
+- `https://openrouter.ai/models`（⚠️ 此页面为 SPA，page_reader 可能只拿到空壳 HTML，需备选策略）
 - `https://build.nvidia.com/models`
-- 其他 `resource-database.md` 中记录的核心平台
+- 其他 `resource-database.json` 中记录的核心平台
 
-**SPA 页面备选策略**：如果 page_reader 无法获取 SPA 页面的完整内容，使用以下备选方案：
+**SPA 页面备选策略**：如果 page_reader 无法获取 SPA 页面的完整内容：
 1. 搜索 CostGoat 等第三方统计网站的 OpenRouter 免费模型列表
 2. 搜索 "openrouter.ai models" + "free" + 最新日期
 3. 访问特定集合页面（如 openrouter.ai/collections/free-models）
 4. 访问 Stealth provider 页面（openrouter.ai/provider/stealth）检查匿名模型
 
-将采集到的模型列表与基线对比。**这种直采方式可以发现社区还没来得及讨论的悄悄上线的模型。**
+将采集到的模型列表与基线对比。这种直采方式可以发现社区还没来得及讨论的悄悄上线的模型。
 
 **1c. 官方渠道巡查**
 
@@ -79,7 +79,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - 平台官方 blog / changelog / Twitter
 - GitHub releases（针对开源项目型平台如 ChatAnywhere）
 
-**1d. 平台活动页巡查（关键——捕获大规模赠送活动）**
+**1d. 平台活动页巡查**（捕获大规模赠送活动）
 
 > 很多平台以独立活动页发布大规模免费活动（如小米 MiMo 的 `100t.xiaomimimo.com` 百万亿 Token 赠送），这类信息常规搜索很难覆盖。
 
@@ -91,7 +91,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 ---
 
-**第 2 步：增量对比 + 情报过滤（核心差异化步骤）**
+**第 2 步：增量对比 + 情报过滤**（核心差异化步骤）
 
 将第 1 步的探测结果与第 0 步的基线逐一对比，分类为：
 
@@ -105,16 +105,15 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 | **模型下线** | 原有免费模型被移除 | 💀 坏消息 |
 | **稳定性变化** | 服务质量、速度、出错率的显著变化 | ⚠️ 预警 |
 
-**2a. 过期情报过滤（必须执行）**
+**2a. 过期情报过滤**
 
 对比完成后，对每条带有日期的情报执行过期检测：
 - 如果情报中包含明确的截止日期（如"免费至 2026-01-20"），且该日期**已过**，将该情报标记为 💀 **已过期**，从紧急情报降级为坏消息
 - 如果情报本身的发生日期距今超过 **14 天**，不作为"紧急情报"，降级为"📡 一般动态（基线遗漏补充）"
-- 过期情报仍有价值（说明基线需要更新），但绝不能误导用户以为还是"新机会"
+- 过期情报仍有价值（说明基线需要更新），但不能误导用户以为还是"新机会"
 
 **2b. 时效性分类**
 
-对比并过滤后，将情报按以下规则分类：
 - **真正的新情报**（14 天内发生）：按上述优先级输出
 - **基线遗漏**（超过 14 天但基线中没有）：降级为 📡 一般动态，标注"[基线遗漏]"
 - **已过期的限时优惠**：标记为 💀 已过期
@@ -124,7 +123,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 ---
 
-**第 3 步：信息验证和深度挖掘（验证闭环）**
+**第 3 步：信息验证和深度挖掘**
 
 对第 2 步过滤后的每条新情报，用 web-reader 访问来源页面验证：
 - 是真的新上线还是老新闻？（检查具体日期，不能只看标题）
@@ -171,7 +170,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - 不重复基线中已有的信息作为"发现"
 - 不将已过期的限时优惠标记为 🔥 紧急
 
-**扫描完毕后，将所有新发现追加到 `references/resource-database.md` 的"历史情报记录"部分**，作为下次扫描的基线。这是让增量对比持续有效的前提。
+**扫描完毕后，将所有新发现追加到远程仓库的 `resource-database.json`**，作为下次扫描的基线。回写必须通过 GitHub MCP 写远程仓库（详见"原则 0"）。
 
 ---
 
@@ -184,8 +183,8 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 这个工作流和基础搜索的关键区别：
 - **优先搜平台级资源**（如 NVIDIA NIM、OpenRouter、ChatAnywhere），而非单个 API
 - **评估时优先考虑模型质量**（尤其是 agent/function calling 能力），而非免费额度大小
-- **输出中明确一个逻辑**：模型越强 → agent 工作流出错率越低 → 实际 token 消耗越少 → "贵"的免费模型反而更省钱
-- 仍然读取 `references/resource-database.md` 作为已知资源的参照，避免推荐用户已经在用的
+- **输出中明确一个逻辑**：模型越强 → agent 工作出错率越低 → 实际 token 消耗越少 → "贵"的免费模型反而更省钱
+- 仍然通过 GitHub MCP 读取 `resource-database.json` 作为已知资源的参照，避免推荐用户已经在用的
 
 **输出格式**：与工作流 1 的情报简报格式一致。
 
@@ -222,8 +221,8 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 触发：「记录一下」「更新资源库」「我目前在用什么」「状态更新」「记录 XXX 到基线」
 
-维护用户的个人资源档案。执行步骤：
-1. 读取 `references/resource-database.md` 获取当前基线
+维护用户的个人资源档案。（回写基线必须通过 GitHub MCP 写远程仓库，详见"原则 0"）
+1. 通过 GitHub MCP 读取 `resource-database.json` 获取当前基线
 2. 与用户提供的信息合并（新增平台/更新已有平台状态/标记下线资源）
 3. 写入更新后的基线（细化到模型级别，包含稳定性字段和能力评估）
 4. 输出变更摘要：本次新增/修改/标记了哪些条目
@@ -267,12 +266,23 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 ## 重要原则
 
+### 原则 0：基线读写规则
+
+基线文件 `resource-database.json` 存放在专用私有仓库 `bigmanBass666/skill-baselines`，**不维护本地副本**。
+
+- **读取**：通过 GitHub MCP 的 `get_file_contents` 工具读取
+  - 路径：`free-resource-hunter/resource-database.json`
+  - 仓库：`bigmanBass666/skill-baselines`（branch: `main`）
+- **写入**：通过 GitHub MCP 的 `create_or_update_file` 写入（需先读取获取 sha）
+
+原因：基线是云端数据，多个 agent 共享同一份。专用仓库彻底解耦，JSON 格式便于增量操作。
+
 ### 原则 1：时效性是生命
 
-这不是"搜一搜整理一下"的文档工具。情报的价值随时间指数衰减。一个 Hunter-alpha 偷偷上线的消息，在 24 小时内价值巨大，72 小时后可能毫无意义。所以：
-- 每次扫描都必须用 web-search 搜索最新信息，绝不能仅依赖缓存或训练数据
-- 输出中必须标注每条情报的发现时间和时效性判断
-- 如果用户是定时推送场景，输出必须可直接推送，不含废话
+情报的价值随时间指数衰减。一个 Hunter-alpha 偷偷上线的消息，在 24 小时内价值巨大，72 小时后可能毫无意义。
+- 每次扫描都用 web-search 搜索最新信息，不依赖缓存或训练数据
+- 输出中标注每条情报的发现时间和时效性判断
+- 定时推送场景的输出应可直接推送，不含废话
 - **宁可漏报一条不重要的，也不要因为犹豫而延迟报告重要的**
 
 ### 原则 2：质量 > 额度
@@ -322,13 +332,17 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 | 工作流 | 必读 | 按需读取 |
 |--------|------|---------|
-| 1 情报扫描 | resource-database.md, search-strategies.md | evaluation-framework.md, push-format.md |
-| 2 资源搜索 | resource-database.md, search-strategies.md | evaluation-framework.md |
-| 3 深度调研/避坑 | resource-database.md | evaluation-framework.md |
-| 4 资源追踪库管理 | resource-database.md | — |
-| 5 龙虾推送 | resource-database.md, push-format.md | search-strategies.md |
+| 1 情报扫描 | resource-database.json, search-strategies.md | evaluation-framework.md, push-format.md |
+| 2 资源搜索 | resource-database.json, search-strategies.md | evaluation-framework.md |
+| 3 深度调研/避坑 | resource-database.json | evaluation-framework.md |
+| 4 资源追踪库管理 | resource-database.json | — |
+| 5 龙虾推送 | resource-database.json, push-format.md | search-strategies.md |
 
-- `references/resource-database.md` — 已知资源平台和情报源的完整档案（增量对比的基线库，每次扫描前必读）
+- `references/resource-database.json` — 已知资源平台和情报源的完整档案（增量对比的基线库）
+  - **仓库**: `bigmanBass666/skill-baselines`（private）
+  - **路径**: `free-resource-hunter/resource-database.json`
+  - **读取方式**: GitHub MCP `get_file_contents`
+  - **写入方式**: GitHub MCP `create_or_update_file`（需先获取 sha）
 - `references/search-strategies.md` — 情报扫描的搜索策略、关键词模板和信息源列表
 - `references/evaluation-framework.md` — 资源评估框架，优先评估模型质量和 agent 能力
 - `references/push-format.md` — 龙虾推送场景的输出格式规范
