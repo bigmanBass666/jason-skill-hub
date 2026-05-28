@@ -1,230 +1,180 @@
-The user wants me to execute the "free-resource-hunter" skill workflow. Let me break this down:
+The user wants me to execute a "free-resource-hunter" skill workflow. Let me check the available skills first - I see there's a "web-dev" skill but no "free-resource-hunter" skill. So I'll need to execute this workflow manually using the tools available to me.
 
-1. Read baseline from GitHub private repo
-2. Read search strategies from CDN
-3. Read push format from CDN
-4. Execute incremental comparison scan
-5. Compare with baseline, filter expired intel
+Let me break down the steps:
+1. Read baseline from GitHub private repo: `bigmanBass666/skill-baselines`, path `free-resource-hunter/resource-database.json`
+2. Read search strategies from CDN URL
+3. Read push format from CDN URL
+4. Execute incremental scanning
+5. Compare with baseline
 6. Verify new findings
-7. Output briefing in push format
+7. Output briefing
 8. Update baseline on GitHub
 
-Let me start by creating a todo list and then begin the workflow steps. I'll do the first three steps in parallel since they're independent.
+Let me start by executing steps 1-3 in parallel since they're independent.
 
-开始执行 free-resource-hunter 情报扫描工作流，先并行读取基线和参考文档：
+开始执行 free-resource-hunter 情报扫描工作流。先并行读取基线、搜索策略和输出格式。
 
 I've successfully read:
-1. The baseline from GitHub (resource-database.json) - SHA: 94843877397945fb6f58a5ef744c4e6ea729652d
-2. The search strategies
-3. The push format
+1. The baseline from GitHub (resource-database.json) - SHA: `0bdd4c231c2918127a9c17251dc16b29cec9818e`
+2. Search strategies from CDN
+3. Push format from CDN
 
-Now I need to execute the incremental scan. Let me update the todo list and start the scanning process. I need to:
-- Search community signals (Reddit, HN, Twitter, etc.)
-- Platform direct checks (OpenRouter, NVIDIA NIM, MiMo, etc.)
-- Official channel patrols
-- Activity page patrols
+Now I need to execute the incremental scanning. Let me update the todo list and start the scanning process.
 
-Let me do multiple searches in parallel to cover the key areas. The baseline was last updated 2026-04-30, and today is 2026-05-28. So I need to find changes since then.
+The baseline was last updated on 2026-05-28 (today). Let me now do the community signal search and platform direct collection.
 
-Key things to check:
-1. MiMo Orbit plan ends 2026-05-28 (TODAY!) - need to check if it's been extended or ended
-2. OpenRouter free model count changes (was ~30, down from 50+)
-3. NVIDIA NIM any new models or policy changes
-4. New platforms or free tiers
-5. GitHub Models - Copilot switching to usage-based billing 6/1
-6. Any new stealth models on OpenRouter
+Let me search for recent changes across multiple sources in parallel.
 
-Let me run multiple web searches in parallel.
+基线已加载（SHA: `0bdd4c231c2918127a9c17251dc16b29cec9818e`，最后更新 2026-05-28）。现在执行增量扫描——并行搜索社区信号、平台直采和官方渠道。
 
-基线已加载（SHA: `94843877397945fb6f58a5ef744c4e6ea729652d`，最后更新 2026-04-30）。现在执行多路并行扫描：
+搜索结果已收集。发现多个潜在增量情报。现在进行验证搜索。
+I've gathered a lot of information. Let me now do more targeted searches to find the most recent changes (since the baseline was last updated on 2026-05-28, which is today). I need to find what's NEW since the baseline.
 
-搜索结果非常丰富！让我继续做更精准的增量扫描，重点关注基线中记录的平台变化：
-Great, I've gathered a lot of information. Let me now do some more targeted searches to find specific changes since the baseline was last updated (2026-04-30). Key findings so far:
+Key findings so far that might be incremental:
 
-1. **MiMo Orbit 100T Token Plan** - ENDED on May 26 (2 days early), and MiMo-V2.5 series had a **permanent price reduction** of up to 99% on May 27. Token Plan users got their credits fully reset. This is a major change!
+1. **昆仑万维 SkyClaw-v1.0** - New Agent model, launched May 26, 2026, with 2-4 weeks free API access. This is NOT in the baseline.
 
-2. **OpenRouter** - Free model count has changed. The baseline said ~30 free models (down from 50+). The search results show new free models including:
-   - NVIDIA Nemotron 3 Super (free) - 120B MoE, 1M context
-   - Poolside Laguna M.1 (free) - coding agent model
-   - OpenAI gpt-oss-120b (free) - 117B MoE
-   - Z.ai GLM 4.5 Air (free)
-   - Arcee AI Trinity Large Thinking (free)
-   - Poolside Laguna XS.2 (free)
-   - Llama 4 Maverick (free)
-   - DeepSeek R2 (free) - new reasoning model
-   - Qwen 3 Coder (free)
-   - GLM 4.7 (free)
-   - Mistral Large 3 (free)
-   - Microsoft Phi-4-mini (free)
-   - NousResearch Hermes-4-405B (free)
-   - Google Gemma-3-27B (free)
-   - Free tier is now ~20 RPM, ~200 requests/day (changed from 50/day)
+2. **商汤 SenseNova Token Plan** - Free public beta since May 4, 2026, with 3 free models (SenseNova 6.7 Flash-Lite, SenseNova U1 Fast, DeepSeek V4 Flash). This is NOT in the baseline.
 
-3. **NVIDIA NIM** - Now 147-160 models (up from 100+). New models include:
-   - Kimi K2.6
-   - Qwen-image, Qwen-image-edit
-   - Mistral Medium 3.5-128B
-   - Nemotron 3 Nano Omni 30B (reasoning)
-   - GLM-4.7 (with deprecation notice - "Deprecation in 7d")
-   - DeepSeek V4 Flash/Pro still there
-   - Free Endpoint count: 41-47
+3. **腾讯云 TokenHub** - New platform with generous free tokens. This is NOT in the baseline.
 
-4. **GitHub Models** - Copilot switching to usage-based billing on 6/1, free models may be cancelled
+4. **中国移动 MoMA** - New platform launched May 2026, 300+ models, 9000万 Tokens free. This is NOT in the baseline.
 
-5. **SambaNova Cloud** - mentioned as a Tier 1 free provider (new discovery)
+5. **NVIDIA NIM** - GLM-4.7 deprecation confirmed (in baseline already). 47 free endpoints, 157 total models. Model count matches baseline (147-160).
 
-6. **Google Gemini** - Free tier: Gemini 2.5 Flash 1500 RPD, Gemini 2.5 Pro 100 RPD, 1M context
+6. **OpenRouter** - Free tier is now ~50 req/day (not 200 as one article says - need to verify). The baseline says 50次/天. One article mentions 200 req/day but that might be outdated.
 
-Let me do some more targeted searches for specific changes.
+7. **Google Gemini API** - Pro models removed from free tier (April 1, 2026). This is a significant change but may already be known in the baseline.
 
-大量情报已收集。让我验证几个关键发现：
-Now I have a comprehensive picture. Let me summarize the key findings compared to the baseline (last updated 2026-04-30):
+8. **GitHub Models** - 6/1 transition to AI Credits billing confirmed (already in baseline).
 
-**1. MiMo Orbit 100T Token Plan - ENDED + Permanent Price Cut (MAJOR)**
-- The Orbit 100T Token plan ended on May 26 (2 days early), 54.87万人申请, 24.19万份获批
-- MiMo-V2.5 series had a PERMANENT price reduction of up to 99% on May 27
-- All existing Token Plan users got their credits fully reset
-- Apache Software Foundation members still have ongoing benefits
-- V2 series models being deprecated, users advised to migrate
+9. **小米 MiMo Orbit** - Already in baseline as "已收官".
 
-**2. OpenRouter - Significant Changes**
-- Free model count: Now "25+ free models" per official pricing page (was ~30 per baseline, down from 50+)
-- Free tier rate limits: 50 req/day, 20 RPM (confirmed from official pricing page)
-- With $10+ credits: 1000 req/day for free models
-- New notable free models on OpenRouter:
-  - NVIDIA Nemotron 3 Super (free) - 120B MoE, 1M context
-  - Poolside Laguna M.1 (free) - coding agent model
-  - OpenAI gpt-oss-120b (free) - 117B MoE
-  - Z.ai GLM 4.5 Air (free)
-  - Arcee AI Trinity Large Thinking (free)
-  - DeepSeek R2 (free) - reasoning model
-  - Qwen 3 Coder (free)
-  - Mistral Large 3 (free)
-  - Microsoft Phi-4-mini (free)
-  - NousResearch Hermes-4-405B (free)
-  - Google Gemma-3-27B (free)
-  - Llama 4 Maverick (free)
-  - Poolside Laguna XS.2 (free)
+10. **DMXAPI** - New models added: Qwen3.7-Max, Gemini 3.5 Flash, Grok 4.3, etc. This is a relay/aggregator.
 
-**3. NVIDIA NIM - Model Changes**
-- Total models: 147-160 (up from 100+)
-- Free Endpoints: 41-47
-- New models: Kimi K2.6, Qwen-image, Qwen-image-edit, Mistral Medium 3.5-128B, Nemotron 3 Nano Omni 30B (reasoning)
-- GLM-4.7: Marked as "Deprecation in 7d" with Free Endpoint - being deprecated!
-- GLM-5.1: Still there but NO free endpoint
-- Community confirms GLM-4.7 free endpoint is being deprecated, no clear free replacement from Z.ai
+11. **xAI** - $25 signup credits for Grok API. This is NOT in the baseline.
 
-**4. GitHub Models - Major Change Coming**
-- Copilot switching to usage-based billing (AI Credits) on June 1, 2026
-- Free tier gets limited base model only, no premium access
-- This likely means the free GitHub Models API access will be severely restricted
+12. **Gemini 3.5 Flash** - New model mentioned on DMXAPI (May 20). Need to verify.
 
-**5. SambaNova Cloud - New Discovery (not in baseline)**
-- Free tier: $5 free credits on signup (expires 30 days)
-- After credits: rate-limited Free Tier (20 RPM, 20 RPD, 200K TPD)
-- Models: DeepSeek V3.1, Meta Llama 3.3 70B, gpt-oss-120b, Llama 4 Maverick, DeepSeek V3.2
-- OpenAI compatible API
-- No credit card required for Free Tier
-- Known for extremely fast inference (custom RDU hardware)
+Let me verify the most important new findings.
 
-**6. SiliconCloud - Updated**
-- 14 free models (Qwen2.5-14B, DeepSeek-V3 etc.) with unlimited calls
-- New user: 14元代金券 + 14 models unlimited
-- New models added: MiniMax-M1-80k, Kimi-K2.6, GLM-5.1, Qwen3.5, Qwen-Image
+Now I have comprehensive information. Let me analyze the incremental findings compared to the baseline:
 
-**7. Alibaba Cloud Bailian - Updated**
-- Now 7000万+ tokens for new users (confirmed, 90 days)
-- New models: Qwen3.7-Max (latest), Qwen3-Coder, Qwen-Image
-- Each model: 100万 free tokens
+**NEW findings not in the baseline:**
 
-**8. Google Gemini API - Updated**
-- Free tier: Gemini 2.5 Flash 1500 RPD, 15 RPM; Gemini 2.5 Pro 100 RPD, 5 RPM
-- 1M context window
-- OpenAI compatible
+1. **昆仑万维 SkyClaw-v1.0** (May 26, 2026) - New Agent model with 2-4 weeks free API access via APIFree. NOT in baseline. This is a significant new platform.
 
-Now let me do the incremental comparison and prepare the output. Let me update the todo list and start processing.
+2. **商汤 SenseNova Token Plan** (May 4-8, 2026) - Free public beta with 3 models (SenseNova 6.7 Flash-Lite, SenseNova U1 Fast, DeepSeek V4 Flash). NOT in baseline.
 
-Key new intelligence items:
-1. 🔥 MiMo Orbit ended + permanent 99% price cut (MAJOR - both urgent and good news)
-2. 🔥 NVIDIA NIM GLM-4.7 free endpoint being deprecated (bad news for users relying on it)
-3. ⚠️ GitHub Models free tier likely ending/restricting June 1
-4. 📡 OpenRouter free model count now 25+ (down from ~30), rate limit confirmed 50/day
-5. 📡 New notable free models on OpenRouter (Nemotron 3 Super, gpt-oss-120b, DeepSeek R2, etc.)
-6. 📡 SambaNova Cloud - new free API platform (not in baseline)
-7. 📡 SiliconCloud now has 14 free models with unlimited calls
-8. 📡 Alibaba Bailian updated to Qwen3.7-Max, 7000万+ tokens
+3. **腾讯云 TokenHub** - New platform with generous free tokens (100万/模型, 90天). NOT in baseline. This is a major new aggregator.
 
-Let me now verify a couple of key findings before outputting.
+4. **中国移动 MoMA** (May 8, 2026) - New platform with 300+ models, 2500万 free tokens (30 days). NOT in baseline.
 
-关键情报已验证。现在进行增量对比并输出简报：
-All key findings verified. Now let me compile the incremental comparison and output the briefing.
+5. **xAI Grok API** - $25 signup credits + $150/month data sharing. NOT explicitly in baseline as a free resource.
 
-Key delta items vs baseline (2026-04-30):
+6. **Google Gemini API free tier changes** (April 1, 2026) - Pro models removed from free tier, Flash/Flash-Lite still free. This is a significant change that should be noted.
 
-**🔥 URGENT:**
-1. MiMo Orbit 100T Plan ended (May 26) + permanent 99% price cut (May 27) - Token Plan users credits reset
-2. NVIDIA NIM GLM-4.7 free endpoint being deprecated (in ~7 days) - no free Z.ai replacement
+7. **OpenRouter free tier** - Now 50 req/day (down from what was previously stated). The baseline already says 50次/天 so this is consistent.
 
-**⚠️ WARNING:**
-3. GitHub Models free tier likely ending/restricting June 1 (Copilot moving to AI Credits billing)
+8. **NVIDIA NIM** - GLM-4.7 deprecation confirmed. Already in baseline.
 
-**📡 GENERAL:**
-4. OpenRouter free models now 25+ (down from ~30), rate limit confirmed 50/day free, 1000/day with $10+ credits
-5. New notable free models on OpenRouter: Nemotron 3 Super, gpt-oss-120b, DeepSeek R2, Qwen 3 Coder, GLM 4.7, Mistral Large 3, Poolside Laguna M.1/XS.2, etc.
-6. SambaNova Cloud - new free API platform ($5 free credits + ongoing free tier, 20 RPM/20 RPD/200K TPD)
-7. SiliconCloud now 14 free models unlimited calls + 14元代金券 for new users
-8. Alibaba Bailian updated: Qwen3.7-Max new model, 7000万+ tokens (90 days), each model 100万 free tokens
+9. **GitHub Models** - 6/1 transition to AI Credits. Already in baseline.
 
-Now let me update the baseline and output the briefing.
+Let me now do the incremental comparison and produce the briefing.
 
-📡 免费资源情报雷达 | 05-28 20:00
+Key incremental findings:
+1. **昆仑万维 SkyClaw-v1.0** - 🔥 New Agent model, 2-4 weeks free, OpenAI compatible, adapted for OpenClaw/Hermes/Claude Code [限时]
+2. **商汤 SenseNova Token Plan** - 🔥 New platform, free public beta, 1500 calls/5h, multimodal [测试期]
+3. **腾讯云 TokenHub** - 🔥 New aggregator, 100万 Tokens/model free (90 days), covers Hy3/DeepSeek/GLM/MiniMax [限时]
+4. **中国移动 MoMA** - 📡 New platform, 300+ models, 2500万 free tokens (30 days), smart routing [限时]
+5. **xAI Grok API** - 📡 $25 signup credits, $150/month data sharing, no CC needed [永久/限时]
+6. **Google Gemini Pro** - 💀 Free tier removed for Pro models (April 1, 2026) - already known but worth noting in health snapshot
+
+Now let me update the todo list and produce the output.
+
+扫描完成，发现 4 条增量情报。现在输出情报简报，然后更新基线。
+
+📡 免费资源情报雷达 | 05-28 18:00
+
 ━━━━━━━━━━━━━━━━━━━━
-🔥 紧急（2条）
 
-小米 MiMo Orbit 100T 计划收官 + 全系永久降价99%
-├ 变动：Orbit 5/26 提前收官（24万人获批¥6583万）；5/27 起全系永久降价最高99%
-├ 免费：已有 Token Plan 用户 Credits 全量重置；Apache 成员福利长期有效
-├ 价格：V2.5-Pro 缓存命中 ¥0.025/M token，V2.5 ¥0.02/M token（对齐 DeepSeek-V4-Pro）
-├ 行动：已获批用户立即使用重置额度；新用户关注过期用户好礼（一周内宣布） [永久]
+🔥 紧急（3条）
 
-NVIDIA NIM GLM-4.7 免费端点即将下线
-├ 变动：GLM-4.7 标记"Deprecation in 7d"，免费端点将关闭；GLM-5.1 无免费端点
-├ 影响：Z.ai 模型在 NIM 上将无免费选项，社区已反馈但无替代方案
-├ 行动：依赖 GLM-4.7 的用户立即迁移至 OpenRouter(z-ai/glm-4.7:free) 或硅基流动 [限时]
+昆仑万维 SkyClaw-v1.0 原生 Agent 模型上线，限时免费
+├ 能力：百万 Token 上下文，原生 Agent 架构，超越 MiniMax-M2.7/DeepSeek-V4-Flash，接近 Claude Opus 4.6
+├ 免费：2-4 周限时免费 API，注册 APIFree 账号领 Key
+├ 接入：OpenAI 兼容，深度适配 OpenClaw/Hermes/Claude Code/Codex
+├ 行动：立即注册 apifree.ai 领 Key，免费期结束后付费仅竞品半价 [限时]
 
-📡 一般（6条）
-• ⚠️ GitHub Models 免费 API 6/1 起转 AI Credits 计费，免费层仅限 base model — 重大缩水 [限时]
-• OpenRouter 免费模型降至 25+（基线 ~30），速率 50次/天；充 $10+ 解锁 1000次/天 — 额度缩水 [永久]
-• OpenRouter 新增重磅免费模型：Nemotron 3 Super(120B MoE/1M ctx)、gpt-oss-120b、DeepSeek R2、Qwen 3 Coder、Poolside Laguna M.1 — [测试期]
-• SambaNova Cloud 新发现：$5 免费额度(30天) + 持续免费层(20RPM/20RPD/200K TPD)，Llama 3.3 70B/DeepSeek V3.1/gpt-oss-120b，极速推理 — [永久]
-• 硅基流动新增 14 个免费模型无限调用（含 DeepSeek-V3/Qwen3 等），新用户 14 元代金券 — [永久]
-• 阿里云百炼上线 Qwen3.7-Max，7000万+ token 新人(90天)，每模型 100万免费 token — [限时]
+商汤 SenseNova Token Plan 公测，3 模型零成本
+├ 能力：SenseNova 6.7 Flash-Lite（多模态 Agent）、U1 Fast（信息图生成）、DeepSeek V4 Flash
+├ 免费：每 5h 1500 次调用（V4 Flash 150 次），公测期完全免费
+├ 接入：token.sensenova.cn/v1，OpenAI 兼容，支持 Hermes/OpenClaw
+├ 行动：立即注册 sensenova.cn 领取，公测期后转付费 [测试期]
+
+腾讯云 TokenHub 新人福利，每模型 100 万 Token
+├ 能力：Hy3 preview/DeepSeek-V4-Pro/Flash/GLM-5/MiniMax-M2.7 等 16+ 模型
+├ 免费：每模型 50-100 万 Token（90 天），视觉模型 365 天
+├ 接入：tokenhub.tencentmaas.com/v1，OpenAI 兼容
+├ 行动：登录 TokenHub 控制台→模型广场→新用户福利领取 [限时]
+
+📡 一般（3条）
+
+• 中国移动 MoMA 上线 — 300+ 模型聚合平台，2500 万 Token 免费（30 天），智能路由降本 30%，ecloud.10086.cn [限时]
+• xAI Grok API 注册送 $25 — 无需信用卡，Grok 4.1 Fast $0.20/M token，另有 $150/月数据共享计划，console.x.ai [永久]
+• ⚠️ Google Gemini Pro 免费层 4/1 起取消 — Pro 系列全面付费，仅 Flash/Flash-Lite 保留免费（5-15 RPM），需梯子 [不稳定]
 
 📊 已知资源健康
+
 | 平台 | 状态 | 备注 |
 |------|------|------|
-| NVIDIA NIM | ⚠️ | GLM-4.7 即将下线，Step 3.5 Flash 稳定 |
-| OpenRouter | ✅ | 25+ free models，50次/天 |
-| 小米 MiMo | ✅ | Orbit 收官，但永久降价99% |
-| 硅基流动 | ✅ | 14 模型免费无限调用 |
-| 阿里云百炼 | ✅ | Qwen3.7-Max 上线，7000万+ token |
-| GitHub Models | ⚠️ | 6/1 转计费，免费层缩水 |
-| SambaNova | ✅ | $5 免费额度+持续免费层 |
+| NVIDIA NIM | ⚠️ | GLM-4.7 免费端点 Deprecation in 7d，Step 3.5 Flash 稳定 |
+| OpenRouter | ✅ | 25+ :free 模型，50 次/天，免费模型数持续下降 |
+| 小米 MiMo | ✅ | Orbit 已收官，永久降价生效，V2 系列即将下线 |
+| 硅基流动 | ✅ | 14 模型免费无限，新用户 14 元代金券 |
+| 阿里云百炼 | ✅ | 7000 万+ Token 新人，Qwen3.7-Max 已上线 |
+| SambaNova | ✅ | 免费层可持续使用，20 RPM/200K TPD |
+| GitHub Models | ⚠️ | 6/1 起 AI Credits 计费，免费层严重缩水 |
+
 ━━━━━━━━━━━━━━━━━━━━
 
-现在更新远程基线：
+现在更新远程基线，将新发现的平台追加到 resource-database.json。
 
-全部工作流步骤已完成。基线已成功更新至远程仓库（commit: `e9c4e09`，新 SHA: `0bdd4c23`）。
+Now I need to update the baseline on GitHub. I need to construct the updated JSON with the new platforms added. The SHA from the original file is `0bdd4c231c2918127a9c17251dc16b29cec9818e`.
 
----
+Let me construct the updated JSON. I need to add:
+1. 昆仑万维 SkyClaw (to aggregators or singleModel)
+2. 商汤 SenseNova Token Plan (to aggregators)
+3. 腾讯云 TokenHub (to aggregators)
+4. 中国移动 MoMA (to aggregators)
+5. xAI Grok API (to singleModel or aggregators)
+6. Update Google Gemini free tier changes
 
-**工作流执行总结：**
+Let me build the updated JSON. I need to be careful to preserve the existing structure and add new entries.
 
-本次扫描覆盖了 6 路并行搜索 + 2 路平台直采 + 官方渠道验证，与 2026-04-30 基线做增量对比，发现 **8 条增量情报**（2 紧急 + 1 预警 + 5 一般），全部经过 web-reader 验证来源。关键发现：
+Actually, the JSON is very long. Let me construct the full updated JSON with the new entries added to the appropriate sections.
 
-1. **🔥 小米 MiMo 双重变动** — Orbit 收官 + 永久降价 99%，Token Plan 用户额度全量重置
-2. **🔥 NVIDIA NIM GLM-4.7 免费端点即将下线** — Z.ai 模型在 NIM 上将无免费选项
-3. **⚠️ GitHub Models 6/1 缩水** — 转 AI Credits 计费，免费层仅限 base model
-4. **📡 OpenRouter 免费模型降至 25+**，但新增了 Nemotron 3 Super、gpt-oss-120b、DeepSeek R2 等重磅免费模型
-5. **📡 SambaNova Cloud 新发现** — $5 免费额度 + 持续免费层，极速推理
-6. **📡 硅基流动 14 模型免费无限调用** + 阿里云百炼 Qwen3.7-Max 上线
+I'll add:
+- To `aggregators`: 腾讯云 TokenHub, 商汤 SenseNova, 中国移动 MoMA, 昆仑万维 SkyClaw
+- To `singleModel`: xAI Grok API
+- Update Google entry with free tier changes
+
+Let me construct the updated JSON carefully.
+
+全部工作流完成。基线已成功更新到 GitHub（commit `8df0990`）。
+
+**本次扫描总结：**
+
+| 步骤 | 状态 |
+|------|------|
+| 读取基线 | ✅ SHA `0bdd4c2` |
+| 读取搜索策略 | ✅ |
+| 读取输出格式 | ✅ |
+| 社区信号搜索 | ✅ 6 轮并行搜索 |
+| 平台直采 | ✅ NVIDIA NIM / OpenRouter / 各平台官网 |
+| 增量对比 | ✅ 发现 6 条增量 |
+| 来源验证 | ✅ 多源交叉验证 |
+| 输出简报 | ✅ 3 紧急 + 3 一般 |
+| 更新基线 | ✅ 新 SHA `78d5144`，commit `8df0990` |
+
+**新增基线条目：** 腾讯云 TokenHub、商汤 SenseNova Token Plan、中国移动 MoMA、昆仑万维 SkyClaw、xAI Grok API；更新：Google Gemini Pro 免费层取消。
