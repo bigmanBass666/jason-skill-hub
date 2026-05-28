@@ -11,7 +11,7 @@ function log(msg) {
   console.log(`[${timestamp()}] ${msg}`);
 }
 
-const IGNORED_DIRS = new Set(['.git', '__pycache__', 'node_modules', '.DS_Store']);
+const IGNORED_DIRS = new Set(['.git', '__pycache__', 'node_modules', '.DS_Store', 'free-resource-hunter-workspace']);
 const PRESERVED_FILES = new Set(['INDEX.md', 'INDEX_HEADER.md', 'skills.json']);
 
 function walkDir(dir, preserveRootFiles) {

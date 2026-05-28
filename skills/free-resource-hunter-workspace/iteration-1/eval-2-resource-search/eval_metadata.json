@@ -1,6 +1,0 @@
-{
-  "eval_id": 2,
-  "eval_name": "resource-search",
-  "prompt": "有没有免费的代码生成模型 API？agent 能力强的那种，我目前只用过 NVIDIA NIM",
-  "assertions": []
-}
