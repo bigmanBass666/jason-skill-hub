@@ -1,0 +1,23 @@
+{
+  "skill_name": "free-resource-hunter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "扫一下最近有什么新的免费 AI 资源，我主要是做 agent 开发的，关注能跑 function calling 的模型",
+      "expected_output": "情报扫描简报，包含紧急情报/一般动态/健康快照三个分区，每条情报有优先级标记和时效性判断",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "有没有免费的代码生成模型 API？agent 能力强的那种，我目前只用过 NVIDIA NIM",
+      "expected_output": "资源搜索报告，优先推荐平台级资源，评估维度以 agent/function calling 能力为首要，包含接入方式",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "OpenRouter 靠谱吗？免费层会不会突然缩水或者收费？我打算把 agent 工作流切过去",
+      "expected_output": "风险预警报告，包含免费层变更历史、用户被收费案例、数据隐私风险、平台存续风险，给出明确结论",
+      "files": []
+    }
+  ]
+}
