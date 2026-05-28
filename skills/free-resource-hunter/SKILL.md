@@ -274,12 +274,12 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 
 仓库信息：`bigmanBass666/skill-baselines`（branch: `main`），路径：`free-resource-hunter/resource-database.json`
 
-**本地交互场景（Claude Code 等有 MCP 的环境）：**
-- 读取：GitHub MCP `get_file_contents`
-- 写入：GitHub MCP `create_or_update_file`（需先读取获取 sha）
+**有 GitHub MCP 的环境（本地 Claude Code、云端 agent 等，推荐）：**
+- 读取：`get_file_contents`（repo: `bigmanBass666/skill-baselines`, path: `free-resource-hunter/resource-database.json`, branch: `main`）
+- 写入：`create_or_update_file`（需先读取获取 sha）
 
-**定时任务 / 无 MCP 环境（有 gh CLI + token 的 agent）：**
-- 前置：`export GITHUB_TOKEN=$GITHUB_PERSONAL_ACCESS_TOKEN`（gh CLI 默认读 GITHUB_TOKEN）
+**无 MCP 环境（仅有 gh CLI + token 的 web agent）：**
+- 前置：`export GITHUB_TOKEN=$GITHUB_PERSONAL_ACCESS_TOKEN`
 - 读取：`gh api repos/bigmanBass666/skill-baselines/contents/free-resource-hunter/resource-database.json?ref=main --jq '.content' | base64 -d`
 - 写入：先读取 sha，再 `gh api ... -X PUT -f message="update baseline" -f content="$(base64)" -f sha="$SHA" -f branch=main`
 
@@ -349,8 +349,8 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - `references/resource-database.json` — 已知资源平台和情报源的完整档案（增量对比的基线库）
   - **仓库**: `bigmanBass666/skill-baselines`（private）
   - **路径**: `free-resource-hunter/resource-database.json`
-  - **读取方式**: 本地用 GitHub MCP `get_file_contents`；定时任务用 `gh api`
-  - **写入方式**: 本地用 GitHub MCP `create_or_update_file`；定时任务用 `gh api -X PUT`
+  - **读取方式**: GitHub MCP `get_file_contents`（推荐）；无 MCP 时用 `gh api`
+  - **写入方式**: GitHub MCP `create_or_update_file`（推荐）；无 MCP 时用 `gh api -X PUT`
   - 详见「原则 0」中的分场景说明
 - `references/search-strategies.md` — 情报扫描的搜索策略、关键词模板和信息源列表
 - `references/evaluation-framework.md` — 资源评估框架，优先评估模型质量和 agent 能力
