@@ -1,0 +1,31 @@
+{
+  "eval_id": 1,
+  "run": "without_skill",
+  "expectations": [
+    {
+      "text": "has-three-sections",
+      "passed": false,
+      "evidence": "报告使用 Tier 1/2/3 分层（Best for Agent Development / Strong Options / Niche），没有 🔥紧急情报、📡一般动态、📊健康快照 的情报分类结构。"
+    },
+    {
+      "text": "priority-markers",
+      "passed": false,
+      "evidence": "无 🔥/📡/💀/⚠️ 等优先级标记。使用 Tier 1/2/3 分类但这是按能力分层而非情报优先级。"
+    },
+    {
+      "text": "timeliness-labeled",
+      "passed": false,
+      "evidence": "无时效性标注（永久/限时/测试期）。所有平台都按静态资源描述，未区分哪些是限时优惠。"
+    },
+    {
+      "text": "actionable",
+      "passed": false,
+      "evidence": "Recommendations 部分有通用建议（'Start with Gemini API'），但不是针对具体情报的可操作行动，也没有区分紧急程度。"
+    },
+    {
+      "text": "has-health-snapshot",
+      "passed": false,
+      "evidence": "无已知资源状态快照。无增量对比概念。"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "run": "without_skill",
+  "expectations": [
+    {
+      "text": "platform-first",
+      "passed": true,
+      "evidence": "推荐了 Google Gemini、Groq、OpenRouter、SiliconFlow 等平台级资源。但 NVIDIA NIM 也被当作独立推荐项（Tier 1），而非已知排除。"
+    },
+    {
+      "text": "agent-capability-first",
+      "passed": false,
+      "evidence": "评估维度以「Free Tier Limits」和「Why it matters」为主，没有单独的 Agent/工具调用能力评级。Function Calling 列存在但只标 Yes/Varies，没有 benchmark 得分。"
+    },
+    {
+      "text": "nvidia-nim-excluded",
+      "passed": false,
+      "evidence": "NVIDIA NIM 被列为 Tier 1 第 4 位推荐（Best function calling quality），且描述为「Mistral Nemotron is particularly strong for agent/tool use」。用户明确说已用过 NIM，报告仍将它作为推荐。"
+    },
+    {
+      "text": "has-access-info",
+      "passed": true,
+      "evidence": "每条推荐包含 URL 和基本接入方式。Migration Guide 部分给出了 base_url 和迁移步骤。"
+    },
+    {
+      "text": "mentions-cost-paradigm",
+      "passed": false,
+      "evidence": "未提及「强模型本身省钱」的逻辑。推荐理由侧重免费额度大小和速度。"
+    }
+  ]
+}
