@@ -278,7 +278,8 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - 读取：GitHub MCP `get_file_contents`
 - 写入：GitHub MCP `create_or_update_file`（需先读取获取 sha）
 
-**定时任务 / 无 MCP 环境（有 GITHUB_TOKEN 的 agent）：**
+**定时任务 / 无 MCP 环境（有 gh CLI + token 的 agent）：**
+- 前置：`export GITHUB_TOKEN=$GITHUB_PERSONAL_ACCESS_TOKEN`（gh CLI 默认读 GITHUB_TOKEN）
 - 读取：`gh api repos/bigmanBass666/skill-baselines/contents/free-resource-hunter/resource-database.json?ref=main --jq '.content' | base64 -d`
 - 写入：先读取 sha，再 `gh api ... -X PUT -f message="update baseline" -f content="$(base64)" -f sha="$SHA" -f branch=main`
 
