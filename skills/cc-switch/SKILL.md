@@ -140,6 +140,27 @@ $ccs = "D:\apps\cc-switch-cli\cc-switch.exe"
 & $ccs env check | list | tools
 ```
 
+## 通用模板（common_config）
+
+cc-switch 的 `settings` 表存储通用模板。切换 provider 时，cc-switch 会将 **provider 的 `settings_config`**（模型 env）合并到 **通用模板** 上，生成最终的 `settings.json`。
+
+```
+common_config_claude（通用模板） + provider.settings_config（模型 env） → settings.json
+```
+
+通用模板包含非 provider 特定的配置：`hooks`、`enabledPlugins`、`statusLine`、`language`、公共 `env` 变量等。
+
+**查询/编辑通用模板**（⚠️ 必须先关闭 cc-switch GUI）：
+
+```powershell
+$dbPath = "$env:USERPROFILE\.cc-switch\cc-switch.db"
+
+# 查看当前模板
+sqlite3 $dbPath "SELECT value FROM settings WHERE key = 'common_config_claude';"
+```
+
+编辑模板后，切换 provider 触发重新生成 settings.json。详细 schema 和编辑方法见 `references/provider-schemas.md` 的 `settings 表` 章节。
+
 ## API Key 测试
 
 添加 provider 前测试 key 是否可用：
