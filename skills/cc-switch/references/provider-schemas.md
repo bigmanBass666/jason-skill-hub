@@ -134,6 +134,78 @@ CREATE TABLE provider_endpoints (
 }
 ```
 
+## settings 表（通用模板）
+
+cc-switch 用 `settings` 表存储 key-value 配置。最重要的 key 是 `common_config_<app_type>`，它存储每种客户端的**通用模板**——切换 provider 时不变的配置。
+
+### 工作原理
+
+```
+common_config_claude（通用模板） + provider.settings_config（模型 env） → settings.json
+```
+
+cc-switch 切换 provider 时，将 provider 的 `settings_config`（主要是 `env` 里的模型变量）合并到 `common_config_claude` 上，生成最终的 `settings.json`。
+
+### 查询通用模板
+
+```powershell
+$dbPath = "$env:USERPROFILE\.cc-switch\cc-switch.db"
+
+# 查看 Claude 通用模板
+sqlite3 $dbPath "SELECT value FROM settings WHERE key = 'common_config_claude';"
+
+# 查看所有通用模板 key
+sqlite3 -header -column $dbPath "SELECT key, length(value) as size FROM settings WHERE key LIKE 'common_config_%';"
+```
+
+### 通用模板内容
+
+`common_config_claude` 包含**非 provider 特定**的配置：
+
+| 字段 | 说明 |
+|------|------|
+| `env` | 公共环境变量（`DISABLE_AUTOUPDATER`, `ENABLE_TOOL_SEARCH`, `API_TIMEOUT_MS` 等） |
+| `enabledPlugins` | 插件开关 |
+| `statusLine` | HUD 状态栏配置 |
+| `language`, `model` | 语言、默认模型 |
+| `hooks` | Hook 配置（PreToolUse 等） |
+| `skipDangerousModePermissionPrompt` 等 | 行为开关 |
+
+### 编辑通用模板
+
+⚠️ **必须关闭 cc-switch GUI**，否则外部修改会触发设置重置。
+
+```powershell
+$dbPath = "$env:USERPROFILE\.cc-switch\cc-switch.db"
+
+# 1. 导出当前模板
+sqlite3 $dbPath "SELECT value FROM settings WHERE key = 'common_config_claude';" > /tmp/common.json
+
+# 2. 编辑 common.json（添加/修改字段）
+
+# 3. 更新回数据库
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+Copy-Item $dbPath "$dbPath.backup_$ts"
+$newValue = Get-Content /tmp/common.json -Raw
+$sql = "UPDATE settings SET value = '$($newValue -replace "'", "''")' WHERE key = 'common_config_claude';"
+$sql | Out-File -FilePath "update.sql" -Encoding utf8 -NoNewline
+Get-Content "update.sql" | sqlite3 $dbPath
+
+# 4. 切换 provider 触发重新生成 settings.json
+```
+
+### 其他 settings key
+
+| key | 说明 |
+|-----|------|
+| `stream_check_config` | 流式连接测试配置 |
+| `rectifier_config` | 请求整形配置（thinking signature 等） |
+| `optimizer_config` | 缓存优化配置 |
+| `common_config_gemini` | Gemini 通用模板 |
+| `common_config_codex` | Codex 通用模板 |
+| `common_config_opencode` | OpenCode 通用模板 |
+| `official_providers_seeded` | 官方 provider 是否已初始化 |
+
 ## 参考现有 Provider
 
 ```powershell
