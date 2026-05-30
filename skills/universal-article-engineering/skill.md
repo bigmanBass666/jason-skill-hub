@@ -377,21 +377,24 @@ ARTICLES_PATH = D:\working\articles   （用户级环境变量）
 1. **文章正文** 写入 `$env:ARTICLES_PATH/<文件名>.md`
 2. **在源项目目录** 创建符号链接指向集中目录的文件，方便在项目上下文中也能访问：
    ```
-   # PowerShell（管理员或开发者模式下）
-   New-Item -ItemType SymbolicLink -Path "<项目目录>/<文件名>.md" -Target "$env:ARTICLES_PATH\<文件名>.md"
+   # cmd mklink（开发者模式下无需管理员，PowerShell New-Item 仍需管理员）
+   cmd //c "mklink \"<项目目录>\<文件名>.md\" \"%ARTICLES_PATH%\<文件名>.md\""
    ```
 3. 如果源项目已有同名文件（非符号链接），先备份再创建链接
 
 > ⚠️ **符号链接是强制要求，不允许降级。**
-> Windows 下创建符号链接需要管理员权限或开启开发者模式。
-> 如果创建失败（权限不足），**不要**悄悄改成复制、硬链接、或其他方案。
+> - PowerShell 的 `New-Item -ItemType SymbolicLink` 在开发者模式下**仍然需要管理员权限**，不要使用
+> - Git Bash 的 `ln -s` 会**静默降级为复制**，绝对禁止使用
+> - **唯一正确方式**：`cmd //c "mklink"` — 开发者模式下普通用户即可执行
+>
+> 如果 `mklink` 也失败，**不要**悄悄改成复制、硬链接、或其他方案。
 > 必须明确告知用户权限不足，并给出以下命令让用户自行执行：
 >
 > ```powershell
 > # 方式一：以管理员身份运行 PowerShell 执行
-> New-Item -ItemType SymbolicLink -Path "<项目目录>\<文件名>.md" -Target "$env:ARTICLES_PATH\<文件名>.md"
+> cmd /c "mklink ""<项目目录>\<文件名>.md"" ""$env:ARTICLES_PATH\<文件名>.md"""
 >
-> # 方式二：开启开发者模式（一劳永逸，之后无需管理员）
+> # 方式二：确认开发者模式已开启（一劳永逸）
 > # 设置 → 系统 → 开发者选项 → 开发人员模式 → 开启
 > ```
 
