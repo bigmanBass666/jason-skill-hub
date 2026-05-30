@@ -298,6 +298,27 @@ When you notice the AI did something wrong, tell it: "Add this rule to AGENTS.md
 - If the mistake was due to unclear requirements, not missing context (clarify the task instead)
 - If adding the rule would duplicate an existing rule (make the existing one more specific instead)
 
+## When the Project Already Has a CLAUDE.md
+
+If the project has a CLAUDE.md but no AGENTS.md, migrate the content:
+
+1. **Read the existing CLAUDE.md** — Understand its full content
+2. **Move content to AGENTS.md** — Copy the CLAUDE.md content into a new AGENTS.md, restructuring it to follow the AGENTS.md format if needed. If the CLAUDE.md content is already well-structured, it can be moved as-is
+3. **Replace CLAUDE.md** — Rewrite CLAUDE.md to contain only the import:
+   ```markdown
+   @AGENTS.md
+   ```
+4. **Preserve tool-specific sections** — If CLAUDE.md contains sections that are Claude Code specific (not general agent instructions), keep those in CLAUDE.md alongside the `@AGENTS.md` import
+
+The resulting CLAUDE.md should look like:
+```markdown
+@AGENTS.md
+
+<!-- Claude Code specific instructions below, if any -->
+```
+
+This way AGENTS.md becomes the single source of truth for all AI coding tools, while CLAUDE.md simply imports it for Claude Code compatibility.
+
 ## When the User Already Has an AGENTS.md
 
 If an AGENTS.md already exists, analyze it against the best practices above and suggest
