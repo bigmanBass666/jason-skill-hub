@@ -372,43 +372,65 @@ ARTICLES_PATH = D:\working\articles   （用户级环境变量）
 - 读取方式：`$env:ARTICLES_PATH`（PowerShell）或 `$ARTICLES_PATH`（bash）
 - 目录不存在时自动创建：`mkdir -p "$env:ARTICLES_PATH"`
 
+### 目录结构
+
+每篇文章独立一个目录，封面、附图、附件全部跟着文章走：
+
+```
+$ARTICLES_PATH/
+├── warp-tailscale-coexistence/
+│   ├── article.md          ← 正文
+│   └── cover.png           ← 封面
+├── cpe/
+│   ├── article.md
+│   └── cover.png
+├── solo-gateway-story/
+│   ├── article.md
+│   ├── cover.png
+│   └── diagram.png         ← 附图（可选）
+```
+
 ### 输出规则
 
-1. **文章正文** 写入 `$env:ARTICLES_PATH/<文件名>.md`
-2. **在源项目目录** 创建符号链接指向集中目录的文件，方便在项目上下文中也能访问：
+1. **创建文章目录**：`mkdir -p "$env:ARTICLES_PATH/<文章名>/"`
+2. **文章正文** 写入 `$env:ARTICLES_PATH/<文章名>/article.md`
+3. **封面图** 生成后存入同目录，命名为 `cover.png`
+4. **在源项目目录** 创建目录联接指向文章目录，方便在项目上下文中也能访问：
    ```
-   # cmd mklink（开发者模式下无需管理员，PowerShell New-Item 仍需管理员）
-   cmd //c "mklink \"<项目目录>\<文件名>.md\" \"%ARTICLES_PATH%\<文件名>.md\""
+   # mklink /J — 目录联接，开发者模式下无需管理员，无需管理员权限
+   cmd //c "mklink /J \"<项目目录>\<文章名>\" \"%ARTICLES_PATH%\<文章名>\""
    ```
-3. 如果源项目已有同名文件（非符号链接），先备份再创建链接
+5. 如果源项目已有同名目录（非联接），先备份再创建
 
-> ⚠️ **符号链接是强制要求，不允许降级。**
-> - PowerShell 的 `New-Item -ItemType SymbolicLink` 在开发者模式下**仍然需要管理员权限**，不要使用
-> - Git Bash 的 `ln -s` 会**静默降级为复制**，绝对禁止使用
-> - **唯一正确方式**：`cmd //c "mklink"` — 开发者模式下普通用户即可执行
+> ⚠️ **目录联接是强制要求，不允许降级。**
+> - 使用 `mklink /J`（Junction，目录联接），不是 `mklink`（文件符号链接）
+> - Junction 不需要管理员权限，任何 Windows 版本都支持
+> - PowerShell 的 `New-Item -ItemType SymbolicLink` 和 Git Bash 的 `ln -s` 均禁止使用
 >
-> 如果 `mklink` 也失败，**不要**悄悄改成复制、硬链接、或其他方案。
-> 必须明确告知用户权限不足，并给出以下命令让用户自行执行：
+> 如果 `mklink /J` 也失败，**不要**悄悄改成复制或其他方案。
+> 必须明确告知用户并给出命令让用户自行执行：
 >
 > ```powershell
-> # 方式一：以管理员身份运行 PowerShell 执行
-> cmd /c "mklink ""<项目目录>\<文件名>.md"" ""$env:ARTICLES_PATH\<文件名>.md"""
->
-> # 方式二：确认开发者模式已开启（一劳永逸）
-> # 设置 → 系统 → 开发者选项 → 开发人员模式 → 开启
+> cmd /c "mklink /J ""<项目目录>\<文章名>"" ""$env:ARTICLES_PATH\<文章名>"""
 > ```
 
-### 文件命名
+### 命名规范
 
-- 使用 kebab-case，简短描述主题：`why-path-disappeared.md`、`reverse-engineering-cpe.md`
+- 目录名使用 kebab-case，简短描述主题：`warp-tailscale-coexistence`、`reverse-engineering-cpe`
+- 正文统一命名为 `article.md`（目录名已经表达了主题）
+- 封面统一命名为 `cover.png`
 - 避免日期前缀（由 git 管理历史）
 
 ### 归档流程（写完文章后自动执行）
 
 ```
-写入正文到 $ARTICLES_PATH/<name>.md
+创建 $ARTICLES_PATH/<文章名>/
     ↓
-在当前项目目录创建符号链接
+写入正文到 article.md
     ↓
-告知用户两个路径
+生成封面 cover.png（如有）
+    ↓
+在当前项目目录创建 mklink /J 联接
+    ↓
+告知用户路径
 ```
