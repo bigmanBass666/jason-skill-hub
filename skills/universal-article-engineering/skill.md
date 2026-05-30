@@ -402,17 +402,19 @@ $ARTICLES_PATH/
    ```
 5. 如果源项目已有同名目录（非联接），先备份再创建
 
-> ⚠️ **目录联接是强制要求，不允许降级。**
-> - 使用 `mklink /J`（Junction，目录联接），不是 `mklink`（文件符号链接）
-> - Junction 不需要管理员权限，任何 Windows 版本都支持
-> - PowerShell 的 `New-Item -ItemType SymbolicLink` 和 Git Bash 的 `ln -s` 均禁止使用
->
-> 如果 `mklink /J` 也失败，**不要**悄悄改成复制或其他方案。
-> 必须明确告知用户并给出命令让用户自行执行：
->
-> ```powershell
-> cmd /c "mklink /J ""<项目目录>\<文章名>"" ""$env:ARTICLES_PATH\<文章名>"""
-> ```
+### 为什么只用 `mklink /J`
+
+`mklink /J`（目录联接）是最可靠的选择，原因：
+
+- **Junction 不需要管理员权限**，任何 Windows 版本都支持，比符号链接少一个权限坑
+- **PowerShell 的 `New-Item -ItemType SymbolicLink`** 在开发者模式下仍然要求管理员，很容易在运行时才发现权限不够
+- **Git Bash 的 `ln -s`** 会静默降级为复制——文章会变成两份独立文件，之后修改正文不会同步到项目目录，集中管理就失效了。而且没有任何提示，你以为是链接其实是副本
+
+如果 `mklink /J` 失败（权限不足），明确告知用户并给出命令让用户自行执行，不要悄悄换成其他方案——悄悄降级的问题是它不会报错，但集中管理的语义已经被破坏了：
+
+```powershell
+cmd /c "mklink /J ""<项目目录>\<文章名>"" ""$env:ARTICLES_PATH\<文章名>"""
+```
 
 ### 命名规范
 
