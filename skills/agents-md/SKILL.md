@@ -24,7 +24,7 @@ practices.
 AGENTS.md is a simple Markdown file placed in the project root that serves as a README for AI
 coding agents. Unlike README.md (written for humans), AGENTS.md provides precise, executable,
 unambiguous instructions that AI agents need to work effectively on a project. It is supported by
-GitHub Copilot, OpenAI Codex, Google Jules, Cursor, Claude Code (via symlink), Aider, and other
+GitHub Copilot, OpenAI Codex, Google Jules, Cursor, Claude Code (via `@AGENTS.md` import in CLAUDE.md), Aider, and other
 major AI coding tools.
 
 The format has no required fields or strict schema — it is plain Markdown. The value comes from
