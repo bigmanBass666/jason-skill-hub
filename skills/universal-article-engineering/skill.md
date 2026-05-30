@@ -356,3 +356,43 @@ Extension Host 的 PATH 是残缺的——但 AI Agent 进程有自己的修复�
 大量留白、短段落、多层标题、代码块、因果链箭头、表格。
 
 > 可读性本质上是视觉节奏。
+
+---
+
+## Phase 5 — 输出与归档：文章的落地位置
+
+所有通过本 Skill 创建的文章，统一归档到集中目录，由环境变量控制。
+
+### 环境变量
+
+```
+ARTICLES_PATH = D:\working\articles   （用户级环境变量）
+```
+
+- 读取方式：`$env:ARTICLES_PATH`（PowerShell）或 `$ARTICLES_PATH`（bash）
+- 目录不存在时自动创建：`mkdir -p "$env:ARTICLES_PATH"`
+
+### 输出规则
+
+1. **文章正文** 写入 `$env:ARTICLES_PATH/<文件名>.md`
+2. **在源项目目录** 创建符号链接指向集中目录的文件，方便在项目上下文中也能访问：
+   ```
+   # PowerShell（管理员或开发者模式下）
+   New-Item -ItemType SymbolicLink -Path "<项目目录>/<文件名>.md" -Target "$env:ARTICLES_PATH\<文件名>.md"
+   ```
+3. 如果源项目已有同名文件（非符号链接），先备份再创建链接
+
+### 文件命名
+
+- 使用 kebab-case，简短描述主题：`why-path-disappeared.md`、`reverse-engineering-cpe.md`
+- 避免日期前缀（由 git 管理历史）
+
+### 归档流程（写完文章后自动执行）
+
+```
+写入正文到 $ARTICLES_PATH/<name>.md
+    ↓
+在当前项目目录创建符号链接
+    ↓
+告知用户两个路径
+```
