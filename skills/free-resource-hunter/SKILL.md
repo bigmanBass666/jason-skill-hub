@@ -381,3 +381,4 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - `references/search-strategies.md` — 情报扫描的搜索策略、关键词模板和信息源列表
 - `references/evaluation-framework.md` — 资源评估框架，优先评估模型质量和 agent 能力
 - `references/push-format.md` — 定时推送场景的输出格式规范
+# test-marker-1780246662
