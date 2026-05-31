@@ -33,7 +33,7 @@ jobs:
       - name: Check if index files need update
         id: check_changes
         run: |
-          if git diff --quiet skills/INDEX.md skills/skills.json _redirects; then
+          if git diff --quiet SKILLS_INDEX.md skills.json _redirects; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
