@@ -18,8 +18,8 @@ const path = require('path');
 const config = require('./config');
 
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
-const OUTPUT_INDEX = path.join(SKILLS_DIR, 'INDEX.md');
-const OUTPUT_JSON = path.join(SKILLS_DIR, 'skills.json');
+const OUTPUT_INDEX = path.join(__dirname, '..', 'SKILLS_INDEX.md');
+const OUTPUT_JSON = path.join(__dirname, '..', 'skills.json');
 const OUTPUT_REDIRECTS = path.join(__dirname, '..', '_redirects');
 const AGENTS_TEMPLATE = path.join(__dirname, '..', 'AGENTS.md.template');
 const OUTPUT_AGENTS = path.join(__dirname, '..', 'AGENTS.md');

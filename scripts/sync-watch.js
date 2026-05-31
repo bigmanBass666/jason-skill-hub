@@ -24,8 +24,7 @@ async function runSync() {
     await fullSync({
       dryRun,
       projectRoot: config.projectRoot,
-      sourceDir: config.syncSourceDir,
-      targetDir: config.syncTargetDir
+      targetDir: path.join(config.projectRoot, 'skills')
     });
     log('Sync complete.');
   } catch (err) {

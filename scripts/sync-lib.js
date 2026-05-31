@@ -223,32 +223,23 @@ function gitCommitAndPush(projectRoot, targetDir) {
   return true;
 }
 
-async function fullSync({ dryRun, projectRoot, sourceDir, targetDir }) {
-  log('=== 开始完整同步流程 ===');
-
-  log('步骤 1/4: 检测变更');
-  const changes = detectChanges(sourceDir, targetDir);
-
-  log('步骤 2/4: 执行镜像同步');
-  const summary = mirrorSync(sourceDir, targetDir, changes, dryRun);
+async function fullSync({ dryRun, projectRoot, targetDir }) {
+  log('=== 开始同步流程 ===');
 
   if (!dryRun) {
-    log('步骤 3/4: 执行构建');
+    log('步骤 1/2: 执行构建（scan.js → INDEX + skills.json + _redirects）');
     runBuild(projectRoot);
 
-    log('步骤 4/4: 提交并推送');
+    log('步骤 2/2: 提交并推送');
     gitCommitAndPush(projectRoot, targetDir);
   } else {
     log('[DRY-RUN] 跳过构建和提交');
   }
 
-  log('=== 完整同步流程结束 ===');
-  return summary;
+  log('=== 同步流程结束 ===');
 }
 
 module.exports = {
-  detectChanges,
-  mirrorSync,
   runBuild,
   gitCommitAndPush,
   fullSync,
