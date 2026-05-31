@@ -1,3 +1,4 @@
+const path = require('path');
 const chokidar = require('chokidar');
 const { fullSync } = require('./sync-lib');
 const config = require('./config');
