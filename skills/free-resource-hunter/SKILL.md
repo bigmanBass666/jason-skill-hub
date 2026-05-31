@@ -56,28 +56,44 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
   - 知乎、V2EX、掘金（国内资源动态）
   - GitHub trending / releases
 
-至少执行 5-8 次不同角度的搜索。
+**发散搜索**（每次扫描必须执行，不可省略）：
+除了围绕"免费""新模型"等常规关键词搜索外，还需要**对核心厂商做定向巡查**——直接用厂商名 + 新模型作为关键词搜索：
+- `"StepFun" OR "阶跃星辰"` + `新模型 OR 上线 OR 发布`
+- `"智谱" OR "GLM"` + `新版 OR 上线 OR 免费`
+- `"昆仑" OR "天工" OR "SkyClaw"` + `Agent OR 新模型`
+- `"DeepSeek" OR "通义" OR "Qwen"` + `新版 OR 上线 OR 更新`
+- `"Kimi" OR "月之暗面"` + `新模型 OR 上线`
+
+> **为什么需要发散搜索**：常规关键词（如"quietly launched free AI model"）天然偏向英文社区讨论。中国厂商（阶跃、智谱、昆仑等）的新模型上线，往往中文社区讨论更早、英文社区讨论滞后 1-3 天。Step 3.7 Flash 在 NIM 上线当天，英文 Reddit 几乎没有讨论，但中文圈已经有人注意到。
+
+至少执行 5-8 次不同角度的搜索，其中**至少 2 次**是中文厂商名模式的发散搜索。
 
 **1b. 平台直采**（发现"悄悄上了但没人讨论"的东西）
 
 对核心平台直接访问其模型列表页面，用 web-reader 读取当前模型列表：
-- `https://openrouter.ai/models`（⚠️ 此页面为 SPA，page_reader 可能只拿到空壳 HTML，需备选策略）
-- `https://build.nvidia.com/models`
+- `https://openrouter.ai/models`（⚠️ 此页面为 SPA，web-reader 可能只拿到空壳 HTML）
+- `https://build.nvidia.com/models`（⚠️ 同上，SPA 页面）
 - 其他 `resource-database.json` 中记录的核心平台
 
-**SPA 页面备选策略**：如果 page_reader 无法获取 SPA 页面的完整内容：
-1. 搜索 CostGoat 等第三方统计网站的 OpenRouter 免费模型列表
-2. 搜索 "openrouter.ai models" + "free" + 最新日期
+**SPA 页面备选策略**（按优先级执行，**必须在输出中标记直采是否成功**）：
+1. **以搜代采**（最可靠）：用 web-search 搜索 `"site:build.nvidia.com/model" + "free endpoint"` 或 `"site:openrouter.ai/models" + "free"` — 搜索引擎的缓存快照往往比 web-reader 更能拿到 SPA 页面的实际内容
+2. 搜索第三方统计/汇总页面（如 CostGoat 免费模型列表、llm-stats.com 等）
 3. 访问特定集合页面（如 openrouter.ai/collections/free-models）
 4. 访问 Stealth provider 页面（openrouter.ai/provider/stealth）检查匿名模型
 
+> **⚠️ 关键原则**：如果 web-reader 拿到空壳或内容明显不完整，**必须切换到"以搜代采"策略**，而不是标注"直采失败"后就跳过。"直采失败≠没有新模型"——这只是你获取不到页面内容，不代表平台没有上新。
+
 将采集到的模型列表与基线对比。这种直采方式可以发现社区还没来得及讨论的悄悄上线的模型。
 
-**1c. 官方渠道巡查**
+**1c. 官方渠道巡查**（发现"官方已发公告但社区还没讨论"的东西）
 
 快速检查以下官方渠道的最新公告：
-- 平台官方 blog / changelog / Twitter
-- GitHub releases（针对开源项目型平台如 ChatAnywhere）
+- **聚合平台官方 blog/changelog**：OpenRouter blog、NVIDIA developer blog（NIM 新模型几乎同步发博文）、Groq changelog、Together AI blog
+- **AI 厂商官方渠道**：阶跃星辰 StepFun 官网/博客、智谱 AI 开放平台公告、昆仑万维天工平台、阿里云百炼公告、百度千帆公告、月之暗面 Kimi 公告、字节跳动 Seed 博客
+- **Hugging Face releases**：新开源/半开源模型通常在 HF 上首发（搜索 `"huggingface.co" + "released" + 模型厂商名`）
+- **GitHub releases**：开源项目型平台如 ChatAnywhere
+
+> **为什么这步不能省略**：Step 3.7 Flash 5/29 上线时，NVIDIA 官方博客已发公告，但英文社区讨论滞后 1-2 天。如果当时巡查了 NVIDIA developer blog，就能当天捕获。**社区信号的"快"是对已有讨论快，官方渠道的"快"是对刚发生的发布快。**
 
 **1d. 平台活动页巡查**（捕获大规模赠送活动）
 
@@ -262,8 +278,9 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 - 不要因为一个信息源失败就放弃整个扫描
 
 **web-reader 拿到空页面或 SPA 空壳**：
-- SPA 页面（如 OpenRouter 模型列表）改用备选策略（CostGoat、集合页面、Stealth 页面）
-- 如果备选方案也失败，改用 web-search 搜索该平台的最新变动
+- SPA 页面（如 OpenRouter 模型列表、NVIDIA NIM 模型列表）**必须**切换到"以搜代采"策略：用 web-search 搜索 `"site:域名" + "new model" OR "added" + 平台名`
+- 如果搜索引擎也无法获取模型列表，使用第三方统计页面（CostGoat、llm-stats.com 等）
+- **直采失败不是"没有新模型"，只是"你暂时看不到列表"。** 不能因为直采失败就跳过该平台——必须通过其他渠道补偿
 - 在输出中标注哪些平台的直采失败、通过什么方式补救的
 
 **搜索结果全是已知信息**：
@@ -332,6 +349,18 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 ### 原则 6：增量对比，不重复已知信息
 
 用户已经对免费资源领域很了解。重复告诉用户"OpenRouter 有免费模型"是浪费时间。每次扫描只报告**增量**——即与基线对比后发现的**变化**。让用户快速知道"什么变了"，而不是"有什么"。
+
+### 原则 7：三源互补，不允许单一依赖
+
+情报扫描的时效性依赖于三类信息源的互补。**任何单一类信息源都有盲区**：
+
+| 信息源类型 | 优势 | 盲区 |
+|-----------|------|------|
+| 社区信号（Reddit/HN/知乎） | 讨论热度高时非常快 | 英文社区对中国厂商滞后 1-3 天；悄无声息上线=零讨论 |
+| 官方渠道（博客/changelog） | 发布即公告，最准确及时 | 小厂商可能不发公告；公告可能被埋在技术文档里 |
+| 平台直采（模型列表读取） | 能发现完全没人讨论的新模型 | SPA 页面良莠不齐，直采经常失败 |
+
+**三源必须同时执行，不能因为某一类"看起来没有新东西"就省略另外两类。** Step 3.7 Flash 的漏报就是教训：社区信号滞后 + 直采 SPA 失败 + 官方渠道未巡查 = 三重漏网。
 
 ## 交互风格
 

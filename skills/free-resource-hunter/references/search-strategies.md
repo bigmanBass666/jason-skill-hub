@@ -43,6 +43,41 @@
 - "偷偷放出 免费 模型"
 ```
 
+#### 发散搜索：中文厂商定向巡查（每次必须执行，不可省略）
+
+> **背景**：Step 3.7 Flash（阶跃星辰）5/29 上线 NIM，但英文社区讨论滞后 2 天。常规关键词"quietly launched"完全命中不到中文厂商的新模型。必须用厂商名做定向巡查。
+
+```
+常见中文 AI 厂商关键词（每次扫描至少覆盖 3-5 个厂商）:
+
+阶跃星辰 StepFun:
+- "StepFun" OR "阶跃星辰" OR "step-3" 新模型 OR 上线 OR 发布
+- site:build.nvidia.com "stepfun" OR "step-3" （直接在 NIM 搜索）
+
+智谱 AI:
+- "智谱" OR "GLM-4" OR "GLM-5" 新版 OR 上线 OR 免费
+- site:openrouter.ai "z.ai" OR "glm"
+
+昆仑万维 / 天工:
+- "昆仑" OR "天工" OR "SkyClaw" OR "skywork" 新模型 OR Agent
+
+阿里云 / 通义:
+- "通义" OR "Qwen3" OR "Qwen4" 新版 OR 上线 OR 更新
+- "阿里云百炼" 新模型 OR 新增
+
+字节跳动 Seed:
+- "字节" OR "Seed" OR "Doubao" OR "豆包" 新模型 OR 上线
+
+月之暗面 / Kimi:
+- "Kimi" OR "月之暗面" 新模型 OR 上线 OR 更新
+
+百度千帆:
+- "百度千帆" OR "文心" OR "ERNIE" 新模型 OR 上线 OR 免费
+
+华为盘古:
+- "华为盘古" OR "Pangu" 新模型 OR 上线
+```
+
 ### Token 赠送 / 激励计划 / 大规模免费活动
 
 > **关键盲区修复**：这类活动往往不走"新模型上线"或"免费API"的常规路径，而是以独立活动页面的形式出现（如 `100t.xiaomimimo.com`），关键词也完全不同。漏掉一次可能错过几十万亿 Token 的免费额度。
@@ -126,15 +161,19 @@
 | **Twitter/X** | AI 圈大佬第一时间发动态（Karpathy, Andrej 等） | web-search site:x.com + 关键词 |
 | **GitHub Trending/Releases** | 新开源项目、新 release、star 暴增的项目 | web-search "GitHub" + "released" + 关键词 |
 
-### 第二梯队：官方渠道（准确但可能慢半天到几天）
+### 第二梯队：官方渠道（准确，且经常比社区更快）
 
-| 信息源 | 内容 | 搜索方式 |
-|--------|------|---------|
-| OpenRouter blog/announcements | 模型上线下线通知 | `site:openrouter.ai` |
-| NVIDIA NIM blog | 新模型上线 | `site:blog.nvidia.com NIM` |
-| Groq changelog | 新模型支持 | `site:groq.com` |
-| Together AI blog | 新模型和优惠 | `site:together.ai/blog` |
-| ChatAnywhere GitHub | 更新日志 | `site:github.com/chatanywhere` |
+> **Step 3.7 Flash 教训**：NVIDIA 官方博客在上线当天就发了公告，但我们的扫描只搜了 Reddit 和 HN（滞后 1-3 天），完全错过了官方渠道。**官方渠道≠慢，很多时候它是最快的。**
+
+| 信息源 | 内容 | 搜索方式 | 优先级 |
+|--------|------|---------|--------|
+| **NVIDIA developer blog** | NIM 新模型上线公告（几乎同步发布） | `site:developer.nvidia.com/blog NIM` | 🔴 必查 |
+| **HuggingFace releases** | 新开源/半开源模型首发地 | `site:huggingface.co "released" OR "new model"` | 🔴 必查 |
+| **OpenRouter blog/announcements** | 模型上线下线通知 | `site:openrouter.ai/blog` | 🟡 常规 |
+| Groq changelog | 新模型支持 | `site:groq.com/changelog` | 🟡 常规 |
+| Together AI blog | 新模型和优惠 | `site:together.ai/blog` | 🟡 常规 |
+| ChatAnywhere GitHub | 更新日志 | `site:github.com/chatanywhere` | 🟡 常规 |
+| **中文 AI 厂商官方博客** | 阶跃/智谱/昆仑/百度/字节/月之暗面官方发布 | 见下方"厂商官方博客清单" | 🔴 必查（中文场景）|
 
 ### 第三梯队：社区聚合（深度但较慢）
 
@@ -167,6 +206,21 @@
 | 智谱 AI | open.bigmodel.cn | — | 激励计划、Token 赠送 |
 | DeepSeek | platform.deepseek.com | — | 注册活动、免费额度 |
 | 火山引擎 | console.volcengine.com/ark | — | 新人礼包、Token 赠送 |
+
+### 厂商官方博客清单
+
+> 每次扫描时，对以下渠道做一轮巡查。重点关注"新模型发布""产品更新""公测/限时免费"等关键词。
+
+| 厂商 | 官方渠道 URL | 搜索方式 |
+|------|------------|---------|
+| 阶跃星辰 StepFun | static.stepfun.com/blog | `site:static.stepfun.com` 或直接访问 |
+| 智谱 AI | open.bigmodel.cn/dev/usevec | 开放平台公告页 |
+| 昆仑万维 天工 | tiangong.cn 或 apifree.ai | 产品更新公告 |
+| 阿里云 | bailian.console.aliyun.com 公告 | 百炼公告页 |
+| NVIDIA NIM | developer.nvidia.com/blog | `site:developer.nvidia.com/blog "NIM"` |
+| 字节跳动 Seed |  Seed 团队博客 / HF releases | `site:huggingface.co/ByteDance` |
+| 月之暗面 Kimi | moonshot.cn | 产品更新日志 |
+| 百度千帆 | qianfan.baidu.com | 千帆公告 |
 
 ---
 
@@ -252,12 +306,22 @@
 ├─ Twitter/X AI 圈动态
 └─ GitHub trending/releases
 
+第 1a+ 步：发散搜索（中文厂商定向巡查，必做）
+├─ 从"中文 AI 厂商清单"中选 3-5 个厂商
+├─ 用"厂商名 + 新模型/上线/发布"搜索
+├─ 特别关注：StepFun、智谱、昆仑、阿里通义、字节 Seed
+└─ 这是捕捉中国厂商新模型的最有效手段（Step 3.7 Flash 教训）
+
 第 1b 步：平台直采
-├─ web-reader OpenRouter 模型列表
-├─ web-reader NVIDIA NIM 模型列表
+├─ web-reader OpenRouter 模型列表（SPA，失败则切换"以搜代采"）
+├─ web-reader NVIDIA NIM 模型列表（SPA，失败则切换"以搜代采"）
+├─ **如果 web-reader 拿到空壳 → 立即用 web-search 替代**
 └─ 其他核心平台（根据 resource-database.json 中的列表）
 
 第 1c 步：官方渠道巡查
+├─ NVIDIA developer blog 搜索"NIM new model"（必查）
+├─ HuggingFace releases 巡查（必查）
+├─ 中文 AI 厂商官方博客巡查（见"厂商官方博客清单"）
 ├─ 各平台 blog/changelog 搜索
 └─ 免费 API 汇总文章
 

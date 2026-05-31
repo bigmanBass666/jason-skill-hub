@@ -22,4 +22,14 @@
 - **增量对比**：只报告与基线的差异，不重复已知信息
 - **基线回写**：通过 GitHub MCP create_or_update_file（需先获取 sha）
 
+## 扫描质量底线（不可跳过）
+
+以下三条是情报扫描的时效性保障，**不是可选的**：
+
+1. **发散搜索必做（原则 7）**：除了常规关键词搜索，必须对 3-5 个中文厂商做定向巡查（StepFun、智谱、昆仑、阿里通义、字节 Seed 等），用"厂商名 + 新模型/上线/发布"搜索。因为中国厂商新模型上线时英文社区讨论滞后 1-3 天，常规关键词完全命中不到。（Step 3.7 Flash 教训）
+
+2. **官方渠道必查（第 1c 步）**：每次扫描必须查 NVIDIA developer blog (`site:developer.nvidia.com/blog "NIM"`) 和 HuggingFace releases — NIM 新模型上线几乎一定同步发 HF release，这是早于社区讨论的信息源。SPA 页面直采失败时，用 web-search "site:build.nvidia.com model free endpoint" 替代。
+
+3. **直采失败不跳过**：如果 web-reader 拿到 SPA 空壳，不能标注"直采失败"后就跳过该平台。必须切换到 web-search 搜索该平台的最新变动。直采失败≠没有新模型，只是你暂时拿不到列表。
+
 输出偏好：直接显示结果，不需要保存到文件。
