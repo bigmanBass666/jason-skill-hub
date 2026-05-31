@@ -31,11 +31,6 @@
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agents-md/SKILL.md
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agents-md/` Directories: evals/, references/. File types: .json(1), .md(1).
 
-### android-cli
-- **Description**: Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line tool.
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/android-cli/SKILL.md
-- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/android-cli/` File types: .md(1).
-
 ### article-to-image-prompt
 - **Description**: 根据文章内容生成用于 ChatGPT（DALL-E）的英文绘图 prompt（封面主图）。当用户提供文章、博客、新闻、报告等文本内容，并希望生成配图、封面图、插图的绘图提示词时，必须使用此 skill。关键词触发：「生成prompt」「帮我配图」「生成封面」「文章插图」「生图提示词」「image prompt」「cover image」「ChatGPT生图」「DALL-E」。即使用户只说「帮我给这篇文章配张图」也应立即触发此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/article-to-image-prompt/SKILL.md
@@ -52,7 +47,7 @@
 ### cc-switch
 - **Description**: 管理和操作 cc-switch 配置数据库。当用户提到 cc-switch、provider 管理、MCP 服务器配置、AI 供应商切换、故障转移设置、代理配置时触发。覆盖：添加/删除/切换 provider、MCP 服务器管理、Skills 管理、Prompts 管理、Failover 队列、Proxy 配置、环境检查。即使用户只是说「加个 AI 供应商」「切一下 provider」「看看 cc-switch 配置」也应触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/SKILL.md
-- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .md(1), .disabled(1).
+- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .disabled(1), .md(1).
 
 ### chaoxing-auto-answer
 - **Description**: >
@@ -170,7 +165,7 @@
 ### trae-forum-pro
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/SKILL.md
-- **Has 38 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/` Directories: .git/, evals/, references/, scripts/. File types: .sample(14), .md(3), .sh(2), .git/commit_editmsg(1), .git/config(1), .git/description(1), .git/fetch_head(1), .git/head(1), .git/index(1), .git/info/exclude(1), .git/logs/head(1), .git/logs/refs/heads/main(1), .git/logs/refs/remotes/origin/main(1), .git/objects/15/009f6ad345e5fb4f7649d108db901739853324(1), .git/objects/4f/de5b344823c3ae03184dd6463135c8b2bb1e87(1), .git/objects/73/7bb989fd5e1ba29d423067a2eaa84a916aae32(1), .idx(1), .pack(1), .rev(1), .git/refs/heads/main(1), .git/refs/remotes/origin/main(1), .json(1).
+- **Has 6 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/` Directories: evals/, references/, scripts/. File types: .md(3), .sh(2), .json(1).
 
 ### trae-solo-cn
 - **Description**: Automate the TRAE SOLO CN desktop app (ByteDance's AI coding assistant) using agent-browser via Chrome DevTools Protocol. Use when the user needs to interact with TRAE SOLO CN, automate AI chat tasks, manage workspaces, install skills, configure automation jobs, or perform dogfooding/QA on the Solo application. Triggers include 'automate Solo', 'control TRAE SOLO', 'interact with Solo app', 'send prompt to Solo AI', 'switch Solo workspace', 'install Solo skill', 'configure Solo automation', 'dogfood TRAE SOLO', 'test TRAE SOLO CN', or any task requiring automation of the TRAE SOLO CN desktop application. Also trigger when the user mentions 'Solo桌面版', 'Trae Solo', 'TRAE SOLO', 'solo-cn', 'Solo AI', or asks to do anything with the Solo AI coding assistant.
@@ -185,11 +180,6 @@
 - **Description**: UI/UX design intelligence. 67 styles, 96 palettes, 57 font pairings, 25 charts, 13 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/SKILL.md
 - **Has 27 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/` Directories: data/, scripts/. File types: .csv(24), .py(3).
-
-### universal-article-engineering
-- **Description**: 将一段真实的工作探索转化为高质量技术文章的完整流程 Skill。当用户说"我不想让这段工作白费"、"帮我把这次探索写成文章"、"以你的身份写下来"、"这次调查值得被记录"时，必须立即触发。也适用于：技术博客、Reverse Engineering 报告、故障溯源记录、架构分析、工程实践文章、Hacker 风格长文。核心前提：文章素材来自真实发生的工作，以真实视角撰写，不捏造，不夸大。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/SKILL.md
-- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/` File types: .md(1).
 
 ### wiztree-cli
 - **Description**: >
