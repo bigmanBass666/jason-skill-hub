@@ -56,17 +56,7 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
   - 知乎、V2EX、掘金（国内资源动态）
   - GitHub trending / releases
 
-**发散搜索**（每次扫描必须执行，不可省略）：
-除了围绕"免费""新模型"等常规关键词搜索外，还需要**对核心厂商做定向巡查**——直接用厂商名 + 新模型作为关键词搜索：
-- `"StepFun" OR "阶跃星辰"` + `新模型 OR 上线 OR 发布`
-- `"智谱" OR "GLM"` + `新版 OR 上线 OR 免费`
-- `"昆仑" OR "天工" OR "SkyClaw"` + `Agent OR 新模型`
-- `"DeepSeek" OR "通义" OR "Qwen"` + `新版 OR 上线 OR 更新`
-- `"Kimi" OR "月之暗面"` + `新模型 OR 上线`
-
-> **为什么需要发散搜索**：常规关键词（如"quietly launched free AI model"）天然偏向英文社区讨论。中国厂商（阶跃、智谱、昆仑等）的新模型上线，往往中文社区讨论更早、英文社区讨论滞后 1-3 天。Step 3.7 Flash 在 NIM 上线当天，英文 Reddit 几乎没有讨论，但中文圈已经有人注意到。
-
-至少执行 5-8 次不同角度的搜索，其中**至少 2 次**是中文厂商名模式的发散搜索。
+至少执行 5-8 次不同角度的搜索。
 
 **1b. 平台直采**（发现"悄悄上了但没人讨论"的东西）
 
@@ -88,12 +78,12 @@ description: 开发者免费资源情报雷达。通过增量对比扫描法（�
 **1c. 官方渠道巡查**（发现"官方已发公告但社区还没讨论"的东西）
 
 快速检查以下官方渠道的最新公告：
-- **聚合平台官方 blog/changelog**：OpenRouter blog、NVIDIA developer blog（NIM 新模型几乎同步发博文）、Groq changelog、Together AI blog
-- **AI 厂商官方渠道**：阶跃星辰 StepFun 官网/博客、智谱 AI 开放平台公告、昆仑万维天工平台、阿里云百炼公告、百度千帆公告、月之暗面 Kimi 公告、字节跳动 Seed 博客
-- **Hugging Face releases**：新开源/半开源模型通常在 HF 上首发（搜索 `"huggingface.co" + "released" + 模型厂商名`）
-- **GitHub releases**：开源项目型平台如 ChatAnywhere
+- **聚合平台 blog/changelog**（模型上线的第一通知渠道）：OpenRouter blog、NVIDIA developer blog、Groq changelog、Together AI blog
+- **Hugging Face releases**：新开源/半开源模型通常在 HF 上首发。搜索 `site:huggingface.co "released" OR "new model"` 即可覆盖所有在 HF 发布的厂商，无需逐个记住厂商名
+- **GitHub releases / trending**：新开源项目和 star 暴增的 repo 是发现新厂商的最佳途径
+- **基线中的厂商官方渠道**：`resource-database.json` 中已有的平台，从基线中获取其官方 URL 进行巡查——不需要提前背厂商名，基线本身就是清单
 
-> **为什么这步不能省略**：Step 3.7 Flash 5/29 上线时，NVIDIA 官方博客已发公告，但英文社区讨论滞后 1-2 天。如果当时巡查了 NVIDIA developer blog，就能当天捕获。**社区信号的"快"是对已有讨论快，官方渠道的"快"是对刚发生的发布快。**
+> **核心思路**：不用预列厂商名单。NIM/OpenRouter 上新模型 → 通常同步发 HF release + 平台公告。HF releases 和聚合平台公告已经覆盖了 90% 的厂商。剩下的新厂商通过 GitHub Trending 和中文社区（知乎/V2EX）自动浮现。
 
 **1d. 平台活动页巡查**（捕获大规模赠送活动）
 
