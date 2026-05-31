@@ -1,0 +1,35 @@
+{
+  "reviews": [
+    {
+      "run_id": "eval-1-intel-scan-with_skill",
+      "feedback": "很有用, 我前几天正是刚好用完了所有免费资源, 又回到了痛苦的step 3.5 flash, 然后我就看到了旧版Hunter找到的mimo降价信息, 随着我的深入了解, 我发现mimo套餐重置,  我之前通过orbit计划领到的是最高的max套餐16亿credit, 但是用完了, 这次重置之后我有80亿credit, 虽然30号过期, 但是无疑是救命稻草. 我现在正在为30号之后的日子发愁, 看到这个SkyClaw, 我估计又可以续命一段时间了, 感谢",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    },
+    {
+      "run_id": "eval-1-intel-scan-without_skill",
+      "feedback": "",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    },
+    {
+      "run_id": "eval-2-resource-search-with_skill",
+      "feedback": "200 请求/天的openrouter模型, 我基本都是忽略不看的, 但有时候有些模型又可以调用1000次/天, 比如owl-alpha, 这是要注意的, 还有我一天要用一两亿token, 付费方案是真的吃不消",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    },
+    {
+      "run_id": "eval-2-resource-search-without_skill",
+      "feedback": "",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    },
+    {
+      "run_id": "eval-3-risk-assessment-with_skill",
+      "feedback": "",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    },
+    {
+      "run_id": "eval-3-risk-assessment-without_skill",
+      "feedback": "",
+      "timestamp": "2026-05-28T18:07:09.134Z"
+    }
+  ],
+  "status": "complete"
+}

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "free-resource-hunter", "runs": [{"id": "eval-1-intel-scan-with_skill", "prompt": "\u626b\u4e00\u4e0b\u6700\u8fd1\u6709\u4ec0\u4e48\u65b0\u7684\u514d\u8d39 AI \u8d44\u6e90\uff0c\u6211\u4e3b\u8981\u662f\u505a agent \u5f00\u53d1\u7684\uff0c\u5173\u6ce8\u80fd\u8dd1 function calling \u7684\u6a21\u578b", "eval_id": 1, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 1,\n  \"run\": \"with_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"has-three-sections\",\n      \"passed\": true,\n      \"evidence\": \"\u62a5\u544a\u5305\u542b\u4e09\u4e2a\u5206\u533a\uff1a\ud83d\udd25 \u7d27\u6025\u60c5\u62a5\u3001\ud83d\udce1 \u4e00\u822c\u52a8\u6001\u3001\ud83d\udcca \u5df2\u77e5\u8d44\u6e90\u72b6\u6001\u5feb\u7167\uff0c\u53e6\u6709 \ud83d\udc80 \u5df2\u8fc7\u671f\u60c5\u62a5 \u9644\u5f55\u3002\"\n    },\n    {\n      \"text\": \"priority-markers\",\n      \"passed\": true,\n      \"evidence\": \"\u7d27\u6025\u60c5\u62a5 3 \u6761\u5747\u6807 \ud83d\udd25\uff0c\u4e00\u822c\u52a8\u6001 9 \u6761\u6807 \ud83d\udce1\uff0c\u8fc7\u671f\u60c5\u62a5\u6807 \ud83d\udc80\uff0c\u5feb\u7167\u8868\u4e2d\u6709 \u26a0\ufe0f\uff08Google Gemini\uff09\u3002\u6bcf\u6761\u60c5\u62a5\u5747\u6709\u660e\u786e\u4f18\u5148\u7ea7\u3002\"\n    },\n    {\n      \"text\": \"timeliness-labeled\",\n      \"passed\": true,\n      \"evidence\": \"SkyClaw \u6807\u6ce8\u300c\u9650\u65f6\u514d\u8d39\uff082-4 \u5468\u7a97\u53e3\uff0c\u9884\u8ba1 6 \u6708\u4e2d\u622a\u6b62\uff09\u300d\uff0cQwen3.7-Max \u6807\u6ce8\u300c\u6c38\u4e45\u4e0a\u7ebf\u300d\uff0cRing-2.6-1T \u6807\u6ce8\u300c\u514d\u8d39\u6a21\u578b\uff0c\u53ef\u80fd\u968f\u65f6\u8c03\u6574\u300d\u3002\u5176\u4ed6\u6761\u76ee\u4e5f\u6709 [\u57fa\u7ebf\u9057\u6f0f\uff0c\u9700\u9a8c\u8bc1\u6765\u6e90]\u3001[\u57fa\u7ebf\u9700\u66f4\u65b0] \u7b49\u6807\u6ce8\u3002\"\n    },\n    {\n      \"text\": \"actionable\",\n      \"passed\": true,\n      \"evidence\": \"3 \u6761\u7d27\u6025\u60c5\u62a5\u5747\u6709\u300c\u63a8\u8350\u884c\u52a8\u300d\u5b57\u6bb5\uff1aSkyClaw\u300c\u7acb\u5373\u6ce8\u518c\u6d4b\u8bd5\u300d\u3001Qwen3.7-Max\u300c\u901a\u8fc7\u963f\u91cc\u4e91\u767e\u70bc\u65b0\u4eba\u989d\u5ea6\u6d4b\u8bd5\u300d\u3001Ring\u300c\u503c\u5f97\u6d4b\u8bd5\u300d\u3002\"\n    },\n    {\n      \"text\": \"has-health-snapshot\",\n      \"passed\": true,\n      \"evidence\": \"\u5065\u5eb7\u5feb\u7167\u8868\u5305\u542b 8 \u4e2a\u5e73\u53f0\uff08NVIDIA NIM\u3001OpenRouter\u3001\u5c0f\u7c73 MiMo\u3001\u963f\u91cc\u4e91\u767e\u70bc\u3001\u7845\u57fa\u6d41\u52a8\u3001Google Gemini\u3001Groq\u3001ChatAnywhere\uff09\uff0c\u6bcf\u4e2a\u6709\u72b6\u6001 emoji \u548c\u5907\u6ce8\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "## \u60c5\u62a5\u626b\u63cf\u62a5\u544a | 2026-05-29\n\n### \ud83d\udd25 \u7d27\u6025\u60c5\u62a5\uff0814\u5929\u5185\u65b0\u53d1\u73b0\uff0c\u4e0e agent/function calling \u76f4\u63a5\u76f8\u5173\uff09\n\n**1. \u5929\u5de5 SkyClaw-v1.0 \u2014 \u56fd\u4ea7\u539f\u751f Agent \u6a21\u578b\uff0c\u9650\u65f6\u514d\u8d39\u8bd5\u7528**\n- \u6765\u6e90\uff1a\u6606\u4ed1\u4e07\u7ef4\u5929\u5de5AI\uff085/22 \u4e0a\u7ebf\u5929\u5de5 Skywork \u5e73\u53f0\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1a\u4e13\u4e3a Agent \u573a\u666f\u539f\u751f\u8bbe\u8ba1\uff0c\u767e\u4e07 token \u4e0a\u4e0b\u6587\uff0c\u53e6\u6709\u8f7b\u91cf\u7248 SkyClaw-v1.-lite\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f3a** \u2014 \u5728\u4e3b\u6d41 Agent benchmark \u4e2d\u8d85\u8d8a DeepSeek V4 Flash\u3001Qwen 3.6 \u7cfb\u5217\uff0c\u903c\u8fd1 DeepSeek V4 Pro \u548c Claude Opus 4.6 \u6c34\u5e73\uff1b\u6df1\u5ea6\u9002\u914d OpenClaw\u3001Claude Code\u3001Codex \u7b49\u6846\u67b6\n- \u514d\u8d39/\u4f18\u60e0\u8be6\u60c5\uff1a\u9650\u65f6\u514d\u8d39\u8bd5\u7528\uff0c\u7a97\u53e3\u671f 2-4 \u5468\uff1b\u6b63\u5f0f\u5b9a\u4ef7\u4f4e\u4e8e Minimax 2.7 \u548c Qwen 3.6 \u7684\u4e00\u534a\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenAI \u517c\u5bb9\u63a5\u53e3\uff0c\u53ef\u901a\u8fc7\u5929\u5de5\u5e73\u53f0\u6216 APIFree\uff08apifree.ai/model/skywork-ai/skyclaw-v1\uff09\u8c03\u7528\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a\u9650\u65f6\u514d\u8d39\uff082-4 \u5468\u7a97\u53e3\uff0c\u9884\u8ba1 6 \u6708\u4e2d\u622a\u6b62\uff09\n- \u63a8\u8350\u884c\u52a8\uff1a**\u7acb\u5373\u6ce8\u518c\u6d4b\u8bd5** \u2014 \u8fd9\u662f\u8fd1\u671f\u6700\u503c\u5f97\u5173\u6ce8\u7684 agent \u6a21\u578b\uff0c\u539f\u751f tool calling \u4f18\u5316\uff0c\u514d\u8d39\u7a97\u53e3\u6709\u9650\n\n**2. Qwen3.7-Max \u2014 \u963f\u91cc\u4e91\u65b0\u65d7\u8230\uff0cAgent \u65f6\u4ee3\u4e13\u7528\u6a21\u578b**\n- \u6765\u6e90\uff1a\u963f\u91cc\u4e91\uff085/20 \u53d1\u5e03\uff09\uff0cOpenRouter \u5df2\u4e0a\u67b6\n- \u6a21\u578b\u4fe1\u606f\uff1aQwen \u7cfb\u5217\u6700\u65b0\u65d7\u8230\uff0c\u4e13\u4e3a agent \u5de5\u4f5c\u8d1f\u8f7d\u8bbe\u8ba1\uff0c\u957f\u7a0b\u81ea\u4e3b\u6267\u884c\u80fd\u529b\uff08\u6570\u767e\u81f3\u6570\u5343\u6b65\u9aa4\uff09\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f3a** \u2014 \u5b98\u65b9\u5b9a\u4f4d \"The Agent Frontier\"\uff0c\u5728 coding\u3001\u529e\u516c\u81ea\u52a8\u5316\u3001\u81ea\u4e3b\u6267\u884c\u65b9\u9762\u5168\u9762\u8d85\u8d8a\u524d\u4ee3\n- \u514d\u8d39/\u4f18\u60e0\u8be6\u60c5\uff1a\u963f\u91cc\u4e91\u767e\u70bc\u65b0\u4eba 7000 \u4e07 Token\uff0890 \u5929\uff09\u53ef\u8986\u76d6\uff1bOpenRouter \u4e0a\u4e3a\u4ed8\u8d39\u6a21\u578b\n- \u63a5\u5165\u65b9\u5f0f\uff1a\u963f\u91cc\u4e91\u767e\u70bc\uff08bailian.console.aliyun.com\uff09/ OpenRouter\uff08qwen/qwen3.7-max\uff09\uff0cOpenAI \u517c\u5bb9\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a\u6c38\u4e45\u4e0a\u7ebf\n- \u63a8\u8350\u884c\u52a8\uff1a**\u901a\u8fc7\u963f\u91cc\u4e91\u767e\u70bc\u65b0\u4eba\u989d\u5ea6\u6d4b\u8bd5** \u2014 function calling \u80fd\u529b\u662f\u7528\u6237\u6838\u5fc3\u9700\u6c42\uff0c\u8fd9\u4e2a\u6a21\u578b\u503c\u5f97\u4f18\u5148\u9a8c\u8bc1\n\n**3. InclusionAI Ring-2.6-1T \u2014 \u8682\u8681\u96c6\u56e2 1T \u6a21\u578b\uff0cOpenRouter \u514d\u8d39**\n- \u6765\u6e90\uff1aInclusionAI/\u8682\u8681\u96c6\u56e2\uff085/8 \u4e0a\u7ebf OpenRouter\uff09\uff0cHugging Face\uff085/14\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1a1T \u53c2\u6570\uff0c262K \u4e0a\u4e0b\u6587\u7a97\u53e3\uff0cElephant Alpha \u7684\u540e\u7eed\u8fed\u4ee3\uff08\u540c\u4e00\u7ec4\u7ec7\uff09\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f85\u9a8c\u8bc1** \u2014 \u6a21\u578b\u5b9a\u4f4d\u504f\u5411\u63a8\u7406\uff0ctool calling \u80fd\u529b\u5c1a\u65e0\u660e\u786e benchmark \u6570\u636e\n- \u514d\u8d39/\u4f18\u60e0\u8be6\u60c5\uff1aOpenRouter :free \u6807\u8bb0\uff0c\u5b8c\u5168\u514d\u8d39\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenRouter\uff08inclusionai/ring-2.6-1t:free\uff09\uff0cOpenAI \u517c\u5bb9\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a\u514d\u8d39\u6a21\u578b\uff0c\u53ef\u80fd\u968f\u65f6\u8c03\u6574\n- \u63a8\u8350\u884c\u52a8\uff1a**\u503c\u5f97\u6d4b\u8bd5** \u2014 \u514d\u8d39\u7684 1T \u53c2\u6570\u6a21\u578b\uff0c\u5148\u8bd5 tool calling \u8868\u73b0\u518d\u51b3\u5b9a\u662f\u5426\u7eb3\u5165\u5de5\u4f5c\u6d41\n\n### \ud83d\udce1 \u4e00\u822c\u52a8\u6001\uff08\u5e73\u53f0\u53d8\u52a8 + \u57fa\u7ebf\u9057\u6f0f\uff09\n\n- **Owl Alpha \u533f\u540d\u6a21\u578b\u4e0a\u7ebf OpenRouter**\uff08~4/28\uff09\u2014 \u65b0 Stealth \u6a21\u578b\uff0c\u514d\u8d39\uff0c\u767e\u4e07 token \u4e0a\u4e0b\u6587\uff0c\u539f\u751f agent \u4f18\u5316\u3002\u4e0d\u5728\u57fa\u7ebf\u5df2\u77e5 Stealth \u5217\u8868\u4e2d\u3002[\u57fa\u7ebf\u9057\u6f0f\uff0c\u9700\u9a8c\u8bc1\u6765\u6e90]\n- **\u5c0f\u7c73 MiMo V2.5 API \u6c38\u4e45\u964d\u4ef7**\uff085/27\uff09\u2014 \u6700\u9ad8\u964d\u5e45 99%\uff0c\u53d6\u6d88\u957f\u4e0a\u4e0b\u6587\u9636\u68af\u5b9a\u4ef7\uff0c\u6210\u4e3a\u5e02\u573a\u4e0a\u6700\u5177\u6027\u4ef7\u6bd4\u7684 1M \u4e0a\u4e0b\u6587\u6a21\u578b\u4e4b\u4e00\u3002\u5df2\u63a5\u5165\u5e73\u53f0\u7684\u7528\u6237\u76f4\u63a5\u53d7\u76ca\u3002\n- **Gemini 3.5 Flash \u53d1\u5e03**\uff085/19\uff0cGoogle I/O\uff09\u2014 Google \u6700\u65b0 Flash \u6a21\u578b\uff0c\u5b9a\u4f4d\u8d8a\u7ea7\u6027\u80fd + \u6781\u81f4\u901f\u5ea6\u3002\u662f\u5426\u4fdd\u7559\u514d\u8d39\u5c42\u5f85\u786e\u8ba4\u3002\n- **Gemini Pro \u514d\u8d39\u5c42\u5df2\u4e8e 4/1 \u7ec8\u6b62** \u2014 \u57fa\u7ebf\u4e2d Google \u6761\u76ee\uff081500 \u6b21/\u5929\uff09\u5df2\u8fc7\u671f\uff0cPro \u6a21\u578b\u4e0d\u518d\u514d\u8d39\u3002Flash \u6a21\u578b\u53ef\u80fd\u4ecd\u4fdd\u7559\u514d\u8d39\u5c42\u3002[\u57fa\u7ebf\u9700\u66f4\u65b0]\n- **\u5c0f\u7c73 MiMo Orbit \u767e\u4e07\u4ebf Token \u6d3b\u52a8\u5df2\u5230\u671f**\uff085/28 \u622a\u6b62\uff09\u2014 \u57fa\u7ebf\u4e2d\u6807\u6ce8\u7684\u6d3b\u52a8\u5df2\u7ed3\u675f\u3002\n- **GitHub Copilot 6/1 \u5168\u9762\u8f6c\u5411\u7528\u91cf\u8ba1\u8d39**\uff083 \u5929\u540e\u751f\u6548\uff09\u2014 \u7528 AI Credits \u66ff\u4ee3 premium requests\uff0ctoken \u8ba1\u8d39\u3002\u57fa\u7ebf\u5df2\u9884\u8b66\uff0c\u73b0\u5728\u662f\u6700\u540e\u7a97\u53e3\u3002\n- **Hunter/Healer Alpha \u8eab\u4efd\u5df2\u63ed\u6653** \u2014 OpenRouter 3/18 \u786e\u8ba4\u4e3a\u5c0f\u7c73 MiMo V2 \u53d8\u4f53\uff08MiMo-V2-Pro \u548c MiMo-V2-Omni\uff09\u3002\u57fa\u7ebf\u4e2d\"\u672a\u77e5\u6765\u6e90\"\u9700\u66f4\u65b0\u3002\n- **OpenRouter \u514d\u8d39\u6a21\u578b\u6301\u7eed\u4e0b\u964d** \u2014 CostGoat \u6700\u65b0\u7edf\u8ba1 27 \u4e2a\u514d\u8d39\u6a21\u578b\uff08\u57fa\u7ebf\u8bb0\u5f55 ~30 \u4e2a\uff0c4/26\uff09\u3002\n- **OpenCode Zen \u5e73\u53f0**\uff08opencode.ai\uff09\u2014 \u65b0\u589e\u591a\u4e2a\u514d\u8d39\u6a21\u578b\u63a5\u5165\uff1aMiMo V2.5\u3001Qwen3.7 Max\u3001Gemini 3.5 Flash\u3001DeepSeek V4 Flash\u3002AI \u7f16\u7a0b\u5de5\u5177\u65b0\u73a9\u5bb6\u3002\n\n### \ud83d\udcca \u5df2\u77e5\u8d44\u6e90\u72b6\u6001\u5feb\u7167\n\n| \u5e73\u53f0 | \u72b6\u6001 | \u5907\u6ce8 |\n|------|------|------|\n| NVIDIA NIM | \u2705 | 100+ \u6a21\u578b\uff0c40 RPM\uff0cStep 3.5 Flash \u4ecd\u4e3a\u4e3b\u529b\u7a33\u5b9a\u6a21\u578b |\n| OpenRouter | \u2705 | 27 \u4e2a\u514d\u8d39\u6a21\u578b\uff08\u6301\u7eed\u4e0b\u964d\uff09\uff0c\u65b0\u589e Ring-2.6-1T\u3001Owl Alpha |\n| \u5c0f\u7c73 MiMo | \u2705 | V2.5 API \u6c38\u4e45\u964d\u4ef7 99%\uff0cOrbit \u6d3b\u52a8\u5df2\u7ed3\u675f |\n| \u963f\u91cc\u4e91\u767e\u70bc | \u2705 | \u65b0\u589e Qwen3.7-Max\uff0c\u65b0\u4eba 7000 \u4e07 Token \u4ecd\u6709\u6548 |\n| \u7845\u57fa\u6d41\u52a8 | \u2705 | 200+ \u5f00\u6e90\u6a21\u578b\u514d\u8d39\u63a8\u7406 |\n| Google Gemini | \u26a0\ufe0f | Pro \u514d\u8d39\u5c42\u5df2\u7ec8\u6b62\uff084/1\uff09\uff0cFlash 3.5 \u65b0\u53d1\u5e03\uff0c\u514d\u8d39\u5c42\u5f85\u786e\u8ba4 |\n| Groq | \u2705 | 30-60 RPM \u514d\u8d39 |\n| ChatAnywhere | \u2705 | \u56fd\u5185\u76f4\u8fde\uff0c\u8f6c\u53d1 GPT/Claude |\n\n### \ud83d\udc80 \u5df2\u8fc7\u671f\u60c5\u62a5\n\n- \u5c0f\u7c73 MiMo Orbit \u767e\u4e07\u4ebf Token \u8ba1\u5212\uff084/28-5/28\uff09\u2014 \u5df2\u4e8e\u6628\u65e5\u5230\u671f\n- Gemini Pro API \u514d\u8d39\u5c42\uff081500 \u6b21/\u5929\uff09\u2014 \u5df2\u4e8e 4/1 \u7ec8\u6b62\n\n### Agent \u5f00\u53d1\u8005\u4e13\u9879\u5efa\u8bae\n\n\u672c\u6b21\u626b\u63cf\u53d1\u73b0 3 \u4e2a\u4e0e agent/function calling \u76f4\u63a5\u76f8\u5173\u7684\u91cd\u78c5\u65b0\u8d44\u6e90\uff1a\n\n1. **SkyClaw-v1.0** \u662f\u6700\u503c\u5f97\u5173\u6ce8\u7684 \u2014 \u539f\u751f agent \u8bbe\u8ba1\uff0c\u5b98\u65b9 benchmark \u903c\u8fd1 Claude Opus 4.6\uff0c\u9650\u65f6\u514d\u8d39 2-4 \u5468\n2. **Qwen3.7-Max** \u662f\u963f\u91cc\u4e91\u4e13\u4e3a agent \u65f6\u4ee3\u6253\u9020\u7684\u65d7\u8230\uff0cfunction calling \u662f\u5176\u6838\u5fc3\u5356\u70b9\uff0c\u53ef\u901a\u8fc7\u767e\u70bc\u65b0\u4eba\u989d\u5ea6\u514d\u8d39\u6d4b\u8bd5\n3. **Ring-2.6-1T** \u662f\u514d\u8d39\u7684 1T \u53c2\u6570\u5927\u6a21\u578b\uff0c\u4f46 tool calling \u80fd\u529b\u5c1a\u672a\u786e\u8ba4\uff0c\u5efa\u8bae\u5148\u8dd1\u4e00\u8f6e agent \u5de5\u4f5c\u6d41\u6d4b\u8bd5\n\n\u5df2\u77e5\u5e73\u53f0\u4e2d\uff0cNVIDIA NIM \u7684 Step 3.5 Flash \u4ecd\u662f\u552f\u4e00\u5728\u9ad8\u5e76\u53d1\u4e0b\u7a33\u5b9a\u7684\u514d\u8d39\u6a21\u578b\uff0c\u4f46 agent \u80fd\u529b\u5f31\u3002\u5982\u679c SkyClaw \u6216 Qwen3.7-Max \u7684 agent \u8868\u73b0\u7ecf\u6d4b\u8bd5\u786e\u8ba4\u4f18\u79c0\uff0c\u53ef\u80fd\u6210\u4e3a\u65b0\u7684\u4e3b\u529b\u9009\u62e9\u3002\n"}], "grading": null}, {"id": "eval-1-intel-scan-without_skill", "prompt": "\u626b\u4e00\u4e0b\u6700\u8fd1\u6709\u4ec0\u4e48\u65b0\u7684\u514d\u8d39 AI \u8d44\u6e90\uff0c\u6211\u4e3b\u8981\u662f\u505a agent \u5f00\u53d1\u7684\uff0c\u5173\u6ce8\u80fd\u8dd1 function calling \u7684\u6a21\u578b", "eval_id": 1, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 1,\n  \"run\": \"without_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"has-three-sections\",\n      \"passed\": false,\n      \"evidence\": \"\u62a5\u544a\u4f7f\u7528 Tier 1/2/3 \u5206\u5c42\uff08Best for Agent Development / Strong Options / Niche\uff09\uff0c\u6ca1\u6709 \ud83d\udd25\u7d27\u6025\u60c5\u62a5\u3001\ud83d\udce1\u4e00\u822c\u52a8\u6001\u3001\ud83d\udcca\u5065\u5eb7\u5feb\u7167 \u7684\u60c5\u62a5\u5206\u7c7b\u7ed3\u6784\u3002\"\n    },\n    {\n      \"text\": \"priority-markers\",\n      \"passed\": false,\n      \"evidence\": \"\u65e0 \ud83d\udd25/\ud83d\udce1/\ud83d\udc80/\u26a0\ufe0f \u7b49\u4f18\u5148\u7ea7\u6807\u8bb0\u3002\u4f7f\u7528 Tier 1/2/3 \u5206\u7c7b\u4f46\u8fd9\u662f\u6309\u80fd\u529b\u5206\u5c42\u800c\u975e\u60c5\u62a5\u4f18\u5148\u7ea7\u3002\"\n    },\n    {\n      \"text\": \"timeliness-labeled\",\n      \"passed\": false,\n      \"evidence\": \"\u65e0\u65f6\u6548\u6027\u6807\u6ce8\uff08\u6c38\u4e45/\u9650\u65f6/\u6d4b\u8bd5\u671f\uff09\u3002\u6240\u6709\u5e73\u53f0\u90fd\u6309\u9759\u6001\u8d44\u6e90\u63cf\u8ff0\uff0c\u672a\u533a\u5206\u54ea\u4e9b\u662f\u9650\u65f6\u4f18\u60e0\u3002\"\n    },\n    {\n      \"text\": \"actionable\",\n      \"passed\": false,\n      \"evidence\": \"Recommendations \u90e8\u5206\u6709\u901a\u7528\u5efa\u8bae\uff08'Start with Gemini API'\uff09\uff0c\u4f46\u4e0d\u662f\u9488\u5bf9\u5177\u4f53\u60c5\u62a5\u7684\u53ef\u64cd\u4f5c\u884c\u52a8\uff0c\u4e5f\u6ca1\u6709\u533a\u5206\u7d27\u6025\u7a0b\u5ea6\u3002\"\n    },\n    {\n      \"text\": \"has-health-snapshot\",\n      \"passed\": false,\n      \"evidence\": \"\u65e0\u5df2\u77e5\u8d44\u6e90\u72b6\u6001\u5feb\u7167\u3002\u65e0\u589e\u91cf\u5bf9\u6bd4\u6982\u5ff5\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "# Free AI API Resources for Agent Development (2026-05)\n\n## Summary\n\nBelow is a curated list of free AI model APIs that support function calling / tool use, specifically relevant for agent developers. All information gathered via live web search on 2026-05-29.\n\n---\n\n## Tier 1: Best for Agent Development (Function Calling Native)\n\n### 1. Google Gemini API (Free Tier)\n- **Models**: Gemini 2.5 Flash, Gemini 2.0 Flash-Lite (free); Pro models now paywalled since April 2026\n- **Function Calling**: Full native support, including parallel function calling and structured output\n- **Free Limits**: 1,500 requests/day, 1M tokens/min, no credit card required, no expiry\n- **Why it matters**: Most generous free tier among major providers. Excellent for agent prototyping with tool use.\n- **URL**: https://ai.google.dev/gemini-api\n\n### 2. Groq (Free Tier)\n- **Models**: Llama 3.3 70B, Llama 4 Scout, Mixtral, Gemma 2 (all free)\n- **Function Calling**: Supported on Llama models via tool_use parameter\n- **Free Limits**: 30 requests/min, speed up to 300-700 tokens/sec on LPU hardware, no credit card\n- **Why it matters**: Fastest free inference available. Great for agent loops where latency matters.\n- **URL**: https://console.groq.com\n\n### 3. OpenRouter (Free Models)\n- **Models**: 28+ free models as of May 2026, including Llama 4 Scout, DeepSeek V4 Flash, Qwen3 Coder, Gemma 3\n- **Function Calling**: Varies by model; OpenRouter can auto-filter for tool-calling-capable models\n- **Free Limits**: ~20 req/min, 200 req/day per free model; sponsored provider backend\n- **Why it matters**: Single API key for many models. Good for testing different models' function calling quality.\n- **URL**: https://openrouter.ai/collections/free-models\n\n### 4. NVIDIA NIM (Free Tier)\n- **Models**: 100+ models including Mistral Nemotron, Qwen3 Coder 480B, MiniMax M2.7, GLM-5, Kimi K2.5, DeepSeek\n- **Function Calling**: Mistral Nemotron is highlighted as one of the best function-calling models. Full tool calling support documented.\n- **Free Limits**: Access via build.nvidia.com, no credit card, rate limits apply\n- **Why it matters**: Widest model variety on a free tier. Mistral Nemotron is particularly strong for agent/tool use.\n- **URL**: https://build.nvidia.com\n\n---\n\n## Tier 2: Strong Options (Good Function Calling, Some Limitations)\n\n### 5. Cerebras Inference API\n- **Models**: Llama 3.3 70B, Llama 4 Scout\n- **Function Calling**: Supported (tool calling, structured outputs, reasoning)\n- **Free Limits**: 1M tokens/day, 30 req/min, 60-100K tokens/min, 8,192 token context cap (free tier)\n- **Why it matters**: 2,000+ tokens/sec on Llama 3.3 70B - fastest inference available. Context cap is a limitation for complex agents.\n- **URL**: https://inference-docs.cerebras.ai\n\n### 6. DeepSeek API\n- **Models**: DeepSeek V4 Pro, DeepSeek V4 Flash\n- **Function Calling**: Supported (OpenAI-compatible format)\n- **Free Limits**: 5M free tokens on signup, concurrency limits (500 for V4 Pro, 2,500 for V4 Flash), very cheap after credits ($0.27/M tokens)\n- **Why it matters**: V4 is frontier-class. Extremely cheap even after free credits run out. Good reasoning for complex agent tasks.\n- **URL**: https://api-docs.deepseek.com\n\n### 7. SambaNova Cloud\n- **Models**: Llama 4 405B, Llama 4 70B (free via SambaCloud)\n- **Function Calling**: Documented support for function calling and JSON mode\n- **Free Limits**: Free tier available, 400-580 tokens/sec\n- **URL**: https://sambanova.ai\n\n### 8. Together AI\n- **Models**: Wide range of open-source models\n- **Function Calling**: Supported on compatible models\n- **Free Limits**: Free credits on signup\n- **URL**: https://www.together.ai\n\n---\n\n## Tier 3: Niche / Special Use Cases\n\n### 9. Puter.js (Unlimited Free)\n- **Models**: GPT-4o, GPT-5.5, Claude, Gemini, Llama, DeepSeek - all via browser JS\n- **Function Calling**: Supports function calling and vision\n- **Free Limits**: Unlimited (costs are covered by end-user of the app)\n- **Caveat**: Browser-only (JavaScript SDK), not a traditional REST API. Good for frontend agent demos, not backend agent services.\n- **URL**: https://developer.puter.com\n\n### 10. Hugging Face Inference API\n- **Models**: Thousands of open-source models\n- **Function Calling**: Depends on model; not all support it natively\n- **Free Limits**: Rate-limited free tier\n- **URL**: https://huggingface.co/inference-api\n\n### 11. Mistral API\n- **Models**: Mistral Small, Mistral Nemo (free tier models)\n- **Function Calling**: Full native support (one of the best for function calling)\n- **Free Limits**: Limited free tier available\n- **URL**: https://mistral.ai\n\n---\n\n## Quick Comparison Matrix for Agent Developers\n\n| Provider | Best Free Model | Function Calling | Speed | Daily Limit | Best For |\n|----------|----------------|-----------------|-------|-------------|----------|\n| Gemini API | 2.5 Flash | Excellent | Fast | 1,500 req | General agent prototyping |\n| Groq | Llama 4 Scout | Good | Fastest (300-700 TPS) | ~43,200 req | Latency-sensitive agents |\n| NVIDIA NIM | Mistral Nemotron | Excellent | Medium | Rate limited | Best function calling quality |\n| OpenRouter | Multiple | Varies | Medium | 200 req | Model comparison/testing |\n| Cerebras | Llama 3.3 70B | Good | Ultra-fast (2000+ TPS) | 1M tokens | Speed benchmarks |\n| DeepSeek | V4 Flash | Good | Medium | 5M tokens (signup) | Complex reasoning agents |\n| Puter.js | GPT-5.5 | Good | Slow (browser) | Unlimited | Frontend-only demos |\n\n---\n\n## Recommendations for Agent Developers\n\n1. **Start with Gemini API** - Best balance of free limits, function calling quality, and developer experience. 1,500 req/day is generous for development and testing.\n\n2. **Use Groq for speed-critical agent loops** - When your agent needs fast tool-calling cycles, Groq's LPU inference is unmatched on the free tier.\n\n3. **Test function calling quality on NVIDIA NIM** - Mistral Nemotron is reportedly one of the best models for structured tool use, and it's free on NIM.\n\n4. **OpenRouter for model diversity** - If you need to benchmark multiple models' function calling against each other, OpenRouter's free tier gives you access to many models via one API.\n\n5. **DeepSeek V4 for complex reasoning** - If your agent needs deep reasoning (multi-step planning, code generation), DeepSeek V4's quality-to-cost ratio is unbeatable. The 5M free tokens on signup are enough for serious testing.\n\n---\n\n## Sources\n- tokenmix.ai, costbench.com, free-llm.com, klymentiev.com (free LLM API comparisons, 2026)\n- openrouter.ai/collections/free-models, openrouter.ai/collections/tool-calling-models\n- brainroad.com (OpenRouter free models for AI agents)\n- aitoolsmentor.com (NVIDIA NIM free models guide)\n- pricepertoken.com (DeepSeek free tier details)\n- developer.puter.com (Puter.js free unlimited AI API)\n- grizzlypeaksoftware.com (Groq free tier limits)\n- docs.sambanova.ai (SambaNova function calling docs)\n- apidog.com (DeepSeek V4 free API usage)\n"}], "grading": null}, {"id": "eval-2-resource-search-with_skill", "prompt": "\u6709\u6ca1\u6709\u514d\u8d39\u7684\u4ee3\u7801\u751f\u6210\u6a21\u578b API\uff1fagent \u80fd\u529b\u5f3a\u7684\u90a3\u79cd\uff0c\u6211\u76ee\u524d\u53ea\u7528\u8fc7 NVIDIA NIM", "eval_id": 2, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 2,\n  \"run\": \"with_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"platform-first\",\n      \"passed\": true,\n      \"evidence\": \"\u63a8\u8350\u7684\u6838\u5fc3\u8d44\u6e90\u5168\u90e8\u901a\u8fc7\u5e73\u53f0\u7ea7\u5165\u53e3\uff1aOpenRouter\uff08DeepSeek V4 Flash:free\u3001Qwen3 Coder:free\u3001Kimi K2.6:free\u3001GPT-OSS:free\uff09\uff0c\u800c\u975e\u5355\u72ec\u7684 API endpoint\u3002\u5065\u5eb7\u5feb\u7167\u4e5f\u6309\u5e73\u53f0\u7ef4\u5ea6\u7ec4\u7ec7\u3002\"\n    },\n    {\n      \"text\": \"agent-capability-first\",\n      \"passed\": true,\n      \"evidence\": \"\u6bcf\u6761\u60c5\u62a5\u9996\u9879\u5c31\u662f Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\u8bc4\u7ea7\uff08\u5f3a/\u4e2d\u5f3a/\u4e2d\u7b49/\u5f85\u9a8c\u8bc1\uff09\uff0c\u5e76\u5f15\u7528 BFCL v3 \u5f97\u5206\uff0884.6%\uff09\u3001SWE-bench\uff0880.2%\uff09\u7b49 benchmark\u3002\u6838\u5fc3\u903b\u8f91\u660e\u786e\uff1a\u300c\u6a21\u578b\u8d8a\u5f3a \u2192 agent \u5de5\u4f5c\u51fa\u9519\u7387\u8d8a\u4f4e \u2192 \u5b9e\u9645 token \u6d88\u8017\u8d8a\u5c11 \u2192 \u8d35\u7684\u514d\u8d39\u6a21\u578b\u53cd\u800c\u66f4\u7701\u94b1\u300d\u3002\"\n    },\n    {\n      \"text\": \"nvidia-nim-excluded\",\n      \"passed\": true,\n      \"evidence\": \"NVIDIA NIM \u4ec5\u51fa\u73b0\u5728\u5065\u5eb7\u5feb\u7167\u8868\u4e2d\uff08\u6807\u6ce8 Step 3.5 Flash agent \u80fd\u529b\u300c\u5f31\u300d\uff09\uff0c\u63a8\u8350\u8d44\u6e90\u4e2d\u6ca1\u6709\u91cd\u590d NIM\u3002\u660e\u786e\u6307\u51fa\u7528\u6237\u5f53\u524d NIM \u7684\u74f6\u9888\u3002\"\n    },\n    {\n      \"text\": \"has-access-info\",\n      \"passed\": true,\n      \"evidence\": \"\u6bcf\u6761\u60c5\u62a5\u5305\u542b\u300c\u63a5\u5165\u65b9\u5f0f\u300d\u5b57\u6bb5\uff0c\u7ed9\u51fa base_url \u548c model ID\uff08\u5982 `deepseek/deepseek-v4-flash:free`\uff09\u3002\"\n    },\n    {\n      \"text\": \"mentions-cost-paradigm\",\n      \"passed\": true,\n      \"evidence\": \"\u62a5\u544a\u5f00\u5934\u660e\u786e\u58f0\u660e\u6838\u5fc3\u903b\u8f91\uff1a\u300c\u6a21\u578b\u8d8a\u5f3a \u2192 agent \u5de5\u4f5c\u51fa\u9519\u7387\u8d8a\u4f4e \u2192 \u5b9e\u9645 token \u6d88\u8017\u8d8a\u5c11 \u2192 \u8d35\u7684\u514d\u8d39\u6a21\u578b\u53cd\u800c\u66f4\u7701\u94b1\u300d\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "## \u8d44\u6e90\u641c\u7d22\u62a5\u544a | 2026-05-29\n\n**\u641c\u7d22\u4e3b\u9898**\uff1a\u514d\u8d39\u4ee3\u7801\u751f\u6210\u6a21\u578b API\uff0c\u8981\u6c42 agent/function calling \u80fd\u529b\u5f3a\n**\u7528\u6237\u73b0\u72b6**\uff1a\u76ee\u524d\u53ea\u7528\u8fc7 NVIDIA NIM\uff08100+ \u6a21\u578b\uff0c\u4ec5 Step 3.5 Flash \u7a33\u5b9a\uff0cagent \u5de5\u4f5c\u6d41\u8868\u73b0\u5dee\uff09\n**\u6838\u5fc3\u903b\u8f91**\uff1a\u6a21\u578b\u8d8a\u5f3a \u2192 agent \u5de5\u4f5c\u51fa\u9519\u7387\u8d8a\u4f4e \u2192 \u5b9e\u9645 token \u6d88\u8017\u8d8a\u5c11 \u2192 \"\u8d35\"\u7684\u514d\u8d39\u6a21\u578b\u53cd\u800c\u66f4\u7701\u94b1\n\n---\n\n### \ud83d\udd25 \u7d27\u6025\u60c5\u62a5\uff0814\u5929\u5185\u65b0\u53d1\u73b0\u7684\u91cd\u78c5\u8d44\u6e90\uff09\n\n**1. DeepSeek V4 Flash \u2014 \u5f53\u524d OpenRouter \u514d\u8d39\u6a21\u578b\u4e2d\u8d28\u91cf\u6700\u9ad8\uff08Quality 77\uff09\uff0cagent \u80fd\u529b\u5f3a**\n- \u6765\u6e90\uff1aOpenRouter\uff08`deepseek/deepseek-v4-flash:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1aDeepSeek V4 \u7cfb\u5217\u8f7b\u91cf\u7248\uff0c1M \u4e0a\u4e0b\u6587\uff0c\u652f\u6301 thinking/non-thinking \u6a21\u5f0f\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f3a** \u2014 BFCL v3 \u5f97\u5206 ~84.6%\uff0c\u539f\u751f function calling \u652f\u6301\uff0c\u591a\u8f6e\u5e76\u884c\u5de5\u5177\u8c03\u7528\u53ef\u9760\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\uff08`:free` \u540e\u7f00\uff09\uff0c20 \u8bf7\u6c42/\u5206\u949f\uff0c200 \u8bf7\u6c42/\u5929\uff0c\u65e0\u9700\u4fe1\u7528\u5361\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenAI \u517c\u5bb9\uff0c`base_url=https://openrouter.ai/api/v1`\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a**\u6c38\u4e45\u514d\u8d39\u5c42**\uff08OpenRouter \u6301\u7eed\u63d0\u4f9b :free \u53d8\u4f53\uff0c\u4f46\u5177\u4f53\u6a21\u578b\u53ef\u80fd\u968f\u65f6\u66f4\u66ff\uff09\n- \u63a8\u8350\u884c\u52a8\uff1a**\u7acb\u5373\u8bd5\u7528** \u2014 \u8fd9\u662f\u4f60\u5f53\u524d agent \u5de5\u4f5c\u6d41\u4e2d NVIDIA NIM Step 3.5 Flash \u7684\u76f4\u63a5\u5347\u7ea7\u66ff\u4ee3\n- \u4ef7\u683c\u53c2\u8003\uff1a\u4ed8\u8d39 V4-Flash \u4ec5 $0.14/$0.28 per M\uff08in/out\uff09\uff0c\u514d\u8d39\u989d\u5ea6\u7528\u5b8c\u540e\u6781\u4f4e\u6210\u672c\u515c\u5e95\n\n**2. Qwen3 Coder 480B A35B \u2014 OpenRouter \u514d\u8d39\u6700\u5f3a\u7f16\u7a0b\u4e13\u7528\u6a21\u578b\uff0c\u4e13\u4e3a agentic coding \u4f18\u5316**\n- \u6765\u6e90\uff1aOpenRouter\uff08`qwen/qwen3-coder:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1a480B \u603b\u53c2/35B \u6d3b\u8dc3\u53c2\u6570 MoE\uff0c\u4e13\u4e3a\u4ee3\u7801\u751f\u6210\u548c agentic \u4efb\u52a1\u4f18\u5316\uff0c1M \u4e0a\u4e0b\u6587\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f3a** \u2014 \u539f\u751f\u652f\u6301 function calling\u3001tool use\u3001\u957f\u4e0a\u4e0b\u6587\u4ed3\u5e93\u7ea7\u63a8\u7406\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\uff0c\u540c\u4e0a\u901f\u7387\u9650\u5236\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenAI \u517c\u5bb9\uff0c`base_url=https://openrouter.ai/api/v1`\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a**\u6c38\u4e45\u514d\u8d39\u5c42**\n- \u63a8\u8350\u884c\u52a8\uff1a**\u7acb\u5373\u8bd5\u7528** \u2014 \u4e0e DeepSeek V4 Flash \u5e76\u5217\u9996\u9009\uff0c\u4e00\u4e2a\u504f\u901a\u7528\u63a8\u7406\uff0c\u4e00\u4e2a\u504f\u4ee3\u7801\u4e13\u7cbe\n\n**3. Qwen 3.6 Plus \u2014 OpenRouter \u514d\u8d39\uff0c1M \u4e0a\u4e0b\u6587\uff0c\u5f3a\u5236\u601d\u7ef4\u94fe\u63a8\u7406**\n- \u6765\u6e90\uff1aOpenRouter\uff08`qwen/qwen3.6-plus:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1aQwen 3.6 \u7cfb\u5217\u65d7\u8230\uff0c1M \u4e0a\u4e0b\u6587\uff0c\u5f3a\u5236\u601d\u7ef4\u94fe\u63a8\u7406 + \u5de5\u5177\u8c03\u7528\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u4e2d\u5f3a** \u2014 \u652f\u6301 function calling + `preserve_thinking` \u53c2\u6570\u67e5\u770b\u63a8\u7406\u8fc7\u7a0b\uff0c\u5bf9\u8c03\u8bd5 agent \u5de5\u4f5c\u6d41\u5f88\u6709\u4ef7\u503c\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\uff08`qwen/qwen3.6-plus:free`\uff09\uff0c~20 \u8bf7\u6c42/\u5206\u949f\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenAI \u517c\u5bb9\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a**\u6c38\u4e45\u514d\u8d39\u5c42**\n- \u63a8\u8350\u884c\u52a8\uff1a**\u503c\u5f97\u8bd5\u7528** \u2014 \u601d\u7ef4\u94fe\u63a8\u7406\u5bf9 agent \u51b3\u7b56\u8d28\u91cf\u6709\u5e2e\u52a9\n\n**4. Kimi K2.6 \u2014 OpenRouter \u514d\u8d39\uff0cSWE-bench 80.2%\uff0c\u957f\u65f6 agent \u81ea\u4e3b\u8fd0\u884c\u80fd\u529b\u7a81\u51fa**\n- \u6765\u6e90\uff1aOpenRouter\uff08`moonshotai/kimi-k2.6:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1a~1T MoE\uff0c256K \u4e0a\u4e0b\u6587\uff0cSWE-bench Verified 80.2%\uff08\u4e0e Claude Sonnet 4.6 \u7684 79.6% \u6301\u5e73\u751a\u81f3\u7565\u9ad8\uff09\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f3a** \u2014 \u793e\u533a\u5b9e\u6d4b 12+ \u5c0f\u65f6\u81ea\u4e3b\u8fd0\u884c\u30014000+ \u5de5\u5177\u8c03\u7528\u7684\u6210\u529f\u6848\u4f8b\uff1bAgent Swarm \u6a21\u5f0f\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\uff0c\u652f\u6301 vision + tools\n- \u63a5\u5165\u65b9\u5f0f\uff1aOpenAI \u517c\u5bb9\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a**\u6c38\u4e45\u514d\u8d39\u5c42**\n- \u63a8\u8350\u884c\u52a8\uff1a**\u503c\u5f97\u8bd5\u7528** \u2014 agent \u81ea\u4e3b\u8fd0\u884c\u65f6\u95f4\u662f\u72ec\u7279\u5356\u70b9\n\n**5. OpenAI GPT-OSS 120B / 20B \u2014 OpenRouter \u514d\u8d39\u65b0\u6a21\u578b\uff0cOpenAI \u5f00\u6e90**\n- \u6765\u6e90\uff1aOpenRouter\uff08`openai/gpt-oss-120b:free`\u3001`openai/gpt-oss-20b:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1aOpenAI \u5f00\u6e90\u6a21\u578b\uff0c131K \u4e0a\u4e0b\u6587\uff0c\u652f\u6301 tools\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u5f85\u9a8c\u8bc1** \u2014 Quality 55\uff08120B\uff09/ 41\uff0820B\uff09\uff0cOpenAI \u51fa\u54c1\u7406\u8bba\u4e0a tool use \u8bad\u7ec3\u5145\u5206\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\n- \u65f6\u6548\u6027\u5224\u65ad\uff1a**\u6c38\u4e45\u514d\u8d39\u5c42**\n- \u63a8\u8350\u884c\u52a8\uff1a**\u6301\u7eed\u5173\u6ce8** \u2014 \u8d28\u91cf\u5206\u6570\u4e2d\u7b49\uff0c\u4f46 OpenAI \u5f00\u6e90\u6a21\u578b\u503c\u5f97\u5173\u6ce8\n\n**6. Google Gemma 4 31B \u2014 OpenRouter \u514d\u8d39\uff0c\u652f\u6301 vision + tools**\n- \u6765\u6e90\uff1aOpenRouter\uff08`google/gemma-4-31b-it:free`\uff09\n- \u6a21\u578b\u4fe1\u606f\uff1a262K \u4e0a\u4e0b\u6587\uff0c\u652f\u6301\u89c6\u89c9\u548c\u5de5\u5177\u8c03\u7528\n- Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\uff1a**\u4e2d\u7b49** \u2014 Quality 65\n- \u514d\u8d39\u8be6\u60c5\uff1aOpenRouter \u514d\u8d39\n- \u63a8\u8350\u884c\u52a8\uff1a**\u53ef\u4ee5\u8bd5\u7528** \u2014 \u8d28\u91cf\u4e2d\u7b49\uff0c\u4f46\u514d\u8d39\u591a\u6a21\u6001\u662f\u4eae\u70b9\n\n---\n\n### \ud83d\udce1 \u4e00\u822c\u52a8\u6001\uff08\u5e73\u53f0\u53d8\u52a8 + \u57fa\u7ebf\u9057\u6f0f\u8865\u5145\uff09\n\n**OpenRouter \u514d\u8d39\u6a21\u578b\u6570\u91cf\u53d8\u5316**\n- \u5f53\u524d 27 \u4e2a\u514d\u8d39\u6a21\u578b\uff08CostGoat 5/28 \u7edf\u8ba1\uff09\uff0c\u8f83\u57fa\u7ebf\u7684 ~30 \u4e2a\u7565\u6709\u4e0b\u964d\n- \u65b0\u589e\u91cd\u8981\u514d\u8d39\u6a21\u578b\uff1aDeepSeek V4 Flash\u3001Qwen 3.6 Plus\u3001Qwen3 Coder\u3001Gemma 4 \u7cfb\u5217\u3001GPT-OSS \u7cfb\u5217\u3001MiniMax M2.5\u3001Kimi K2.6\n- \u901f\u7387\u9650\u5236\u8c03\u6574\u4e3a 20 \u8bf7\u6c42/\u5206\u949f + 200 \u8bf7\u6c42/\u5929\uff08\u6b64\u524d\u4e3a 50 \u6b21/\u5929\uff09\n\n**DeepSeek V4 Pro \u5b9a\u4ef7\u6c38\u4e45\u4e0b\u8c03**\n- 2026-05-22 \u786e\u8ba4 $0.435/$0.87 per M \u4e3a\u6c38\u4e45\u4ef7\u683c\uff08\u539f\u4e3a 75% \u9650\u65f6\u6298\u6263\uff09\n- \u65b0\u7528\u6237\u6ce8\u518c\u53ef\u83b7 $1 \u8bd5\u7528\u989d\u5ea6\uff08\u7ea6 700 \u4e07 input tokens\uff09\n- V4-Pro agent \u80fd\u529b\u5f3a\uff1a\u591a\u8f6e\u5e76\u884c\u5de5\u5177\u8c03\u7528\u53ef\u9760\uff0cAnthropic \u517c\u5bb9 API \u53ef\u76f4\u63a5\u7528\u4e8e Claude Code\n\n**OpenAI \u5f00\u6e90\u6a21\u578b\u4e0a\u7ebf OpenRouter**\n- GPT-OSS 120B \u548c GPT-OSS 20B \u514d\u8d39\u53ef\u7528\uff0cOpenAI \u9996\u6b21\u5728 OpenRouter \u63d0\u4f9b\u514d\u8d39\u5f00\u6e90\u6a21\u578b\n\n**\u7845\u57fa\u6d41\u52a8 SiliconCloud \u514d\u8d39\u5c42\u6301\u7eed\u66f4\u65b0**\n- 200+ \u5f00\u6e90\u6a21\u578b\u514d\u8d39\u63a8\u7406\uff08Qwen/GLM/DeepSeek \u7cfb\u5217\uff09\uff0c\u56fd\u5185\u76f4\u8fde\uff0c\u5ef6\u8fdf\u4f4e\n- \u5df2\u77e5\u8d44\u6e90\uff0c\u672a\u6709\u91cd\u5927\u53d8\u5316\n\n---\n\n### \ud83d\udcca \u5df2\u77e5\u8d44\u6e90\u72b6\u6001\u5feb\u7167\uff08\u57fa\u7ebf\u5df2\u6709\uff0c\u6309 agent \u80fd\u529b\u6392\u5e8f\uff09\n\n| \u5e73\u53f0 | Agent \u80fd\u529b | \u514d\u8d39\u653f\u7b56 | \u7a33\u5b9a\u6027 | \u4f60\u7684\u9002\u7528\u6027 |\n|------|-----------|---------|--------|-----------|\n| NVIDIA NIM\uff08\u4f60\u6b63\u5728\u7528\uff09 | Step 3.5 Flash **\u5f31** | 40 RPM \u514d\u8d39 | Step \u7a33\u5b9a\uff0c\u5176\u4ed6\u4e0d\u7a33\u5b9a | \u5df2\u77e5 \u2014 agent \u5de5\u4f5c\u6d41\u74f6\u9888 |\n| OpenRouter\uff0827 \u514d\u8d39\u6a21\u578b\uff09 | V4 Flash / Qwen3 Coder **\u5f3a** | 20 RPM + 200 \u6b21/\u5929 | \u8f83\u9ad8 | **\u9996\u9009\u8865\u5145/\u66ff\u4ee3** |\n| \u5c0f\u7c73 MiMo Orbit | MiMo-V2.5 **\u4e2d\u5f3a** | \u767e\u4e07\u4ebf Token \u7533\u8bf7\u5236\uff08\u622a\u6b62 5/28\uff09 | \u4e2d | \u26a0\ufe0f \u6d3b\u52a8\u4eca\u5929\u622a\u6b62\uff01 |\n| \u963f\u91cc\u4e91\u767e\u70bc | Qwen \u7cfb\u5217 **\u4e2d** | 7000 \u4e07 Token \u65b0\u4eba 90 \u5929 | \u9ad8 | \u56fd\u5185\u76f4\u8fde\u5907\u9009 |\n| \u7845\u57fa\u6d41\u52a8 SiliconCloud | \u5f00\u6e90\u6a21\u578b **\u4e2d** | \u6c38\u4e45\u514d\u8d39\u5c42 | \u4e2d\u9ad8 | \u56fd\u5185\u76f4\u8fde\u5907\u9009 |\n| DeepSeek \u5b98\u65b9 | V4-Pro **\u5f3a** | \u65b0\u7528\u6237 $1 \u8bd5\u7528 | \u9ad8 | \u515c\u5e95\u65b9\u6848\uff0c\u6781\u4f4e\u6210\u672c |\n| Google Gemini | Flash **\u4e2d** | 1500 \u6b21/\u5929 | \u9ad8 | \u9700\u68af\u5b50 |\n| Groq | \u5f00\u6e90\u6a21\u578b **\u89c6\u6a21\u578b** | 30-60 RPM | \u9ad8 | \u9700\u68af\u5b50 |\n\n---\n\n### \ud83d\udca1 \u9488\u5bf9\u4f60\u7684\u4f7f\u7528\u5efa\u8bae\n\n\u4f60\u76ee\u524d\u53ea\u7528 NVIDIA NIM\uff0cStep 3.5 Flash \u7a33\u5b9a\u4f46 agent \u80fd\u529b\u5f31\u3002**OpenRouter \u7684\u514d\u8d39 DeepSeek V4 Flash \u548c Qwen3 Coder \u662f\u6700\u503c\u5f97\u7acb\u5373\u8bd5\u7528\u7684\u66ff\u4ee3**\uff1a\n\n1. **DeepSeek V4 Flash\uff08:free\uff09** \u2014 agent \u80fd\u529b BFCL 84.6%\uff0c\u6bd4 NIM \u4e0a\u4efb\u4f55\u6a21\u578b\u90fd\u5f3a\u4e00\u4e2a\u91cf\u7ea7\uff0c\u4e14 1M \u4e0a\u4e0b\u6587\n2. **Qwen3 Coder\uff08:free\uff09** \u2014 \u4e13\u4e3a agentic coding \u8bbe\u8ba1\uff0c480B MoE \u53c2\u6570\uff0cfunction calling \u539f\u751f\u4f18\u5316\n3. **Kimi K2.6\uff08:free\uff09** \u2014 12+ \u5c0f\u65f6\u81ea\u4e3b agent \u8fd0\u884c\u8bb0\u5f55\uff0c\u9002\u5408\u957f\u65f6\u95f4\u7f16\u7801\u4efb\u52a1\n\n\u4e09\u4e2a\u90fd\u8d70 OpenAI \u517c\u5bb9 API\uff0c\u5207\u6362\u6210\u672c\u6781\u4f4e\u3002\u5efa\u8bae\u7528 DeepSeek V4 Flash \u505a\u4e3b\u529b\uff0cQwen3 Coder \u505a\u4ee3\u7801\u4efb\u52a1\u4e3b\u529b\uff0c\u4e8c\u8005\u4e92\u8865\u3002\n\n\u5982\u679c\u514d\u8d39\u989d\u5ea6\u4e0d\u591f\u7528\uff08200 \u6b21/\u5929\uff09\uff0cDeepSeek V4 Pro \u4ed8\u8d39\u4e5f\u53ea\u8981 $0.435/$0.87 per M \u2014 \u51e0\u4e4e\u7b49\u4e8e\u514d\u8d39\u3002\n"}], "grading": null}, {"id": "eval-2-resource-search-without_skill", "prompt": "\u6709\u6ca1\u6709\u514d\u8d39\u7684\u4ee3\u7801\u751f\u6210\u6a21\u578b API\uff1fagent \u80fd\u529b\u5f3a\u7684\u90a3\u79cd\uff0c\u6211\u76ee\u524d\u53ea\u7528\u8fc7 NVIDIA NIM", "eval_id": 2, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 2,\n  \"run\": \"without_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"platform-first\",\n      \"passed\": true,\n      \"evidence\": \"\u63a8\u8350\u4e86 Google Gemini\u3001Groq\u3001OpenRouter\u3001SiliconFlow \u7b49\u5e73\u53f0\u7ea7\u8d44\u6e90\u3002\u4f46 NVIDIA NIM \u4e5f\u88ab\u5f53\u4f5c\u72ec\u7acb\u63a8\u8350\u9879\uff08Tier 1\uff09\uff0c\u800c\u975e\u5df2\u77e5\u6392\u9664\u3002\"\n    },\n    {\n      \"text\": \"agent-capability-first\",\n      \"passed\": false,\n      \"evidence\": \"\u8bc4\u4f30\u7ef4\u5ea6\u4ee5\u300cFree Tier Limits\u300d\u548c\u300cWhy it matters\u300d\u4e3a\u4e3b\uff0c\u6ca1\u6709\u5355\u72ec\u7684 Agent/\u5de5\u5177\u8c03\u7528\u80fd\u529b\u8bc4\u7ea7\u3002Function Calling \u5217\u5b58\u5728\u4f46\u53ea\u6807 Yes/Varies\uff0c\u6ca1\u6709 benchmark \u5f97\u5206\u3002\"\n    },\n    {\n      \"text\": \"nvidia-nim-excluded\",\n      \"passed\": false,\n      \"evidence\": \"NVIDIA NIM \u88ab\u5217\u4e3a Tier 1 \u7b2c 4 \u4f4d\u63a8\u8350\uff08Best function calling quality\uff09\uff0c\u4e14\u63cf\u8ff0\u4e3a\u300cMistral Nemotron is particularly strong for agent/tool use\u300d\u3002\u7528\u6237\u660e\u786e\u8bf4\u5df2\u7528\u8fc7 NIM\uff0c\u62a5\u544a\u4ecd\u5c06\u5b83\u4f5c\u4e3a\u63a8\u8350\u3002\"\n    },\n    {\n      \"text\": \"has-access-info\",\n      \"passed\": true,\n      \"evidence\": \"\u6bcf\u6761\u63a8\u8350\u5305\u542b URL \u548c\u57fa\u672c\u63a5\u5165\u65b9\u5f0f\u3002Migration Guide \u90e8\u5206\u7ed9\u51fa\u4e86 base_url \u548c\u8fc1\u79fb\u6b65\u9aa4\u3002\"\n    },\n    {\n      \"text\": \"mentions-cost-paradigm\",\n      \"passed\": false,\n      \"evidence\": \"\u672a\u63d0\u53ca\u300c\u5f3a\u6a21\u578b\u672c\u8eab\u7701\u94b1\u300d\u7684\u903b\u8f91\u3002\u63a8\u8350\u7406\u7531\u4fa7\u91cd\u514d\u8d39\u989d\u5ea6\u5927\u5c0f\u548c\u901f\u5ea6\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "# Free Code Generation Model APIs with Strong Agent Capabilities\n\n> A comprehensive comparison for developers already familiar with NVIDIA NIM, looking for free alternatives with robust function calling / tool use support.\n\n---\n\n## TL;DR Recommendation\n\n| Priority | Platform | Best For | Agent/Tool Calling | Free Tier Summary |\n|----------|----------|----------|--------------------|-------------------|\n| 1st | **Google Gemini (AI Studio)** | Highest free limits + native function calling | Yes (native) | 15 RPM, 1,500 RPD, 1M TPM (2.0 Flash); no card, no expiry |\n| 2nd | **Groq** | Fastest inference + tool calling on Llama/Qwen | Yes (OpenAI-compatible) | 30 RPM, 1,000 RPD (70B); 14,400 RPD (8B); no card |\n| 3rd | **DeepSeek** (direct + via OpenRouter) | Strongest free coding agent model | Yes (native) | Direct: ~50 req/day free; via OpenRouter: deepseek-chat-v3:free |\n| 4th | **OpenRouter** | Model variety - try many models with one API key | Varies by model | 20 RPM, 50 RPD (free); $10 top-up unlocks 1,000 RPD |\n| 5th | **SiliconFlow** | China-accessible, multi-model gateway | Yes | Free tier with DeepSeek/Qwen models; OpenAI-compatible |\n| 6th | **Qwen (Alibaba Bailian/DashScope)** | China-direct, large MoE model | Yes | 70M signup tokens; Qwen3-235B available free on OpenRouter |\n| 7th | **Mistral (La Plateforme)** | European alternative, strong models | Yes | Free tier, 1 RPS, 500K TPM |\n| 8th | **Cloudflare Workers AI** | Edge deployment | Limited | Free tier with basic models |\n\n---\n\n## Detailed Breakdown\n\n### 1. Google Gemini API (via AI Studio)\n\n**Why it is #1:** Google offers the most generous free tier among all major providers. No credit card, no expiration. Gemini models natively support function calling, code execution, and multi-turn tool use.\n\n**Free Tier Limits (as of 2026):**\n\n| Model | RPM | TPM | RPD | Context Window |\n|-------|-----|-----|-----|----------------|\n| Gemini 2.5 Flash | 10 | 250,000 | 1,500 | 1M tokens |\n| Gemini 2.5 Pro | 5 | 150,000 | 50 | 1M tokens |\n| Gemini 2.0 Flash | 15 | 1,000,000 | 1,500 | 1M tokens |\n| Gemini 1.5 Pro | 2 | 32,000 | 50 | 2M tokens |\n\n**Agent Capabilities:**\n- Native function calling with JSON schema definitions\n- Built-in code execution (sandboxed Python)\n- Multi-modal: image, video, audio, document understanding\n- 1M token context window on free tier (best among free options)\n\n**How to use:** Sign up at https://aistudio.google.com, get API key, make calls to generativelanguage.googleapis.com.\n\n**Caveat:** Free tier inputs/outputs may be used by Google for model improvement.\n\n---\n\n### 2. Groq\n\n**Why it is strong:** Custom LPU hardware delivers 300-700+ tokens/second -- the fastest inference available for free. OpenAI-compatible API means zero migration from NVIDIA NIM.\n\n**Free Tier Limits:**\n\n| Model | RPM | RPD | TPM | TPD |\n|-------|-----|-----|-----|-----|\n| llama-3.1-8b-instant | 30 | 14,400 | 6,000 | 500,000 |\n| llama-3.3-70b-versatile | 30 | 1,000 | 12,000 | 100,000 |\n| meta-llama/llama-4-scout-17b | 30 | 1,000 | 30,000 | 500,000 |\n| qwen/qwen3-32b | 60 | 1,000 | 6,000 | 500,000 |\n| moonshotai/kimi-k2-instruct | 60 | 1,000 | 10,000 | 300,000 |\n\n**Agent Capabilities:**\n- OpenAI-compatible tool/function calling format\n- Supported on Llama 3.3 70B, Llama 4 Scout, Qwen3, Kimi K2\n- Proven in agentic workflows with LangChain/LangGraph\n- Response headers include rate limit info for graceful handling\n\n**How to use:** Sign up at https://console.groq.com, set base_url to https://api.groq.com/openai/v1.\n\n**Best for:** High-speed agent loops, coding agents, rapid prototyping.\n\n---\n\n### 3. DeepSeek\n\n**Why it matters:** DeepSeek Chat V3 and V4 are among the strongest free coding models. Community testing consistently ranks it as the top choice for agentic coding tasks on OpenRouter.\n\n**Access Options:**\n- **Direct API (api.deepseek.com):** ~50 free requests/day for verified users, $5 signup credit. OpenAI-compatible format. Supports native function calling.\n- **Via OpenRouter:** deepseek/deepseek-chat-v3-0324:free -- confirmed tool calling, multi-step instruction following. The #1 recommendation from community testing for agentic coding.\n- **DeepSeek R1:** Also free on OpenRouter. Slower (reasoning model) but provides visible chain-of-thought -- useful for debugging agent loops.\n\n**Agent Capabilities:**\n- Native function calling (JSON schema format)\n- Excellent multi-step instruction following\n- Strong code generation and planning capabilities\n- OpenAI-compatible API\n\n**Caveat:** DeepSeek documentation notes function calling can be unstable on older model versions. Use the latest (V3-0324 or V4) for best results.\n\n---\n\n### 4. OpenRouter\n\n**Why it is useful:** A single API key gives access to 20+ free models. You can test multiple models for agent suitability without signing up for each provider separately.\n\n**Free Tier:**\n- 20 requests per minute\n- 50 requests per day (shared across ALL free models)\n- $10 one-time top-up increases to 1,000 RPD (highly recommended)\n\n**Models with confirmed tool calling (free tier):**\n- qwen/qwen3-235b-a22b:free -- 235B MoE, Tools + Reasoning\n- google/gemma-3-27b-it:free -- Vision + Tools\n- deepseek/deepseek-chat-v3-0324:free -- Top pick for coding agents\n- meta-llama/llama-4-maverick:free -- Solid for simpler agent tasks\n- nvidia/nemotron-3-nano-30b-a3b:free -- Smaller footprint with Tools support\n\n**How to use:** Same as OpenAI SDK, change base_url to https://openrouter.ai/api/v1 and use model IDs with :free suffix.\n\n**Key insight:** Free model availability is volatile. Models can disappear from the free tier without notice. Build fallback logic.\n\n---\n\n### 5. SiliconFlow\n\n**Why it matters for China users:** Direct access from mainland China without VPN. Aggregates 47+ models including DeepSeek and Qwen with a unified OpenAI-compatible API.\n\n**Details:**\n- Free tier available (exact limits vary by model)\n- Supports function calling on capable models\n- Domestic Chinese infrastructure = low latency from China\n- Also accessible via OpenRouter as a provider\n\n**How to use:** Sign up at https://siliconflow.cn or https://siliconflow.com\n\n---\n\n### 6. Qwen (Alibaba Bailian / DashScope)\n\n**Free Tier:** 70M tokens on signup via Bailian platform. Qwen3-235B (235B parameter MoE) is also available free on OpenRouter.\n\n**Agent Capabilities:**\n- Native function calling\n- Qwen3 models support Tools + Reasoning tags\n- Large context windows\n- China-direct access (no proxy needed)\n\n**How to use:** Sign up at https://dashscope.aliyun.com or access Qwen3 free via OpenRouter.\n\n---\n\n### 7. Mistral (La Plateforme)\n\n**Free Tier:** No explicit limit, 1 request/second, 500K TPM. Includes Mistral Large and smaller models.\n\n**Agent Capabilities:**\n- Function calling supported\n- Mistral Devstral 2 (123B, 262K context) is specifically designed for agentic coding\n- European data sovereignty option\n\n**How to use:** Sign up at https://console.mistral.ai\n\n---\n\n### 8. Other Notable Options\n\n| Platform | Free Tier | Agent Support | Best For |\n|----------|-----------|---------------|----------|\n| **xAI Grok** | Limited requests/day, $25/month free credit | Tool calling with reasoning traces | Experimentation |\n| **HuggingFace Serverless** | Free inference API | Basic | Testing open models |\n| **Together AI** | Free credits on signup | Function calling on select models | Variety |\n| **Cerebras** | Free tier with fast inference | OpenAI-compatible | Speed |\n| **Cohere** | 1,000 calls/month trial | Command R+ has strong tool use | RAG + agents |\n| **GitHub Models** | Free with GitHub account | Select models | GitHub ecosystem |\n\n---\n\n## Migration Guide: From NVIDIA NIM\n\nSince you are already using NVIDIA NIM, here is how to transition:\n\n1. **NIM uses OpenAI-compatible format** -- All recommended alternatives above also use OpenAI-compatible APIs, so your existing code needs minimal changes (just base_url and API key).\n\n2. **Closest direct replacement:** Groq -- same speed-focused philosophy, same API format, free tier is generous.\n\n3. **Best upgrade path:** Google Gemini -- significantly higher free limits than NIM, native multimodal + function calling, 1M context window.\n\n4. **For coding agent use specifically:** DeepSeek Chat V3/V4 (via OpenRouter or direct) -- community-tested as the strongest free model for agentic coding tasks.\n\n## Recommended Stack for Free Agent Development\n\nPrimary model:    Groq (llama-3.3-70b-versatile) -- fast, reliable tool calling\nCoding agent:     DeepSeek V4 (via OpenRouter) -- best free coding agent\nBackup/fallback:  Google Gemini 2.0 Flash -- highest free limits, 1M context\nTesting/variety:  OpenRouter free tier -- try 20+ models with one key\n\n---\n\n## Sources\n\n- Analytics Vidhya: \"15 Free LLM APIs You Can Use in 2026\" (Jan 2026)\n- BrainRoad: \"OpenRouter Free Models: Which Work for AI Agents\" (Feb 2026)\n- GrizzlyPeakSoftware: \"Groq API Free Tier Limits in 2026\" (Mar 2026)\n- PE Collective: \"Gemini API Free Tier 2026\" (Apr 2026)\n- yangmao.ai: \"Best NVIDIA Build Alternatives 2026\"\n- GitHub: cheahjs/free-llm-api-resources, open-free-llm-api/awesome-freellm-apis"}], "grading": null}, {"id": "eval-3-risk-assessment-with_skill", "prompt": "OpenRouter \u9760\u8c31\u5417\uff1f\u514d\u8d39\u5c42\u4f1a\u4e0d\u4f1a\u7a81\u7136\u7f29\u6c34\u6216\u8005\u6536\u8d39\uff1f\u6211\u6253\u7b97\u628a agent \u5de5\u4f5c\u6d41\u5207\u8fc7\u53bb", "eval_id": 3, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 3,\n  \"run\": \"with_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"has-conclusion\",\n      \"passed\": true,\n      \"evidence\": \"\u7ed3\u8bba\u660e\u786e\uff1a\u300c\u9700\u8b66\u60d5\u300d\u2014 \u5e73\u53f0\u672c\u8eab\u9760\u8c31\u4e14\u5728\u5feb\u901f\u53d1\u5c55\uff0c\u4f46\u514d\u8d39\u5c42\u5bf9 agent \u5de5\u4f5c\u6d41\u5b58\u5728\u591a\u91cd\u9650\u5236\uff0c\u4e0d\u80fd\u4f5c\u4e3a\u751f\u4ea7\u73af\u5883\u4e3b\u65b9\u6848\u3002\u672b\u5c3e\u7efc\u5408\u5224\u5b9a\u8868\u4e5f\u6709\u9010\u7ef4\u5ea6\u8bc4\u7ea7\u3002\"\n    },\n    {\n      \"text\": \"covers-pricing-history\",\n      \"passed\": true,\n      \"evidence\": \"\u7b2c 2 \u8282\u300c\u514d\u8d39\u5c42\u53d8\u66f4\u5386\u53f2\u300d\u5217\u51fa 6 \u4e2a\u65f6\u95f4\u8282\u70b9\u7684\u53d8\u66f4\uff082025-04 \u81f3 2026-05\uff09\uff0c\u7ed3\u8bba\u662f\u300c\u514d\u8d39\u5c42\u7f29\u6c34\u662f\u786e\u5b9a\u6027\u8d8b\u52bf\u300d\u3002\"\n    },\n    {\n      \"text\": \"covers-charge-risk\",\n      \"passed\": true,\n      \"evidence\": \"\u7b2c 4 \u8282\u300c\u7528\u6237\u88ab\u610f\u5916\u6536\u8d39\u7684\u98ce\u9669\u300d\u5206\u6790\u4e86\u9884\u4ed8 credits \u4e0d\u53ef\u9000\u6b3e\u3001365 \u5929\u8fc7\u671f\u30015.5% \u624b\u7eed\u8d39\uff0c\u5e76\u5f15\u7528 OpenClaw \u6536\u8d39 bug \u6848\u4f8b\u3002\"\n    },\n    {\n      \"text\": \"covers-platform-survival\",\n      \"passed\": true,\n      \"evidence\": \"\u7b2c 1 \u8282\u300c\u5e73\u53f0\u5b58\u7eed\u98ce\u9669\uff1a\u4f4e\u300d\u5217\u51fa\u878d\u8d44\u6570\u636e\uff08$1.3B \u4f30\u503c\u3001CapitalG/NVIDIA/a16z\uff09\u30018M \u7528\u6237\u300125T \u5468 token\u3002\"\n    },\n    {\n      \"text\": \"migration-guidance\",\n      \"passed\": true,\n      \"evidence\": \"\u6700\u7ec8\u5efa\u8bae\u660e\u786e\uff1a\u5f00\u53d1\u6d4b\u8bd5\u53ef\u7528\uff08\u5145\u503c $10\uff09\uff0c\u751f\u4ea7\u73af\u5883\u4e0d\u8981\u4f9d\u8d56\u514d\u8d39\u5c42\u3002\u7ed9\u51fa\u65b9\u6848 A\uff08\u4ed8\u8d39\u5c42\uff09\u3001\u65b9\u6848 A\uff08NIM+\u7845\u57fa+OR \u8865\u5145\uff09\u3002\u7b2c 5 \u8282\u6709\u8fc1\u79fb\u98ce\u9669\u8868\uff086 \u9879\u5177\u4f53\u98ce\u9669\uff09\uff0c\u7b2c 7 \u8282\u8bc4\u4f30\u8fc1\u51fa\u96be\u5ea6\u4e3a\u300c\u4f4e\u300d\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "## OpenRouter \u98ce\u9669\u8bc4\u4f30\u62a5\u544a | 2026-05-29\n\n**\u8bc4\u4f30\u5bf9\u8c61**: OpenRouter (openrouter.ai)\n**\u7528\u6237\u9700\u6c42**: \u8bc4\u4f30\u5c06 agent \u5de5\u4f5c\u6d41\u5207\u6362\u5230 OpenRouter \u514d\u8d39\u5c42\u7684\u53ef\u884c\u6027\u548c\u98ce\u9669\n**\u7ed3\u8bba**: **\u9700\u8b66\u60d5** \u2014 \u5e73\u53f0\u672c\u8eab\u9760\u8c31\u4e14\u5728\u5feb\u901f\u53d1\u5c55\uff0c\u4f46\u514d\u8d39\u5c42\u5bf9 agent \u5de5\u4f5c\u6d41\u5b58\u5728\u591a\u91cd\u9650\u5236\uff0c\u4e0d\u80fd\u4f5c\u4e3a\u751f\u4ea7\u73af\u5883\u4e3b\u65b9\u6848\n\n---\n\n### 1. \u5e73\u53f0\u5b58\u7eed\u98ce\u9669\uff1a\u4f4e\n\n| \u6307\u6807 | \u6570\u636e |\n|------|------|\n| \u6210\u7acb\u65f6\u95f4 | 2023 \u5e74 |\n| \u6700\u65b0\u878d\u8d44 | 2026-05-28 $113M Series B\uff08CapitalG \u9886\u6295\uff0cNVIDIA/a16z \u53c2\u6295\uff09 |\n| \u4f30\u503c | $1.3B\uff08\u4e00\u5e74\u5185\u4ece $547M \u7ffb\u500d\uff09 |\n| \u7528\u6237\u89c4\u6a21 | 8M+ \u7528\u6237 |\n| \u5468 Token \u5904\u7406\u91cf | 25T\uff086 \u4e2a\u6708\u5185 5 \u500d\u589e\u957f\uff09 |\n| \u6a21\u578b\u6570\u91cf | 400+\uff08\u6765\u81ea 60+ provider\uff09 |\n\n**\u5224\u65ad**: \u4e0d\u662f\u5c0f\u56e2\u961f\u6216\u4e2a\u4eba\u9879\u76ee\u3002Google \u6bcd\u516c\u53f8 Alphabet \u65d7\u4e0b CapitalG \u9886\u6295 B \u8f6e\uff0cNVIDIA \u6218\u7565\u53c2\u6295\uff0c\u8bf4\u660e\u673a\u6784\u7ea7\u8d44\u672c\u770b\u597d\u5176\u57fa\u7840\u8bbe\u65bd\u5b9a\u4f4d\u3002\u77ed\u671f\u5185\u5012\u95ed\u6216\u8dd1\u8def\u7684\u98ce\u9669\u6781\u4f4e\u3002\n\n---\n\n### 2. \u514d\u8d39\u5c42\u53d8\u66f4\u5386\u53f2\uff1a\u5df2\u7f29\u6c34\uff0c\u4e14\u8d8b\u52bf\u660e\u786e\n\n**\u5df2\u53d1\u751f\u7684\u53d8\u66f4\uff08\u6309\u65f6\u95f4\u7ebf\uff09\uff1a**\n\n| \u65f6\u95f4 | \u53d8\u66f4 | \u5f71\u54cd |\n|------|------|------|\n| 2025-04 | \u514d\u8d39\u65e5\u8c03\u7528\u4ece 200 \u6b21\u964d\u81f3 50 \u6b21\uff08\u65e0\u5145\u503c\u7528\u6237\uff09 | \u7eaf\u767d\u5ad6\u7528\u6237\u989d\u5ea6\u780d 75% |\n| 2025-04 | \u5145\u503c $10+ \u7528\u6237\u65e5\u514d\u8d39\u8c03\u7528\u5347\u81f3 1,000 \u6b21 | \u9f13\u52b1\u5c0f\u989d\u5145\u503c\uff0c\u63d0\u9ad8\u95e8\u69db |\n| 2025-07 | \u4e24\u5927 provider \u8f6c\u5411\u7eaf\u4ed8\u8d39\uff1bOpenRouter \u627f\u62c5\u90e8\u5206\u514d\u8d39\u6a21\u578b\u6210\u672c | \u514d\u8d39\u6a21\u578b\u4f9b\u7ed9\u7aef\u6536\u7d27 |\n| 2025-07 | \u5f15\u5165 Venice Uncensored \u7b49\u65b0\u514d\u8d39\u6a21\u578b | \u5b98\u65b9\u4e3b\u52a8\u8865\u5145\u514d\u8d39\u4f9b\u7ed9 |\n| 2026-04 | :free \u6a21\u578b\u4ece 50+ \u964d\u81f3\u7ea6 30 \u4e2a\uff08CostGoat \u7edf\u8ba1\uff09 | \u53ef\u7528\u514d\u8d39\u6a21\u578b\u6301\u7eed\u51cf\u5c11 |\n| 2026-05 | \u5f53\u524d\u514d\u8d39\u6a21\u578b 27 \u4e2a\uff08CostGoat \u6700\u65b0\u7edf\u8ba1\uff09 | \u8fdb\u4e00\u6b65\u7f29\u51cf |\n\n**\u8d8b\u52bf\u5224\u65ad**: \u514d\u8d39\u5c42\u7f29\u6c34\u662f**\u786e\u5b9a\u6027\u8d8b\u52bf**\uff0c\u4e0d\u662f\u5076\u7136\u4e8b\u4ef6\u3002\u5e73\u53f0\u7b56\u7565\u4ece\"\u65e0\u5dee\u522b\u514d\u8d39\"\u8f6c\u5411\"\u7528 $10 \u95e8\u69db\u7b5b\u9009\u4ed8\u8d39\u7528\u6237 + \u63a7\u5236\u7eaf\u514d\u8d39\u6d88\u8017\"\u3002\u514d\u8d39\u6a21\u578b\u6570\u91cf\u4ece 50+ \u7f29\u81f3 27 \u4e2a\uff0c\u4e14\u5b98\u65b9\u660e\u786e\u8bf4\u4e86\"less popular models will soon transition away from the free tier\"\u3002\n\n---\n\n### 3. \u514d\u8d39\u5c42\u5bf9 Agent \u5de5\u4f5c\u6d41\u7684\u5177\u4f53\u9650\u5236\n\n**\u5f53\u524d\u514d\u8d39\u5c42\u9650\u5236\uff08\u65e0\u5145\u503c\uff09:**\n- 50 \u6b21/\u5929\uff08\u6240\u6709\u514d\u8d39\u6a21\u578b\u5171\u4eab\uff0c\u4e0d\u662f\u6bcf\u4e2a\u6a21\u578b 50 \u6b21\uff09\n- 20 RPM\uff08\u6bcf\u5206\u949f\u8bf7\u6c42\u6570\uff09\n- \u65e0 SLA\uff0c\u65e0\u53ef\u7528\u6027\u4fdd\u8bc1\n\n**\u5145\u503c $10 \u540e:**\n- 1,000 \u6b21/\u5929\uff08\u4ecd 20 RPM\uff09\n- \u4ed8\u8d39\u6a21\u578b RPS = \u8d26\u6237\u4f59\u989d\u7f8e\u5143\u6570\uff08\u6700\u4f4e 1\uff0c\u6700\u9ad8 500\uff09\n\n**\u5bf9 Agent \u5de5\u4f5c\u6d41\u7684\u5b9e\u9645\u5f71\u54cd:**\n- 50 \u6b21/\u5929\u5bf9 agent \u5f00\u53d1\u6d4b\u8bd5\u5b8c\u5168\u4e0d\u591f \u2014 \u4e00\u4e2a agent \u5faa\u73af\u53ef\u80fd\u51e0\u5206\u949f\u5c31\u70e7\u5b8c\n- 20 RPM \u5bf9\u8fde\u7eed tool calling \u662f\u786c\u74f6\u9888 \u2014 agent \u4e00\u6b65 5 \u4e2a tool call = \u7528\u6389 25% \u7684\u5206\u949f\u989d\u5ea6\n- \u514d\u8d39\u6a21\u578b\u53ef\u7528\u6027\u4e0d\u7a33\u5b9a \u2014 \u786c\u7f16\u7801\u7684 fallback \u6a21\u578b\u53ef\u80fd\u4e00\u5468\u540e\u5c31\u4e0b\u7ebf\u4e86\n- \u793e\u533a\u6d4b\u8bd5\uff082026-02\uff09\u786e\u8ba4\uff1a\u4ec5 DeepSeek Chat v3\u3001Llama 4 Maverick\u3001Qwen3-235b \u4e09\u4e2a\u514d\u8d39\u6a21\u578b\u5728 agent tool calling \u4e2d\u8868\u73b0\u53ef\u63a5\u53d7\uff0c\u5176\u4f59\u5927\u90e8\u5206\u4e0d\u53ef\u7528\n\n**\u5173\u952e\u95ee\u9898**: \u514d\u8d39\u6a21\u578b\u968f\u65f6\u53ef\u80fd\u88ab provider \u4ece\u514d\u8d39\u5c42\u64a4\u4e0b\uff08\u65e0\u901a\u77e5\uff09\uff0c\u5bfc\u81f4\u786c\u7f16\u7801\u7684\u6a21\u578b ID \u9759\u9ed8\u5931\u8d25\u3002\n\n---\n\n### 4. \u7528\u6237\u88ab\u610f\u5916\u6536\u8d39\u7684\u98ce\u9669\n\n**\u6536\u8d39\u673a\u5236:**\n- \u5145\u503c\u91c7\u7528\u9884\u4ed8 credits \u5236\uff0c**\u4e0d\u53ef\u9000\u6b3e**\n- Credits 365 \u5929\u540e\u8fc7\u671f\uff08\u4f59\u989d\u4e22\u5931\uff09\n- \u5145\u503c\u65f6\u6536\u53d6 5.5% \u624b\u7eed\u8d39\uff08\u4fe1\u7528\u5361\uff09/ 5.0%\uff08\u52a0\u5bc6\u8d27\u5e01\uff09\uff0c\u6700\u4f4e $0.80/\u7b14\n- \u8d26\u6237\u4f59\u989d\u8017\u5c3d\u540e\uff0c\u4ed8\u8d39\u6a21\u578b\u8bf7\u6c42\u8fd4\u56de 402 \u9519\u8bef\uff08\u4e0d\u4f1a\u81ea\u52a8\u6263\u8d39\u4ea7\u751f\u8d1f\u503a\uff09\n\n**\u610f\u5916\u6536\u8d39\u6848\u4f8b:**\n- OpenClaw\uff08Claude Code \u7b49\u5de5\u5177\uff09\u66fe\u56e0\u672a\u6b63\u786e\u53d1\u9001 OpenRouter attribution headers\uff0c\u5bfc\u81f4\u672c\u5e94\u514d\u8d39\u7684\u8bf7\u6c42\u88ab\u5f53\u4f5c\u4ed8\u8d39\u8bf7\u6c42\u8ba1\u8d39\uff08GitHub issue #57498\uff0c\u5df2\u4fee\u590d\u4f46\u8bf4\u660e\u4e86\u96c6\u6210\u5c42\u9762\u7684\u6536\u8d39\u9677\u9631\uff09\n- \u4ed8\u8d39\u6a21\u578b\u7684 RPS \u4e0e\u4f59\u989d\u6302\u94a9 \u2014 \u4f59\u989d\u8017\u5c3d\u610f\u5473\u7740\u5e76\u53d1\u80fd\u529b\u9aa4\u964d\uff0c\u53ef\u80fd\u89e6\u53d1\u751f\u4ea7\u73af\u5883\u95ee\u9898\n\n**\u5224\u65ad**: \u53ea\u7528\u514d\u8d39\u6a21\u578b\u3001\u4e0d\u5145\u503c\u7684\u60c5\u51b5\u4e0b\uff0c\u4e0d\u5b58\u5728\u610f\u5916\u6536\u8d39\u98ce\u9669\u3002\u4f46\u4e00\u65e6\u5145\u503c\uff0c5.5% \u624b\u7eed\u8d39 + 365 \u5929\u8fc7\u671f\u662f\u786e\u5b9a\u6027\u6210\u672c\u3002\u5bf9\u4e8e agent \u5de5\u4f5c\u6d41\uff0c\u514d\u8d39\u5c42\u7684 50 \u6b21/\u5929\u9650\u5236\u610f\u5473\u7740\u4f60\u5927\u6982\u7387\u9700\u8981\u5145\u503c $10+\uff0c\u8fd9\u65f6\u5c31\u9700\u8981\u63a5\u53d7\u8fd9\u4e9b\u6761\u6b3e\u3002\n\n---\n\n### 5. \u6570\u636e\u9690\u79c1\u98ce\u9669\n\n**OpenRouter \u5c42\u9762:**\n- \u9ed8\u8ba4\u4e0d\u5b58\u50a8 prompt/response \u5185\u5bb9\uff08\u9664\u975e\u7528\u6237\u624b\u52a8\u5f00\u542f prompt logging\uff09\n- \u4f46\u5f00\u542f prompt logging \u540e\uff0cToS \u4e2d\u5305\u542b\u5bf9 Inputs/Outputs \u7684**\u6c38\u4e45\u5546\u4e1a\u4f7f\u7528\u8bb8\u53ef**\uff082025-04 ToS \u66f4\u65b0\uff0cSkool \u793e\u533a\u8ba8\u8bba\u5f15\u53d1\u5173\u6ce8\uff09\n- \u8bf7\u6c42\u5143\u6570\u636e\uff08token \u6570\u91cf\u3001\u5ef6\u8fdf\u7b49\uff09\u59cb\u7ec8\u88ab\u8bb0\u5f55\n- \u6570\u636e\u4fdd\u7559\u7b56\u7565\u4e3a\"as long as necessary\"\uff0c\u5220\u9664\u9700\u624b\u52a8\u7533\u8bf7\n\n**Provider \u5c42\u9762:**\n- \u514d\u8d39\u8def\u7531\uff08openrouter/free\uff09\u4f1a\u968f\u673a\u5206\u914d\u5230\u4e0d\u540c provider\uff0c\u6bcf\u4e2a provider \u6709\u72ec\u7acb\u7684\u6570\u636e\u653f\u7b56\n- \u514d\u8d39\u6a21\u578b\u6c60\u4e2d\u7684 provider \u4f1a\u968f\u65f6\u95f4\u53d8\u5316\uff0c\u4f60\u7684\u5b9e\u9645\u6570\u636e\u6d41\u7ecf\u8def\u5f84\u662f\u52a8\u6001\u7684\n- \u90e8\u5206 provider \u53ef\u80fd\u7528 prompt \u8bad\u7ec3\u6a21\u578b\n\n**\u5bf9 Agent \u5de5\u4f5c\u6d41\u7684\u5f71\u54cd**: \u5982\u679c\u4f60\u7684 agent \u5904\u7406\u654f\u611f\u6570\u636e\uff08\u5ba2\u6237\u4fe1\u606f\u3001\u5546\u4e1a\u7b56\u7565\u3001NDA \u5185\u5bb9\uff09\uff0c\u514d\u8d39\u8def\u7531\u6a21\u5f0f\u7684\u6570\u636e\u6d41\u5411\u4e0d\u786e\u5b9a\u6027\u662f\u4e00\u4e2a\u5408\u89c4\u98ce\u9669\u3002OpenRouter \u63d0\u4f9b\u4e86\u57fa\u4e8e\u6570\u636e\u653f\u7b56\u7684\u8def\u7531\u8fc7\u6ee4\u9009\u9879\uff0c\u4f46\u9700\u8981\u4e3b\u52a8\u914d\u7f6e\u3002\n\n---\n\n### 6. \u7a33\u5b9a\u6027\u548c\u53ef\u7528\u6027\n\n**\u5b95\u673a\u8bb0\u5f55\uff082025-08 \u81f3 2026-02\uff0c8 \u4e2a\u6708\u5185\uff09:**\n- 2025-08-28: \u6570\u636e\u5e93\u5b95\u673a 50 \u5206\u949f\n- 2026-02-17: \u7b2c\u4e09\u65b9\u7f13\u5b58\u4f9d\u8d56\u6545\u969c\uff0c38 \u5206\u949f\uff0820% \u8bf7\u6c42\u5931\u8d25 -> 80-90% \u5931\u8d25\uff09\n- 2026-02-19: \u540c\u4e00\u7f13\u5b58\u5c42\u518d\u6b21\u6545\u969c\uff0c35 \u5206\u949f\n\n**\u5173\u952e\u95ee\u9898**: 2026-02 \u5b95\u673a\u671f\u95f4\uff0cOpenRouter \u8fd4\u56de 401 \"User not found\" \u9519\u8bef\uff08\u5b9e\u9645\u662f\u57fa\u7840\u8bbe\u65bd\u6545\u969c\uff09\uff0c\u5bfc\u81f4\u5f00\u53d1\u8005\u6d6a\u8d39\u65f6\u95f4\u6392\u67e5 API Key \u95ee\u9898\u3002\u6b64\u95ee\u9898\u5df2\u4fee\u590d\uff08\u73b0\u8fd4\u56de 503\uff09\uff0c\u4f46\u66b4\u9732\u4e86\u8def\u7531\u5c42\u5f15\u5165\u989d\u5916\u6545\u969c\u6a21\u5f0f\u7684\u98ce\u9669\u3002\n\n**\u5ef6\u8fdf**: \u989d\u5916 25-40ms \u8def\u7531\u5c42\u5f00\u9500\uff0c\u5bf9\u4ea4\u4e92\u5f0f\u573a\u666f\u5f71\u54cd\u4e0d\u5927\uff0c\u5bf9\u9ad8\u9891\u8c03\u7528\u6709\u7d2f\u79ef\u5f71\u54cd\u3002\n\n**\u56fd\u5185\u53ef\u8bbf\u95ee\u6027**: \u53ef\u76f4\u8fde\uff0c\u652f\u6301\u652f\u4ed8\u5b9d/\u5fae\u4fe1\u5145\u503c\u3002\u8fd9\u6bd4\u5927\u591a\u6570\u6d77\u5916\u5e73\u53f0\u6709\u4f18\u52bf\u3002\n\n---\n\n### 7. \u8fc1\u51fa\u96be\u5ea6\n\n**\u8bc4\u4f30**: \u4f4e\n\n- OpenAI \u517c\u5bb9 API \u2014 \u5207\u6362\u53ea\u9700\u6539 base_url \u548c model name\n- \u65e0\u957f\u671f\u5408\u540c\uff0c\u9884\u4ed8\u5236\n- \u4f46\uff1a\u5982\u679c\u4f60\u7528\u7684\u662f `openrouter/free` \u8def\u7531\uff08\u4e0d\u6307\u5b9a\u5177\u4f53\u6a21\u578b\uff09\uff0c\u8fc1\u51fa\u65f6\u9700\u8981\u9009\u5b9a\u66ff\u4ee3\u6a21\u578b\u5e76\u6d4b\u8bd5\n\n---\n\n### 8. \u7efc\u5408\u5224\u5b9a\n\n| \u7ef4\u5ea6 | \u8bc4\u7ea7 | \u8bf4\u660e |\n|------|------|------|\n| \u5e73\u53f0\u5b58\u7eed | \u5b89\u5168 | $1.3B \u4f30\u503c\uff0c\u9876\u7ea7\u673a\u6784\u80cc\u4e66\uff0c8M \u7528\u6237 |\n| \u514d\u8d39\u5c42\u6301\u4e45\u6027 | \u5371\u9669 | \u5df2\u591a\u6b21\u7f29\u6c34\uff0c\u8d8b\u52bf\u660e\u786e\uff1a\u7eaf\u514d\u8d39\u7528\u6237\u4f1a\u88ab\u6301\u7eed\u538b\u7f29 |\n| Agent \u5de5\u4f5c\u6d41\u9002\u7528\u6027 | \u4e0d\u63a8\u8350\uff08\u514d\u8d39\u5c42\uff09 | 50 \u6b21/\u5929 + 20 RPM + \u6a21\u578b\u4e0d\u7a33\u5b9a = \u65e0\u6cd5\u7528\u4e8e\u751f\u4ea7 agent |\n| Agent \u5de5\u4f5c\u6d41\u9002\u7528\u6027 | \u53ef\u7528\uff08\u5145\u503c $10+\uff09 | 1,000 \u6b21/\u5929 + \u591a\u6a21\u578b\u5207\u6362 + OpenAI \u517c\u5bb9 = \u5f00\u53d1\u6d4b\u8bd5\u591f\u7528 |\n| \u610f\u5916\u6536\u8d39 | \u4f4e | \u53ea\u8981\u4e0d\u5145\u503c\u5c31\u4e0d\u4f1a\u88ab\u6536\u8d39\uff1b\u5145\u503c\u540e 5.5% \u624b\u7eed\u8d39\u548c 365 \u5929\u8fc7\u671f\u662f\u786e\u5b9a\u6210\u672c |\n| \u6570\u636e\u9690\u79c1 | \u9700\u6ce8\u610f | \u9ed8\u8ba4\u5b89\u5168\uff0c\u4f46\u514d\u8d39\u8def\u7531\u7684\u6570\u636e\u6d41\u5411\u4e0d\u786e\u5b9a\uff1bToS \u6709\u6c38\u4e45\u8bb8\u53ef\u6761\u6b3e\u9700\u8b66\u60d5 |\n| \u7a33\u5b9a\u6027 | \u4e2d | \u65e0 SLA\uff0c8 \u4e2a\u6708 3 \u6b21\u5b95\u673a\uff1b\u81ea\u52a8 failover \u662f\u52a0\u5206\u9879 |\n| \u8fc1\u51fa\u96be\u5ea6 | \u4f4e | OpenAI \u517c\u5bb9\uff0c\u5207\u6362\u6210\u672c\u4f4e |\n\n**\u6700\u7ec8\u7ed3\u8bba: \u9700\u8b66\u60d5**\n\nOpenRouter \u4f5c\u4e3a\u5e73\u53f0\u662f\u9760\u8c31\u7684 \u2014 \u8d44\u672c\u3001\u7528\u6237\u91cf\u3001\u6280\u672f\u80fd\u529b\u90fd\u5728\u5934\u90e8\u3002\u4f46**\u514d\u8d39\u5c42\u4e0d\u9002\u5408\u7528\u4e8e agent \u5de5\u4f5c\u6d41\u751f\u4ea7\u73af\u5883**\uff0c\u539f\u56e0\u662f\uff1a\n\n1. **\u989d\u5ea6\u4e0d\u591f**: 50 \u6b21/\u5929\u5bf9 agent \u51e0\u4e4e\u6ca1\u7528\uff0c$10 \u5145\u503c\u540e 1,000 \u6b21/\u5929\u624d\u52c9\u5f3a\u591f\u5f00\u53d1\u6d4b\u8bd5\n2. **\u6a21\u578b\u4e0d\u7a33\u5b9a**: \u514d\u8d39\u6a21\u578b\u968f\u65f6\u53ef\u80fd\u4e0b\u7ebf\uff0cfallback \u94fe\u4e00\u5468\u5c31\u8fc7\u671f\n3. **\u786e\u5b9a\u6027\u7f29\u6c34**: \u514d\u8d39\u5c42\u5728\u8fc7\u53bb\u4e00\u5e74\u5df2\u7f29\u6c34\u4e24\u6b21\uff0c\u4e14\u5b98\u65b9\u660e\u786e\u8bf4\u4e86\u4f1a\u7ee7\u7eed\u51cf\u5c11\u514d\u8d39\u6a21\u578b\n\n**\u5efa\u8bae\u65b9\u6848:**\n\n- **\u5f00\u53d1/\u6d4b\u8bd5\u9636\u6bb5**: \u53ef\u4ee5\u7528 OpenRouter\uff08\u5145\u503c $10\uff09\uff0c\u5229\u7528\u591a\u6a21\u578b\u5207\u6362\u5feb\u901f\u8fed\u4ee3\n- **\u751f\u4ea7\u73af\u5883**: \u4e0d\u8981\u4f9d\u8d56 OpenRouter \u514d\u8d39\u5c42\u3002\u4e24\u4e2a\u65b9\u5411\uff1a\n  - \u65b9\u6848 A: OpenRouter \u4ed8\u8d39\u5c42\uff08\u9700\u8981\u7684\u6a21\u578b\u6309\u91cf\u4ed8\u8d39\uff0c\u6709 RPS \u4fdd\u8bc1\uff09\n  - \u65b9\u6848 B: \u4f60\u73b0\u6709\u7684 NVIDIA NIM\uff08\u514d\u8d39\u4f46\u4ec5 Step 3.5 Flash \u7a33\u5b9a\uff09+ \u7845\u57fa\u6d41\u52a8\uff08\u56fd\u5185\u76f4\u8fde\u514d\u8d39\u5f00\u6e90\u6a21\u578b\uff09+ OpenRouter \u5145\u503c $10 \u4f5c\u4e3a\u8865\u5145\n- **Agent \u5de5\u4f5c\u6d41\u7684\u6838\u5fc3\u6a21\u578b**: \u5efa\u8bae\u7528 DeepSeek V4 Pro \u6216 Qwen3 Coder\uff08\u5728 OpenRouter \u4e0a\u6709 :free \u7248\u672c\u4e14 tool calling \u652f\u6301\u8f83\u597d\uff09\uff0c\u4f46\u8981\u51c6\u5907\u597d fallback \u5230\u4ed8\u8d39\u7248\u672c\n\n---\n\n**\u4fe1\u606f\u6765\u6e90:**\n- OpenRouter \u5b98\u65b9\u516c\u544a (openrouter.ai/announcements) \u2014 \u5b95\u673a\u8bb0\u5f55\u3001\u514d\u8d39\u5c42\u66f4\u65b0\u3001Series B \u878d\u8d44\n- CostGoat (costgoat.com) \u2014 \u514d\u8d39\u6a21\u578b\u5b9e\u65f6\u5217\u8868\uff082026-05-28 \u66f4\u65b0\uff09\n- BrainRoad \u2014 OpenRouter \u514d\u8d39\u6a21\u578b agent \u9002\u7528\u6027\u6d4b\u8bd5\uff082026-02-28\uff09\n- TokenMix / OFox \u2014 OpenRouter \u53ef\u9760\u6027\u5b9e\u6d4b\u62a5\u544a\uff082026-04\uff09\n- \u77e5\u4e4e / CSDN / LINUX DO \u2014 \u4e2d\u6587\u793e\u533a\u514d\u8d39\u989d\u5ea6\u53d8\u66f4\u8ba8\u8bba\n- Skool AI Automation Society \u2014 ToS \u9690\u79c1\u6761\u6b3e\u53d8\u66f4\u5206\u6790\n- TechCrunch / NYT \u2014 Series B \u878d\u8d44\u62a5\u9053\uff082026-05-26\uff09\n- resource-database.json \u57fa\u7ebf\uff08\u6700\u540e\u66f4\u65b0 2026-04-30\uff09\n"}], "grading": null}, {"id": "eval-3-risk-assessment-without_skill", "prompt": "OpenRouter \u9760\u8c31\u5417\uff1f\u514d\u8d39\u5c42\u4f1a\u4e0d\u4f1a\u7a81\u7136\u7f29\u6c34\u6216\u8005\u6536\u8d39\uff1f\u6211\u6253\u7b97\u628a agent \u5de5\u4f5c\u6d41\u5207\u8fc7\u53bb", "eval_id": 3, "outputs": [{"name": "grading.json", "type": "text", "content": "{\n  \"eval_id\": 3,\n  \"run\": \"without_skill\",\n  \"expectations\": [\n    {\n      \"text\": \"has-conclusion\",\n      \"passed\": true,\n      \"evidence\": \"\u7ed3\u8bba\u660e\u786e\uff1a\u300c\u4e0d\u5efa\u8bae\u5728\u751f\u4ea7\u7ea7 agent \u5de5\u4f5c\u6d41\u4e2d\u4f9d\u8d56 OpenRouter \u514d\u8d39\u5c42\u300d\u3002\"\n    },\n    {\n      \"text\": \"covers-pricing-history\",\n      \"passed\": true,\n      \"evidence\": \"\u7b2c 1 \u8282\u300c\u514d\u8d39\u5c42\u653f\u7b56\u53d8\u52a8\u5386\u53f2\u300d\u8986\u76d6 2025-04 \u7f29\u6c34\u548c 2026-05 \u73b0\u72b6\uff0850 \u8bf7\u6c42/\u5929\uff09\u3002\u4f46\u4e0d\u5982 with-skill \u7248\u672c\u5168\u9762\uff08\u7f3a\u5c11\u6a21\u578b\u6570\u91cf\u53d8\u5316\u3001provider \u9000\u51fa\u7b49\u7ec6\u8282\uff09\u3002\"\n    },\n    {\n      \"text\": \"covers-charge-risk\",\n      \"passed\": true,\n      \"evidence\": \"\u7b2c 3 \u8282\u300c\u8d39\u7528\u7ed3\u6784\uff08\u9690\u6027\u6210\u672c\uff09\u300d\u8986\u76d6 5.5% \u5145\u503c\u624b\u7eed\u8d39\u30015% BYOK \u624b\u7eed\u8d39\u3001\u52a0\u5bc6\u8d27\u5e01\u53e0\u52a0\u8d39\u3002\"\n    },\n    {\n      \"text\": \"covers-platform-survival\",\n      \"passed\": true,\n      \"evidence\": \"\u4f46\u5206\u6790\u8f83\u6d45 \u2014 \u672a\u63d0\u53ca\u878d\u8d44\u6570\u636e\u3001\u4f30\u503c\u3001\u7528\u6237\u91cf\u3002\u4ec5\u57fa\u4e8e\u5e73\u53f0\u529f\u80fd\u548c\u5386\u53f2\u6570\u636e\u3002\"\n    },\n    {\n      \"text\": \"migration-guidance\",\n      \"passed\": false,\n      \"evidence\": \"\u7b2c 6 \u8282\u7ed9\u51fa\u63a8\u8350\u66ff\u4ee3\u65b9\u6848\u8868\uff08\u76f4\u8fde API / BYOK / LiteLLM\uff09\u548c\u8fc1\u79fb\u7b56\u7565 5 \u6761\u3002\u4f46\u7f3a\u5c11\u5bf9 agent \u5de5\u4f5c\u6d41\u7684\u5177\u4f53\u573a\u666f\u5206\u6790\uff08\u5f00\u53d1 vs \u751f\u4ea7\u62c6\u5206\uff09\uff0c\u51b3\u7b56\u6846\u67b6\u4e0d\u5982 with-skill \u6e05\u6670\u3002\"\n    }\n  ]\n}\n"}, {"name": "report.md", "type": "text", "content": "# OpenRouter \u514d\u8d39\u5c42\u53ef\u9760\u6027\u8bc4\u4f30\u62a5\u544a\n\n> \u8c03\u7814\u65e5\u671f\uff1a2026-05-29 | \u8c03\u7814\u65b9\u5f0f\uff1a\u516c\u5f00\u4fe1\u606f\u641c\u7d22\uff08\u7528\u6237\u53cd\u9988\u3001\u5b98\u65b9\u516c\u544a\u3001\u7b2c\u4e09\u65b9\u8bc4\u6d4b\uff09\n\n---\n\n## \u7ed3\u8bba\u5148\u884c\n\n**\u4e0d\u5efa\u8bae\u5728\u751f\u4ea7\u7ea7 agent \u5de5\u4f5c\u6d41\u4e2d\u4f9d\u8d56 OpenRouter \u514d\u8d39\u5c42\u3002** \u514d\u8d39\u5c42\u5df2\u591a\u6b21\u5355\u65b9\u9762\u7f29\u6c34\uff0c\u4e14\u5b58\u5728\u6570\u636e\u9690\u79c1\u9690\u60a3\u548c\u5e73\u53f0\u8d39\u7528\u53e0\u52a0\u95ee\u9898\u3002\u4ed8\u8d39\u5c42\u53ef\u7528\uff0c\u4f46\u6210\u672c\u672a\u5fc5\u4f4e\u4e8e\u76f4\u8fde\u5b98\u65b9 API\u3002\n\n---\n\n## 1. \u514d\u8d39\u5c42\u653f\u7b56\u53d8\u52a8\u5386\u53f2\n\n### 2025 \u5e74 4 \u6708 \u2014 \u5927\u5e45\u7f29\u6c34\uff08\u5df2\u53d1\u751f\uff09\n\nOpenRouter \u4e8e 2025 \u5e74 4 \u6708 9 \u65e5\u5ba3\u5e03\u91cd\u5927\u653f\u7b56\u8c03\u6574\uff1a\n\n| \u9879\u76ee | \u8c03\u6574\u524d | \u8c03\u6574\u540e |\n|------|--------|--------|\n| \u6bcf\u65e5\u514d\u8d39\u8c03\u7528\u6b21\u6570 | 200 \u6b21 | 50 \u6b21\uff08\u7f29\u51cf 75%\uff09 |\n| \u514d\u8d39\u6a21\u578b\u9002\u7528\u8303\u56f4 | \u5168\u90e8\u514d\u8d39\u6a21\u578b | \u9650 < 50 \u5b57\u77ed\u6587\u672c\u751f\u6210\uff0c\u590d\u6742\u4efb\u52a1\uff08\u957f\u6587\u672c\u3001\u591a\u8f6e\u5bf9\u8bdd\uff09\u88ab\u6392\u9664 |\n| \u4ed8\u8d39\u7528\u6237\u6fc0\u52b1 | \u65e0 | \u8d26\u6237\u4f59\u989d > $10 \u7684\u7528\u6237\u6bcf\u65e5 1000 \u6b21\u4e0a\u9650 |\n| \u5e76\u53d1\u9650\u5236\uff08RPS\uff09 | \u7edf\u4e00 | \u6309\u8d26\u6237\u4f59\u989d\u5206\u5c42\uff0c\u4f59\u989d\u5c11\u5219\u4f4e |\n\n\u6765\u6e90\uff1a\u7ad9\u957f\u4e4b\u5bb6\u3001\u77e5\u4e4e\u3001CSDN \u7b49\u591a\u5bb6\u4e2d\u6587\u79d1\u6280\u5a92\u4f53\u62a5\u9053\uff082025-04-09\uff09\n\n### 2026 \u5e74 5 \u6708 \u2014 \u73b0\u72b6\n\n- \u514d\u8d39\u5c42\u4ecd\u5b58\u5728\uff0c\u4f46\u9650\u5236\u4e25\u683c\uff1a**50 \u8bf7\u6c42/\u5929\uff0c20 \u8bf7\u6c42/\u5206\u949f**\n- \u514d\u8d39\u5c42\u65e0 SLA\u3001\u65e0 uptime \u4fdd\u8bc1\n- 429 \u9519\u8bef\uff08\u914d\u989d\u7528\u5c3d\uff09\u662f\u5e38\u6001\uff0c\u9700\u7b49\u7b2c\u4e8c\u5929\u81ea\u52a8\u91cd\u7f6e\n\n**\u7ed3\u8bba\uff1a\u514d\u8d39\u5c42\u7f29\u6c34\u4e0d\u662f\"\u4f1a\u4e0d\u4f1a\"\u7684\u95ee\u9898\uff0c\u800c\u662f\"\u5df2\u7ecf\u53d1\u751f\u4e14\u53ef\u80fd\u7ee7\u7eed\"\u7684\u95ee\u9898\u3002**\n\n---\n\n## 2. \u5e73\u53f0\u7a33\u5b9a\u6027\n\n\u6839\u636e\u7b2c\u4e09\u65b9\u8bc4\u6d4b\uff082026 \u5e74\u6570\u636e\uff09\uff1a\n\n- **\u8fc7\u53bb 8 \u4e2a\u6708\u5185\u53d1\u751f 3 \u6b21\u5e73\u53f0\u7ea7\u5b95\u673a**\uff0c\u6bcf\u6b21 35-50 \u5206\u949f\n- \u65e0\u5b98\u65b9 SLA \u627f\u8bfa\uff08\u65e0\u8bba\u514d\u8d39\u8fd8\u662f\u4ed8\u8d39\uff09\n- \u514d\u8d39\u5c42\u65e0 uptime \u4fdd\u969c\uff0c\u4ed8\u8d39\u5c42\u540c\u6837\u65e0\u5e73\u53f0\u7ea7 SLA\n\n\u5bf9\u4e8e agent \u5de5\u4f5c\u6d41\u6765\u8bf4\uff0c\u8fd9\u610f\u5473\u7740\u4efb\u52a1\u53ef\u80fd\u5728\u6267\u884c\u4e2d\u9014\u56e0\u5e73\u53f0\u4e0d\u53ef\u7528\u800c\u4e2d\u65ad\uff0c\u4e14\u65e0\u6cd5\u83b7\u5f97\u8d54\u507f\u6216\u8865\u507f\u3002\n\n---\n\n## 3. \u8d39\u7528\u7ed3\u6784\uff08\u9690\u6027\u6210\u672c\uff09\n\nOpenRouter \u6807\u699c\"\u63a8\u7406\u4ef7\u683c\u4e0d\u52a0\u4ef7\"\uff0c\u4f46\u5b9e\u9645\u5b58\u5728\u591a\u5c42\u8d39\u7528\uff1a\n\n| \u8d39\u7528\u9879 | \u8bf4\u660e |\n|--------|------|\n| **\u5145\u503c\u624b\u7eed\u8d39** | \u5145\u503c\u65f6\u6536\u53d6\u7ea6 5.5% \u7684\u5e73\u53f0\u8d39\uff08Credit purchase fee\uff09 |\n| **BYOK \u624b\u7eed\u8d39** | \u81ea\u5e26 API Key \u901a\u8fc7 OpenRouter \u8c03\u7528\u65f6\uff0c\u6536\u53d6 5% \u4f7f\u7528\u8d39 |\n| **\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8** | Coinbase 1% + OpenRouter 4% \u624b\u7eed\u8d39\u53e0\u52a0 |\n\n\u5b98\u65b9\u5df2\u5ba3\u5e03\u5c06\u53d6\u6d88 BYOK \u7684 5% \u4f7f\u7528\u8d39\uff0c\u6539\u4e3a\u56fa\u5b9a\u6708\u8d39\u8ba2\u9605\uff08\u5b9a\u4ef7\u5f85\u5b9a\uff09\uff0c\u4f46\u622a\u81f3\u76ee\u524d\u5c1a\u672a\u751f\u6548\u3002\n\n**\u5b9e\u9645\u5f71\u54cd\uff1a** \u7b2c\u4e09\u65b9\u8bc4\u6d4b\u663e\u793a\uff0cOpenRouter \u7684\u771f\u5b9e\u6210\u672c\u6bd4\u6807\u4ef7\u9ad8\u7ea6 5-25%\uff08\u53d6\u51b3\u4e8e\u4f7f\u7528\u65b9\u5f0f\uff09\uff0c\u5bf9\u4e8e\u5927\u89c4\u6a21 agent \u5de5\u4f5c\u6d41\uff0c\u8fd9\u4e2a\u5dee\u8ddd\u4f1a\u76f8\u5f53\u660e\u663e\u3002\n\n---\n\n## 4. \u6570\u636e\u9690\u79c1\u98ce\u9669\n\n\u8fd9\u662f\u6700\u503c\u5f97\u5173\u6ce8\u7684\u95ee\u9898\uff1a\n\n### \u9ed8\u8ba4\u6570\u636e\u6536\u96c6\n- OpenRouter **\u9ed8\u8ba4\u5f00\u542f prompt/completion \u65e5\u5fd7\u8bb0\u5f55**\n- \u7528\u6237\u53ef\u4ee5\u9009\u62e9\u5173\u95ed\u65e5\u5fd7\uff0c\u4f46\u5173\u95ed\u540e\u65e0\u6cd5\u4eab\u53d7 1% \u6298\u6263\n\n### \u670d\u52a1\u6761\u6b3e\u4e89\u8bae\n- OpenRouter \u66f4\u65b0\u540e\u7684\u670d\u52a1\u6761\u6b3e\u89c4\u5b9a\uff1a\u5982\u679c\u4fdd\u6301\u65e5\u5fd7\u5f00\u542f\uff0c\u5e73\u53f0\u83b7\u5f97\u5bf9 Inputs/Outputs \u7684**\u4e0d\u53ef\u64a4\u9500\u5546\u4e1a\u4f7f\u7528\u6743**\n- \u8fd9\u610f\u5473\u7740\u7406\u8bba\u4e0a\u53ef\u4ee5\u5c06\u533f\u540d\u5316\u7247\u6bb5\u51fa\u552e\u7ed9\u7b2c\u4e09\u65b9\u6216\u5206\u6790\u5408\u4f5c\u4f19\u4f34\n- \u6765\u6e90\uff1a\u793e\u533a\u7528\u6237\u53cd\u9988\uff08skool.com \u8ba8\u8bba\u7ec4\uff09\n\n### \u5408\u89c4\u9650\u5236\n- GDPR DPA\uff08\u6570\u636e\u5904\u7406\u534f\u8bae\uff09\u4ec5\u5bf9 Enterprise \u5c42\u5ba2\u6237\u5f00\u653e\n- \u65e0 HIPAA \u5408\u89c4\u8ba4\u8bc1\n- \u5bf9\u4e8e\u5904\u7406\u654f\u611f\u6570\u636e\u7684 agent \u5de5\u4f5c\u6d41\uff0c\u8fd9\u662f\u786c\u4f24\n\n**\u5982\u679c\u4f60\u7684 agent \u5de5\u4f5c\u6d41\u6d89\u53ca\u4efb\u4f55\u654f\u611f\u4fe1\u606f\uff08\u4ee3\u7801\u3001\u4e1a\u52a1\u6570\u636e\u3001\u7528\u6237\u6570\u636e\uff09\uff0c\u5fc5\u987b\u5173\u95ed\u65e5\u5fd7\uff0c\u4e14\u9700\u8981\u8bc4\u4f30\u6570\u636e\u7ecf\u7531\u7b2c\u4e09\u65b9\u4e2d\u8f6c\u7684\u98ce\u9669\u3002**\n\n---\n\n## 5. Agent \u5de5\u4f5c\u6d41\u8fc1\u79fb\u7684\u5177\u4f53\u98ce\u9669\n\n| \u98ce\u9669\u9879 | \u5f71\u54cd | \u4e25\u91cd\u7a0b\u5ea6 |\n|--------|------|----------|\n| \u514d\u8d39\u5c42 50 \u6b21/\u5929\u4e0a\u9650 | agent \u4efb\u52a1\u91cf\u4e00\u5927\u7acb\u5373\u88ab\u9650\u6d41 | \u9ad8 |\n| \u65e0 SLA / 3 \u6b21\u5b95\u673a | \u4efb\u52a1\u4e2d\u65ad\u3001workflow \u5931\u8d25 | \u9ad8 |\n| \u653f\u7b56\u5355\u65b9\u9762\u53d8\u66f4 | \u6210\u672c\u548c\u53ef\u7528\u6027\u4e0d\u53ef\u9884\u6d4b | \u4e2d\u9ad8 |\n| \u6570\u636e\u7ecf\u7b2c\u4e09\u65b9\u4e2d\u8f6c | \u589e\u52a0\u653b\u51fb\u9762\u3001\u9690\u79c1\u5408\u89c4\u98ce\u9669 | \u4e2d\uff08\u53d6\u51b3\u4e8e\u6570\u636e\u654f\u611f\u5ea6\uff09 |\n| \u5e73\u53f0\u8d39\u53e0\u52a0 | \u5b9e\u9645\u6210\u672c\u53ef\u80fd\u9ad8\u4e8e\u9884\u671f | \u4e2d |\n| \u514d\u8d39\u5c42\u5e76\u53d1\u9650\u5236\u4f4e | agent \u5e76\u884c\u4efb\u52a1\u53d7\u963b | \u4e2d |\n\n---\n\n## 6. \u5efa\u8bae\n\n### \u4e0d\u63a8\u8350\u573a\u666f\n- \u751f\u4ea7\u73af\u5883 agent \u5de5\u4f5c\u6d41\uff08\u65e0 SLA + \u9650\u6d41\u662f\u81f4\u547d\u7684\uff09\n- \u6d89\u53ca\u654f\u611f\u6570\u636e\u7684\u573a\u666f\uff08\u9690\u79c1\u6761\u6b3e\u98ce\u9669\uff09\n- \u9700\u8981\u9ad8\u5e76\u53d1\u6216\u9ad8\u9891\u8c03\u7528\u7684\u573a\u666f\uff0850 \u6b21/\u5929\u8fdc\u8fdc\u4e0d\u591f\uff09\n\n### \u53ef\u8003\u8651\u573a\u666f\n- \u4e2a\u4eba\u5f00\u53d1/\u6d4b\u8bd5\u9636\u6bb5\u7684\u4f4e\u6210\u672c\u8bd5\u9519\n- \u5076\u5c14\u8c03\u7528\u3001\u975e\u5173\u952e\u8def\u5f84\u7684\u8f85\u52a9\u529f\u80fd\n- \u591a\u6a21\u578b\u5bf9\u6bd4\u6d4b\u8bd5\uff08OpenRouter \u7684\u6838\u5fc3\u4ef7\u503c\u662f\u805a\u5408 300+ \u6a21\u578b\uff09\n\n### \u63a8\u8350\u66ff\u4ee3\u65b9\u6848\n\n| \u65b9\u6848 | \u9002\u5408\u573a\u666f | \u4f18\u52bf |\n|------|----------|------|\n| **\u76f4\u8fde\u5b98\u65b9 API**\uff08Anthropic / OpenAI / Google\uff09 | \u751f\u4ea7 agent \u5de5\u4f5c\u6d41 | SLA \u4fdd\u969c\u3001\u65e0\u4e2d\u95f4\u5c42\u8d39\u3001\u6570\u636e\u4e0d\u7ecf\u8fc7\u7b2c\u4e09\u65b9 |\n| **BYOK \u6a21\u5f0f + OpenRouter** | \u9700\u8981\u591a\u6a21\u578b\u8def\u7531 | \u7528 OpenRouter \u505a\u8def\u7531\uff0c\u4f46\u7528\u81ea\u5df1\u7684 API Key\uff0c\u53d6\u6d88 5% \u8d39\u540e\u53ef\u63a5\u53d7 |\n| **LiteLLM / \u81ea\u5efa\u4ee3\u7406** | \u6280\u672f\u80fd\u529b\u5f3a\u7684\u56e2\u961f | \u81ea\u4e3b\u63a7\u5236\u8def\u7531\u3001\u65e0\u5e73\u53f0\u8d39\u3001\u6570\u636e\u4e0d\u51fa\u57df |\n\n### \u8fc1\u79fb\u7b56\u7565\uff08\u5982\u679c\u4ecd\u60f3\u7528 OpenRouter\uff09\n\n1. **\u5fc5\u987b\u5173\u95ed prompt \u65e5\u5fd7**\uff08Settings > Data Collection\uff09\uff0c\u653e\u5f03 1% \u6298\u6263\u6362\u53d6\u9690\u79c1\n2. **\u81f3\u5c11\u5145\u503c $10**\uff0c\u89e3\u9501\u66f4\u9ad8\u7684\u6bcf\u65e5\u8c03\u7528\u4e0a\u9650\uff081000 \u6b21\uff09\u548c\u5e76\u53d1\n3. **\u8bbe\u7f6e\u7528\u91cf\u544a\u8b66**\uff0c\u76d1\u63a7\u8d39\u7528\u5f02\u5e38\n4. **\u51c6\u5907\u597d\u56de\u9000\u65b9\u6848**\uff0c\u4e0d\u8981\u8ba9 agent 100% \u4f9d\u8d56\u5355\u4e00\u4e2d\u8f6c\u5e73\u53f0\n5. **\u5b9a\u671f\u68c0\u67e5\u670d\u52a1\u6761\u6b3e\u66f4\u65b0**\uff0cOpenRouter \u6709\u5355\u65b9\u9762\u53d8\u66f4\u7684\u5148\u4f8b\n\n---\n\n## \u53c2\u8003\u6765\u6e90\n\n- \u7ad9\u957f\u4e4b\u5bb6\uff1aOpenRouter\u8c03\u6574API\u653f\u7b56\uff082025-04-09\uff09\n- \u77e5\u4e4e/CSDN\uff1aOpenRouter \u514d\u8d39\u653f\u7b56\u5927\u8c03\u6574\u89e3\u8bfb\n- \u5934\u6761\uff1aOpenRouter \u514d\u8d39\u989d\u5ea6\u72c2\u780d 75%\n- tokenmix.ai\uff1aIs OpenRouter Reliable? Uptime & Rate Limits Tested (2026)\n- ofox.ai\uff1aOpenRouter Pricing 2026 Hidden Markup Breakdown\n- costbench.com\uff1aOpenRouter Hidden Costs 2026\n- Reddit r/LocalLLaMA\uff1aOpenRouter Trustworthiness \u8ba8\u8bba\n- OpenRouter \u5b98\u65b9\uff1aSimplifying Our Platform Fee \u516c\u544a\n- skool.com\uff1aOpenRouter ToS \u66f4\u65b0\u8ba8\u8bba\n- OpenRouter \u5b98\u65b9\uff1aData Collection / Privacy \u6587\u6863\n"}], "grading": null}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"skill_name": "free-resource-hunter", "iteration": 1, "timestamp": "2026-05-29T01:48:00+08:00", "configurations": [{"name": "with_skill", "pass_rate": {"mean": 1.0, "stddev": 0.0}, "time_seconds": {"mean": 473.2, "stddev": 71.2}, "tool_uses": {"mean": 35.3, "stddev": 4.6}}, {"name": "without_skill", "pass_rate": {"mean": 0.4, "stddev": 0.33}, "time_seconds": {"mean": 276.1, "stddev": 56.5}, "tool_uses": {"mean": 16.0, "stddev": 6.0}}], "delta": {"pass_rate": "+0.60 (100% vs 40%)", "time_seconds": "+197.1s (+71%, skill \u505a\u4e86\u66f4\u591a\u641c\u7d22\u548c\u9a8c\u8bc1)", "tool_uses": "+19.3 (+121%, skill \u52a0\u8f7d\u57fa\u7ebf + \u591a\u6e90\u641c\u7d22 + \u9a8c\u8bc1)"}, "evals": [{"eval_id": 1, "eval_name": "intel-scan", "results": [{"config": "with_skill", "pass_rate": "5/5", "time_seconds": 426.6, "tool_uses": 39, "assertions": [{"text": "has-three-sections", "passed": true}, {"text": "priority-markers", "passed": true}, {"text": "timeliness-labeled", "passed": true}, {"text": "actionable", "passed": true}, {"text": "has-health-snapshot", "passed": true}]}, {"config": "without_skill", "pass_rate": "0/5", "time_seconds": 253.4, "tool_uses": 16, "assertions": [{"text": "has-three-sections", "passed": false}, {"text": "priority-markers", "passed": false}, {"text": "timeliness-labeled", "passed": false}, {"text": "actionable", "passed": false}, {"text": "has-health-snapshot", "passed": false}]}]}, {"eval_id": 2, "eval_name": "resource-search", "results": [{"config": "with_skill", "pass_rate": "5/5", "time_seconds": 437.2, "tool_uses": 30, "assertions": [{"text": "platform-first", "passed": true}, {"text": "agent-capability-first", "passed": true}, {"text": "nvidia-nim-excluded", "passed": true}, {"text": "has-access-info", "passed": true}, {"text": "mentions-cost-paradigm", "passed": true}]}, {"config": "without_skill", "pass_rate": "2/5", "time_seconds": 343.7, "tool_uses": 22, "assertions": [{"text": "platform-first", "passed": true}, {"text": "agent-capability-first", "passed": false}, {"text": "nvidia-nim-excluded", "passed": false}, {"text": "has-access-info", "passed": true}, {"text": "mentions-cost-paradigm", "passed": false}]}]}, {"eval_id": 3, "eval_name": "risk-assessment", "results": [{"config": "with_skill", "pass_rate": "5/5", "time_seconds": 555.8, "tool_uses": 37, "assertions": [{"text": "has-conclusion", "passed": true}, {"text": "covers-pricing-history", "passed": true}, {"text": "covers-charge-risk", "passed": true}, {"text": "covers-platform-survival", "passed": true}, {"text": "migration-guidance", "passed": true}]}, {"config": "without_skill", "pass_rate": "4/5", "time_seconds": 231.2, "tool_uses": 10, "assertions": [{"text": "has-conclusion", "passed": true}, {"text": "covers-pricing-history", "passed": true}, {"text": "covers-charge-risk", "passed": true}, {"text": "covers-platform-survival", "passed": true}, {"text": "migration-guidance", "passed": false}]}]}], "analyst_notes": "Skill \u6700\u5927\u4ef7\u503c\u4f53\u73b0\u5728\u60c5\u62a5\u626b\u63cf\uff08eval 1\uff09\u548c\u8d44\u6e90\u641c\u7d22\uff08eval 2\uff09\uff1awith-skill \u7248\u672c\u4ea7\u51fa\u6709\u7ed3\u6784\u5316\u7684\u60c5\u62a5\u5206\u7c7b\u3001\u4f18\u5148\u7ea7\u6807\u6ce8\u3001\u65f6\u6548\u6027\u5224\u65ad\u3001\u589e\u91cf\u5bf9\u6bd4\uff0cbaseline \u5b8c\u5168\u7f3a\u5931\u8fd9\u4e9b\u7ef4\u5ea6\u3002\u98ce\u9669\u8bc4\u4f30\uff08eval 3\uff09\u5dee\u8ddd\u8f83\u5c0f\uff0c\u56e0\u4e3a baseline \u672c\u8eab\u5c31\u80fd\u505a\u57fa\u672c\u8c03\u7814\uff0c\u4f46 skill \u7684\u4f18\u52bf\u5728\u4e8e\u66f4\u5b8c\u6574\u7684\u51b3\u7b56\u6846\u67b6\uff08\u5f00\u53d1/\u751f\u4ea7\u62c6\u5206\u3001\u591a\u65b9\u6848\u5bf9\u6bd4\uff09\u548c\u66f4\u6df1\u5c42\u7684\u9a8c\u8bc1\uff08\u878d\u8d44\u6570\u636e\u3001\u5177\u4f53\u6848\u4f8b\uff09\u3002\u65f6\u95f4\u6210\u672c +71% \u662f\u5408\u7406\u7684\u2014\u2014skill \u505a\u4e86 2-3 \u500d\u7684\u641c\u7d22\u91cf\u548c\u9a8c\u8bc1\u6b65\u9aa4\uff0c\u6362\u6765\u7684\u662f\u96f6\u6f0f\u62a5\u96f6\u8bef\u62a5\u3002"}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

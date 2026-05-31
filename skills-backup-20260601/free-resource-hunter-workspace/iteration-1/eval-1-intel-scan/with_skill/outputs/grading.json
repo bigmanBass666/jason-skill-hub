@@ -1,0 +1,31 @@
+{
+  "eval_id": 1,
+  "run": "with_skill",
+  "expectations": [
+    {
+      "text": "has-three-sections",
+      "passed": true,
+      "evidence": "报告包含三个分区：🔥 紧急情报、📡 一般动态、📊 已知资源状态快照，另有 💀 已过期情报 附录。"
+    },
+    {
+      "text": "priority-markers",
+      "passed": true,
+      "evidence": "紧急情报 3 条均标 🔥，一般动态 9 条标 📡，过期情报标 💀，快照表中有 ⚠️（Google Gemini）。每条情报均有明确优先级。"
+    },
+    {
+      "text": "timeliness-labeled",
+      "passed": true,
+      "evidence": "SkyClaw 标注「限时免费（2-4 周窗口，预计 6 月中截止）」，Qwen3.7-Max 标注「永久上线」，Ring-2.6-1T 标注「免费模型，可能随时调整」。其他条目也有 [基线遗漏，需验证来源]、[基线需更新] 等标注。"
+    },
+    {
+      "text": "actionable",
+      "passed": true,
+      "evidence": "3 条紧急情报均有「推荐行动」字段：SkyClaw「立即注册测试」、Qwen3.7-Max「通过阿里云百炼新人额度测试」、Ring「值得测试」。"
+    },
+    {
+      "text": "has-health-snapshot",
+      "passed": true,
+      "evidence": "健康快照表包含 8 个平台（NVIDIA NIM、OpenRouter、小米 MiMo、阿里云百炼、硅基流动、Google Gemini、Groq、ChatAnywhere），每个有状态 emoji 和备注。"
+    }
+  ]
+}
