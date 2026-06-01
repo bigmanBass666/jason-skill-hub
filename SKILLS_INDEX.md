@@ -48,7 +48,7 @@
 ### claude-project-mover
 - **Description**: 移动项目文件夹并同步更新 Claude 聊天记录路径，确保移动后对话历史不丢失。当用户说"移动项目"、"搬项目"、"把XX移到别处但保留聊天记录"、"relocate project"、"move this folder but keep claude history"、"换位置但保留对话"时触发。即使只说"帮我搬个项目"也应触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/SKILL.md
-- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/` File types: .py(1).
+- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/` Directories: research/. File types: .py(1), .txt(1).
 
 ### design-principles
 - **Description**: 软件设计原则审查器。用 SOLID、DRY、OCP 等经典原则对代码进行结构化审查，识别违反原则的设计并给出具体修复建议。当用户提到"设计原则"、"代码质量"、"SOLID"、"DRY"、"开闭原则"、"重构建议"、"架构审查"、"代码评审"、"设计模式"、"principles"、"code review"、"architecture review"、"代码坏味道"、"耦合"、"内聚"、"职责不清"时，必须使用此 skill。即使用户只是说"这段代码有什么问题"或"帮我看看架构合不合理"也应触发。
