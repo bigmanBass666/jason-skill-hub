@@ -52,6 +52,7 @@ GitHub → CDN (jsdelivr) → 云端 agent
 | `skills.json` | scan.js 生成的结构化 skill 列表（根目录） |
 | `INDEX_HEADER.md` | INDEX.md 的头部模板（根目录） |
 | `_redirects` | Netlify 重定向规则（根目录，scan.js 生成） |
+| `.skillignore` | scan.js 忽略规则（排除 __pycache__/、workspace/、.zip 等） |
 | `.github/workflows/` | CI workflow 定义 |
 
 ## Code Style & Conventions
@@ -67,6 +68,7 @@ GitHub → CDN (jsdelivr) → 云端 agent
 - 🚫 **不要**：直接编辑 `jason-skill-hub/skills/` 下的文件（会被覆盖）
 - 🚫 **不要**：手动编辑 `SKILLS_INDEX.md`、`skills.json`、`_redirects`（scan.js 生成）
 - 🚫 **不要**：提交包含 API key / token / secret 的文件（全局 pre-commit hook 会拦截）
+- ✅ **可以**：向 `.skillignore` 添加规则（排除不应用 CDN 分发的文件）
 
 ## Commit 规范
 
