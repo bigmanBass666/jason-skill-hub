@@ -78,13 +78,12 @@
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/chaoxing-auto-answer/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/chaoxing-auto-answer.zip
-- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/chaoxing-auto-answer/` Directories: evals/. File types: .json(1), .md(1).
+- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/chaoxing-auto-answer/` Directories: evals/. File types: .json(1).
 
 ### claude-project-mover
 - **Description**: 在两个项目路径之间同步 Claude 会话历史（非搬文件）。覆盖两种场景：(1) 全量历史迁移 — 用户自己搬了项目文件夹后迁移所有历史会话；(2) 单会话同步 — 把当前或指定会话复制到另一项目目录（worktree / 多目录场景）。当用户说"搬项目"、"迁移历史"、"同步聊天记录"、"sync session"、"保留对话"、"claude 历史不见了"、"change project path but keep history"、"relocate project"、"move this folder but keep claude history"时触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/claude-project-mover.zip
-- **Has 5 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/` Directories: evals/, research/. File types: .md(3), .json(1), .py(1).
 
 ### code-review-skill
 - **Description**: |
@@ -114,7 +113,7 @@
 - **Description**: Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/docx.zip
-- **Has 60 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/` Directories: scripts/. File types: .xsd(39), .py(15), .xml(5), .txt(1).
+- **Has 57 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/` Directories: scripts/. File types: .xsd(39), .py(15), .xml(2), .txt(1).
 
 ### everything-manager
 - **Description**: |
@@ -137,7 +136,7 @@
 - **Description**: 为无原生视觉能力的模型提供图片处理能力。当 VISION_BLOCK_READ=1（纯文本模型模式）时，通过此 skill 调用多模型后端分析图片。多模态模型直接使用原生视觉，无需调用此 skill。支持文件路径、URL、Playwright 截图等输入，通过 zhipu-4v / zhipu-thinking / stepfun-3.7 等后端完成视觉任务。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/free-vision.zip
-- **Has 5 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/` Directories: evals/, references/, scripts/. File types: .md(2), .py(2), .json(1).
+- **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/` Directories: evals/, scripts/. File types: .py(2), .json(1).
 
 ### frontend-design
 - **Description**: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.
@@ -175,7 +174,7 @@
 - **Description**: 花叔Design——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审。根据任务embody对应专家（UX/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、做个HTML页面、做个可视化、app原型、iOS原型、导出MP4/GIF、60fps视频、设计风格、设计方向、配色方案、推荐风格、选个风格、做个好看的、评审、好不好看、review this design、带解说的动画、解说视频、长视频科普、voiceover、narration、5分钟讲清楚什么是XX。需求模糊时进设计方向顾问（三套逻辑并行出3版真实视觉，HTML原生40种风格库网页20+PPT20为弹药）；另含品牌资产协议、反AI slop、Junior工作流、Tweaks变体、动画→MP4/GIF导出、带解说长视频pipeline、5维评审。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/huashu-design.zip
-- **Has 106 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/` Directories: assets/, demos/, references/, scripts/. File types: .html(46), .md(30), .jsx(7), .mjs(6), .js(4), .json(4), .sh(4), .py(2), .example(1), .gitignore(1), .license(1).
+- **Has 99 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/` Directories: assets/, demos/, references/, scripts/. File types: .html(46), .md(28), .jsx(7), .mjs(5), .sh(4), .js(3), .json(2), .example(1), .gitignore(1), .license(1), .py(1).
 
 ### improve-codebase-architecture
 - **Description**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
