@@ -1,6 +1,7 @@
 const path = require('path');
 
 const DEFAULT_GITHUB_BASE = 'https://raw.githubusercontent.com/bigmanBass666/jason-skill-hub/master';
+const PKG_BASE = 'https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg';
 
 const URL_FORMATS = {
   'github-raw': {
@@ -50,6 +51,10 @@ function getConfig() {
 
     getFileUrl(skillName, filePath) {
       return formatConfig.pattern(`skills/${skillName}/${filePath}`);
+    },
+
+    getZipUrl(skillName) {
+      return `${PKG_BASE}/${skillName}.zip`;
     },
 
     syncSourceDir: process.env.SYNC_SOURCE_DIR || 'C:\\Users\\86150\\.agents\\skills',

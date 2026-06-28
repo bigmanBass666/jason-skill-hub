@@ -252,6 +252,7 @@ function generateIndex(skills) {
     md += `### ${skill.name}\n`;
     md += `- **Description**: ${skill.description}\n`;
     md += `- **Raw**: ${getSkillUrl(skill.path)}\n`;
+    md += `- **Zip**: ${config.getZipUrl(skill.path)}\n`;
 
     const referenceFiles = skill.files.filter(f => {
       return isReferenceFile(f.replace(/\\/g, '/'));
@@ -300,6 +301,7 @@ function generateSkillsJson(skills) {
       name: skill.name,
       description: skill.description,
       url: getSkillUrl(skill.path),
+      zip_url: config.getZipUrl(skill.path),
     };
 
     if (config.includeFiles) {

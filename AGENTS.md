@@ -14,6 +14,14 @@ jason-skill-hub/skills/（透明镜像，不直接编辑）
     ↓ scan.js 生成索引
     ↓ git push
 GitHub → CDN (jsdelivr) → 云端 agent
+
+**Zip 包**：每个 skill 也可通过 `@pkg` 分支下载单文件 zip 包：
+```
+skills/ → git archive → pkg 分支（仅含 .zip 文件）
+    ↓ CDN
+https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/<skill-name>.zip
+```
+`skills.json` 中每个条目的 `zip_url` 字段包含对应 zip 的完整 URL。
 ```
 
 **关键影响**：
@@ -34,9 +42,10 @@ GitHub → CDN (jsdelivr) → 云端 agent
 
 本项目没有传统意义上的 build/test。核心验证：
 - `node scripts/scan.js` 成功执行，生成文件无报错
-- CI 有两个 GitHub Actions workflow：
+- CI 有三个 GitHub Actions workflow：
   - `Auto Fix Skill Index`：自动检测索引文件是否需要更新并 push
   - `Validate Skill Index`：PR 时验证索引文件是最新的
+  - `Build Skill Packages`：生成每个 skill 的 .zip 并推送到 `pkg` 分支（CDN 通过 `@pkg` tag 访问）
 
 ## Project Structure
 
@@ -53,6 +62,7 @@ GitHub → CDN (jsdelivr) → 云端 agent
 | `INDEX_HEADER.md` | INDEX.md 的头部模板（根目录） |
 | `_redirects` | Netlify 重定向规则（根目录，scan.js 生成） |
 | `.skillignore` | scan.js 忽略规则（排除 __pycache__/、workspace/、.zip 等） |
+| `pkg` 分支 | CI 自动生成的每个 skill 的 .zip 包，CDN 通过 `@pkg` 访问 |
 | `.github/workflows/` | CI workflow 定义 |
 
 ## Code Style & Conventions

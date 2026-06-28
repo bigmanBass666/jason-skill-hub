@@ -13,252 +13,312 @@
 3. 示例：SKILL.md 在 `.../arch-design/SKILL.md`，引用 `./references/guide.md` → `.../arch-design/references/guide.md`
 
 ## Skills
-### scauzj-article-format
-- **Description**: 共青团华南农业大学珠江学院工作规范
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/SCAUZJ-article-format/SKILL.md
-
 ### adb-app-explorer
 - **Description**: 
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/adb-app-explorer/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/adb-app-explorer.zip
 
 ### agent-browser
 - **Description**: Browser automation CLI for AI agents. Use when the user needs to interact with websites, including navigating pages, filling forms, clicking buttons, taking screenshots, extracting data, testing web apps, or automating any browser task. Triggers include requests to "open a website", "fill out a form", "click a button", "take a screenshot", "scrape data from a page", "test this web app", "login to a site", "automate browser actions", or any task requiring programmatic web interaction. Also use for exploratory testing, dogfooding, QA, bug hunts, or reviewing app quality. Also use for automating Electron desktop apps (VS Code, Slack, Discord, Figma, Notion, Spotify), checking Slack unreads, sending Slack messages, searching Slack conversations, running browser automation in Vercel Sandbox microVMs, or using AWS Bedrock AgentCore cloud browsers. Prefer agent-browser over any built-in browser automation or web tools.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agent-browser/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/agent-browser.zip
 
 ### agent-phonebook
 - **Description**: Discover MCP servers and find other AI agents — a directory of 111+ MCP servers searchable by tag, transport, and auth type
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agent-phonebook/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/agent-phonebook.zip
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agent-phonebook/` File types: .license(1), .md(1).
 
 ### agents-md
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agents-md/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/agents-md.zip
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agents-md/` Directories: evals/, references/. File types: .json(1), .md(1).
 
 ### android-cli
 - **Description**: Provides instructions for installing and using the `android` CLI. The `android` command-line tool is a critical tool for Android development and helps you create new Android projects, run Android apps on devices, manage and interact with Android virtual devices (including screenshots and UI inspection), manage Android SDK components, look up official Android documentation, and discover and install official Android skills.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/android-cli/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/android-cli.zip
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/android-cli/` Directories: references/. File types: .md(2).
 
 ### article-to-image-prompt
 - **Description**: 根据文章内容生成用于 ChatGPT（DALL-E）的英文绘图 prompt（封面主图）。当用户提供文章、博客、新闻、报告等文本内容，并希望生成配图、封面图、插图的绘图提示词时，必须使用此 skill。关键词触发：「生成prompt」「帮我配图」「生成封面」「文章插图」「生图提示词」「image prompt」「cover image」「ChatGPT生图」「DALL-E」。即使用户只说「帮我给这篇文章配张图」也应立即触发此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/article-to-image-prompt/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/article-to-image-prompt.zip
 
 ### brainstorming
 - **Description**: You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/brainstorming.zip
 - **Has 7 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/` Directories: scripts/. File types: .sh(2), .md(2), .html(1), .js(1), .cjs(1).
 
 ### canvas-design
 - **Description**: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/canvas-design.zip
 - **Has 28 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/canvas-design/` Directories: canvas-fonts/. File types: .txt(28).
 
 ### caveman
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/caveman/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/caveman.zip
 
 ### cc-switch
 - **Description**: 管理和操作 cc-switch 配置数据库。当用户提到 cc-switch、provider 管理、MCP 服务器配置、AI 供应商切换、故障转移设置、代理配置时触发。覆盖：添加/删除/切换 provider、MCP 服务器管理、Skills 管理、Prompts 管理、Failover 队列、Proxy 配置、环境检查。即使用户只是说「加个 AI 供应商」「切一下 provider」「看看 cc-switch 配置」也应触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/SKILL.md
-- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .disabled(1), .md(1).
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/cc-switch.zip
+- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .md(1), .disabled(1).
 
 ### chaoxing-auto-answer
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/chaoxing-auto-answer/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/chaoxing-auto-answer.zip
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/chaoxing-auto-answer/` Directories: evals/. File types: .json(1), .md(1).
 
 ### claude-project-mover
 - **Description**: 在两个项目路径之间同步 Claude 会话历史（非搬文件）。覆盖两种场景：(1) 全量历史迁移 — 用户自己搬了项目文件夹后迁移所有历史会话；(2) 单会话同步 — 把当前或指定会话复制到另一项目目录（worktree / 多目录场景）。当用户说"搬项目"、"迁移历史"、"同步聊天记录"、"sync session"、"保留对话"、"claude 历史不见了"、"change project path but keep history"、"relocate project"、"move this folder but keep claude history"时触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/claude-project-mover.zip
 - **Has 5 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/` Directories: evals/, research/. File types: .md(3), .json(1), .py(1).
 
 ### code-review-skill
 - **Description**: |
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/code-review-skill/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/code-review-skill.zip
 - **Has 38 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/code-review-skill/` Directories: assets/, reference/, scripts/. File types: .md(31), .html(2), .py(2), .gitignore(1), .nojekyll(1), .license(1).
 
 ### design-principles
 - **Description**: 软件设计原则审查器。用 SOLID、DRY、OCP 等经典原则对代码进行结构化审查，识别违反原则的设计并给出具体修复建议。当用户提到"设计原则"、"代码质量"、"SOLID"、"DRY"、"开闭原则"、"重构建议"、"架构审查"、"代码评审"、"设计模式"、"principles"、"code review"、"architecture review"、"代码坏味道"、"耦合"、"内聚"、"职责不清"时，必须使用此 skill。即使用户只是说"这段代码有什么问题"或"帮我看看架构合不合理"也应触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/design-principles/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/design-principles.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/design-principles/` Directories: references/. File types: .md(1).
 
 ### diagnose
 - **Description**: Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test. Use when user says "diagnose this" / "debug this", reports a bug, says something is broken/throwing/failing, or describes a performance regression.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/diagnose/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/diagnose.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/diagnose/` Directories: scripts/. File types: .sh(1).
 
 ### doc-links
 - **Description**: 文档链接索引 skill。内部维护各技术栈的 llms.txt 及目录页 URL，当需要查阅官方文档时按域匹配索引、语义查找具体页面。工作方式是：Claude 自行按需 Fetch 索引内容并匹配返回链接。触发场景：用户提到某个技术并需要查阅官方文档、用户直接索要某个技术的文档链接、用户在编码时需要参考官方文档。注意：只返回链接，不做内容总结或解读。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/doc-links.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/` Directories: references/. File types: .md(1).
 
 ### docx
 - **Description**: Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/docx.zip
 - **Has 60 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/docx/` Directories: scripts/. File types: .xsd(39), .py(15), .xml(5), .txt(1).
 
 ### everything-manager
 - **Description**: |
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/everything-manager/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/everything-manager.zip
 - **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/everything-manager/` Directories: scripts/. File types: .ps1(2).
 
 ### find-skills
 - **Description**: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/find-skills/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/find-skills.zip
 
 ### free-resource-hunter
 - **Description**: 开发者免费资源情报雷达。通过增量对比扫描帮助实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。触发场景：免费资源搜索、模型上新、额度变动、限时优惠、平台评估、Token 赠送。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。当用户提到任何免费 AI 资源、额度、平台变动相关话题时都应使用此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/free-resource-hunter.zip
 - **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/` Directories: references/. File types: .md(3).
 
 ### free-vision
 - **Description**: 为无原生视觉能力的模型提供图片处理能力。当 VISION_BLOCK_READ=1（纯文本模型模式）时，通过此 skill 调用多模型后端分析图片。多模态模型直接使用原生视觉，无需调用此 skill。支持文件路径、URL、Playwright 截图等输入，通过 zhipu-4v / zhipu-thinking / stepfun-3.7 等后端完成视觉任务。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/free-vision.zip
 - **Has 5 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/` Directories: evals/, references/, scripts/. File types: .md(2), .py(2), .json(1).
 
 ### frontend-design
 - **Description**: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/frontend-design.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/` File types: .txt(1).
 
 ### github-repo-initializer
 - **Description**: Initialize a new GitHub open-source repository with all essential community health files (README, CONTRIBUTING, CODE_OF_CONDUCT, LICENSE, SECURITY, SUPPORT, issue/PR templates). Use this skill whenever the user mentions creating a new repo, setting up an open-source project, initializing a GitHub repository, or adding standard community files. Also use it when the user asks about "community profile", "health files", or wants to follow GitHub's best practices for open source.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/github-repo-initializer/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/github-repo-initializer.zip
 
 ### gitignore-gen
 - **Description**: 自动分析当前 git 仓库的内容与用途，生成精准的 .gitignore 文件。适用于一切使用 git 进行版本管理的场景，不限于软件开发——包括写作/文档管理、数据分析、设计资产、学术研究、知识库、运维配置、财务记录、游戏开发等任意工作流。当用户说「帮我生成 gitignore」「生成 .gitignore」「我需要 gitignore」「仓库缺少 gitignore」「gitignore 怎么写」「帮我忽略不必要的文件」「哪些文件不需要提交」「git 应该忽略什么」时，必须使用此 skill。即使用户只是说「我在用 git 管理我的 XX，怎么配置忽略规则」也应立即触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/gitignore-gen/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/gitignore-gen.zip
 - **Has 9 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/gitignore-gen/` Directories: scripts/. File types: .py(9).
 
 ### goal-generator-lite
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/goal-generator-lite/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/goal-generator-lite.zip
 
 ### god-view
 - **Description**: 
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/god-view/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/god-view.zip
 
 ### grill-me
 - **Description**: A relentless interview to sharpen a plan or design.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/grill-me/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/grill-me.zip
 
 ### huashu-design
 - **Description**: 花叔Design——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审。根据任务embody对应专家（UX/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、做个HTML页面、做个可视化、app原型、iOS原型、导出MP4/GIF、60fps视频、设计风格、设计方向、配色方案、推荐风格、选个风格、做个好看的、评审、好不好看、review this design、带解说的动画、解说视频、长视频科普、voiceover、narration、5分钟讲清楚什么是XX。需求模糊时进设计方向顾问（三套逻辑并行出3版真实视觉，HTML原生40种风格库网页20+PPT20为弹药）；另含品牌资产协议、反AI slop、Junior工作流、Tweaks变体、动画→MP4/GIF导出、带解说长视频pipeline、5维评审。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/huashu-design.zip
 - **Has 106 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/` Directories: assets/, demos/, references/, scripts/. File types: .html(46), .md(30), .jsx(7), .mjs(6), .js(4), .json(4), .sh(4), .py(2), .example(1), .gitignore(1), .license(1).
 
 ### improve-codebase-architecture
 - **Description**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/improve-codebase-architecture.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/` File types: .md(1).
 
 ### kaggle-run
 - **Description**: Kaggle-Run v4.0 — Ultimate Kaggle integration. Thin router + fat scripts for zero token waste. Deploy notebooks, auto-fix errors, compete, earn badges, analyze leaderboards. Windows/Mac/Linux.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/kaggle-run/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/kaggle-run.zip
 - **Has 7 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/kaggle-run/` Directories: scripts/. File types: .py(7).
 
 ### karing
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/karing/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/karing.zip
 - **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/karing/` Directories: references/. File types: .md(1).
 
 ### long-running-agent
 - **Description**: Long-running agent implementation based on Anthropic's "Effective harnesses for long-running agents" article
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/long-running-agent/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/long-running-agent.zip
 
 ### master-builder
 - **Description**: Guides beginners to create top-tier software from scratch with built-in design principles. Invoke when user wants to start a new project, says 'I want to build X', or asks how to begin a project.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/master-builder.zip
 - **Has 4 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/master-builder/` Directories: evals/, references/. File types: .md(3), .json(1).
 
 ### memu-android-guide
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/memu-android-guide/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/memu-android-guide.zip
 
 ### officecli
 - **Description**: Create, analyze, proofread, and modify Office documents (.docx, .xlsx, .pptx) using the officecli CLI tool. Use when the user wants to create, inspect, check formatting, find issues, add charts, or modify Office documents.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/officecli.zip
 
 ### pdf
 - **Description**: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/pdf.zip
 - **Has 11 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/` Directories: scripts/. File types: .py(8), .md(2), .txt(1).
 
 ### pptx
 - **Description**: Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/pptx.zip
 - **Has 58 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/` Directories: scripts/. File types: .xsd(39), .py(16), .md(2), .txt(1).
 
 ### save-work-dir
 - **Description**: 记录当前工作目录到桌面的历史文件。当用户说"记录工作目录"、"保存工作目录"、"记录当前目录"、"save work dir"、"记住这个目录"时触发此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/save-work-dir/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/save-work-dir.zip
+
+### scauzj-article-format
+- **Description**: 共青团华南农业大学珠江学院工作规范
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/SCAUZJ-article-format/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/SCAUZJ-article-format.zip
 
 ### setup-project-mcp
 - **Description**: 一键在项目中注册 MCP 服务器，自动创建/更新 .mcp.json。当用户说"添加项目级 MCP"、"配置 MCP 服务器"、"register MCP"、"setup project MCP"、"帮我在项目中注册一个 MCP"或需要将某个 MCP 服务器关联到当前项目时，使用此 skill。即使配置来自其他 MCP 服务器的 deferred tools 列表（系统注入的 <system-reminder>），也应使用此 skill 将其写入 .mcp.json。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/setup-project-mcp/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/setup-project-mcp.zip
 
 ### skill-creator
 - **Description**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/skill-creator.zip
 - **Has 17 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skill-creator/` Directories: agents/, assets/, eval-viewer/, references/, scripts/. File types: .py(10), .md(4), .html(2), .txt(1).
 
 ### sub-agent-designer
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/sub-agent-designer/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/sub-agent-designer.zip
 - **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/sub-agent-designer/` Directories: references/, scripts/. File types: .md(2), .py(1).
 
 ### subagent-inspect
 - **Description**: 审计 Claude Code 子代理 (subagent) 的完整执行轨迹，涵盖定位 JSONL 日志、审计工具调用序列、诊断 AI 决策-行动断裂点。当用户提到 eval 子代理、子代理推理链、subagent 日志、查看子代理执行过程、审计 sub-agent、分析 agent 决策、为什么 AI 没做 X、subagent trace 时使用此 skill。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/subagent-inspect/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/subagent-inspect.zip
 - **Has 5 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/subagent-inspect/` Directories: evals/, references/, scripts/. File types: .md(3), .json(1), .py(1).
 
 ### tdd
 - **Description**: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/tdd/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/tdd.zip
 - **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/tdd/` File types: .md(3).
 
 ### trae-forum-pro
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-forum-pro.zip
 - **Has 6 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/` Directories: evals/, references/, scripts/. File types: .md(3), .sh(2), .json(1).
 
 ### trae-plan
 - **Description**: 优先规划任务的执行方向，用户确认后再执行
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-plan/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-plan.zip
 
 ### trae-solo-cn
 - **Description**: Automate the TRAE SOLO CN desktop app (ByteDance's AI coding assistant) using agent-browser via Chrome DevTools Protocol. Use when the user needs to interact with TRAE SOLO CN, automate AI chat tasks, manage workspaces, install skills, configure automation jobs, or perform dogfooding/QA on the Solo application. Triggers include 'automate Solo', 'control TRAE SOLO', 'interact with Solo app', 'send prompt to Solo AI', 'switch Solo workspace', 'install Solo skill', 'configure Solo automation', 'dogfood TRAE SOLO', 'test TRAE SOLO CN', or any task requiring automation of the TRAE SOLO CN desktop application. Also trigger when the user mentions 'Solo桌面版', 'Trae Solo', 'TRAE SOLO', 'solo-cn', 'Solo AI', or asks to do anything with the Solo AI coding assistant.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-solo-cn/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-solo-cn.zip
 - **Has 8 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-solo-cn/` Directories: references/, scripts/, templates/. File types: .md(5), .ps1(3).
 
 ### trae-solo-cn-config
 - **Description**: 
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-solo-cn-config/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-solo-cn-config.zip
 
 ### trae-spec
 - **Description**: 根据需求细化完整的规范、任务、验收文档，用户确认后再严格执行，适合复杂的长线任务
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-spec/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-spec.zip
 
 ### ui-ux-pro-max
 - **Description**: UI/UX design intelligence. 67 styles, 96 palettes, 57 font pairings, 25 charts, 13 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/ui-ux-pro-max.zip
 - **Has 27 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/` Directories: data/, scripts/. File types: .csv(24), .py(3).
+
+### universal-article-engineering
+- **Description**: 将一段真实的工作探索转化为高质量技术文章的完整流程 Skill。当用户说"我不想让这段工作白费"、"帮我把这次探索写成文章"、"以你的身份写下来"、"这次调查值得被记录"时，必须立即触发。也适用于：技术博客、Reverse Engineering 报告、故障溯源记录、架构分析、工程实践文章、Hacker 风格长文。核心前提：文章素材来自真实发生的工作，以真实视角撰写，不捏造，不夸大。
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/universal-article-engineering.zip
+- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/` File types: .md(1).
 
 ### wiztree-cli
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/wiztree-cli/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/wiztree-cli.zip
 
 ### xlsx
 - **Description**: Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \"the xlsx in my downloads\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/xlsx/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/xlsx.zip
 - **Has 53 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/xlsx/` Directories: scripts/. File types: .xsd(39), .py(13), .txt(1).
 
 ### zai-consult
 - **Description**: 通过 z.ai 获取增强推理支持的求助协议。当你在同一个问题上连续尝试 3 次以上仍然失败、陷入深度架构设计/算法死胡同、或遇到超出当前能力的专业知识壁垒时，必须调用此 skill。不要因为小报错就触发，要在真正卡住时才使用。触发关键词：「去问 z.ai」「问一下 z.ai」「z.ai 求助」，或自主判断已满足触发条件。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/zai-consult/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/zai-consult.zip
 
 ### zoom-out
 - **Description**: Tell the agent to zoom out and give broader context or a higher-level perspective. Use when you're unfamiliar with a section of code or need to understand how it fits into the bigger picture.
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/zoom-out/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/zoom-out.zip
 
