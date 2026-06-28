@@ -1,1 +1,0 @@
-尝试: 智谱 GLM-4V-Flash ... 错误：文件不存在: D:/Test/skill_design/nonexistent_path.png EXIT_CODE=1

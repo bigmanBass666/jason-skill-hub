@@ -1,6 +1,0 @@
-{
-  "eval_id": 2,
-  "eval_name": "no-history-skip",
-  "prompt": "把 C:\\Users\\86150\\Documents\\random-temp-folder 搬到 E:\\backup\\random-temp-folder，注意保留 Claude 聊天记录。",
-  "assertions": []
-}

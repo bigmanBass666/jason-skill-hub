@@ -1,6 +1,0 @@
-{
-  "eval_id": 1,
-  "eval_name": "normal-migration",
-  "prompt": "帮我把项目从 C:\\Users\\86150\\.agents\\skills\\claude-project-mover 搬到 D:\\Projects\\claude-project-mover，保留 Claude 聊天记录。",
-  "assertions": []
-}
