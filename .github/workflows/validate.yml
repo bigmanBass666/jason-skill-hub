@@ -33,7 +33,7 @@ jobs:
       - name: Check if index files need update
         id: check_changes
         run: |
-          if git diff --quiet SKILLS_INDEX.md skills.json _redirects; then
+          if git diff --quiet SKILLS_INDEX.md _redirects; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -44,7 +44,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add SKILLS_INDEX.md skills.json _redirects
+          git add SKILLS_INDEX.md _redirects
           git commit -m "chore: auto-update skill index files"
           git pull --rebase origin master
           git push
@@ -58,7 +58,7 @@ jobs:
         if: github.event_name == 'pull_request' && steps.check_changes.outputs.changed == 'true'
         run: |
           echo "❌ Index files are out of date. Run 'node scripts/scan.js' and commit the changes."
-          git diff SKILLS_INDEX.md skills.json _redirects
+          git diff SKILLS_INDEX.md _redirects
           exit 1
 
       - name: ✅ Index files are up to date

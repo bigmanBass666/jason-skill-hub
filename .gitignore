@@ -24,3 +24,6 @@ __pycache__/
 
 # Skill packaging
 *.zip
+
+# Legacy generated files (no longer produced by scan.js)
+skills.json

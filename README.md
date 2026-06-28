@@ -20,7 +20,7 @@ GitHub → jsDelivr CDN      ← CI 自动 purge 缓存
 
 | 命令 | 用途 |
 |------|------|
-| `node scripts/scan.js` | 重新生成索引（SKILLS_INDEX.md + skills.json + _redirects） |
+| `node scripts/scan.js` | 重新生成索引（SKILLS_INDEX.md + _redirects） |
 | `node scripts/sync-watch.js --once` | 手动同步：scan + git commit + push |
 | `git commit --no-verify` | 跳过 pre-commit hook（误报时用） |
 

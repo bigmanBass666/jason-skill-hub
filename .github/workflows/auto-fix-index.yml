@@ -28,7 +28,7 @@ jobs:
       - name: Check if index files changed
         id: check_changes
         run: |
-          if git diff --quiet SKILLS_INDEX.md skills.json _redirects; then
+          if git diff --quiet SKILLS_INDEX.md _redirects; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -39,7 +39,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add SKILLS_INDEX.md skills.json _redirects
+          git add SKILLS_INDEX.md _redirects
           git commit -m "chore: auto-update skill index files"
           # Retry loop to handle race conditions with other pushes
           for i in 1 2 3; do

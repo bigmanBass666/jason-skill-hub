@@ -19,7 +19,6 @@ const config = require('./config');
 
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
 const OUTPUT_INDEX = path.join(__dirname, '..', 'SKILLS_INDEX.md');
-const OUTPUT_JSON = path.join(__dirname, '..', 'skills.json');
 const OUTPUT_REDIRECTS = path.join(__dirname, '..', '_redirects');
 const AGENTS_TEMPLATE = path.join(__dirname, '..', 'AGENTS.md.template');
 const OUTPUT_AGENTS = path.join(__dirname, '..', 'AGENTS.md');
@@ -293,37 +292,6 @@ function generateIndex(skills) {
 }
 
 /**
- * 生成 skills.json 结构化索引
- */
-function generateSkillsJson(skills) {
-  const data = skills.map(skill => {
-    const base = {
-      name: skill.name,
-      description: skill.description,
-      url: getSkillUrl(skill.path),
-      zip_url: config.getZipUrl(skill.path),
-    };
-
-    if (config.includeFiles) {
-      const referenceFiles = skill.files.filter(f => {
-        return isReferenceFile(f.replace(/\\/g, '/'));
-      });
-      base.references = referenceFiles.map(f => {
-        const normalized = f.replace(/\\/g, '/');
-        return {
-          path: normalized,
-          url: config.getFileUrl(skill.path, normalized)
-        };
-      });
-    }
-
-    return base;
-  });
-
-  return JSON.stringify(data, null, 2);
-}
-
-/**
  * 生成 _redirects 内容
  */
 function generateRedirects(skills) {
@@ -372,10 +340,6 @@ function main() {
   const indexContent = generateIndex(skills);
   fs.writeFileSync(OUTPUT_INDEX, indexContent);
   console.log('Generated INDEX.md');
-
-  const jsonContent = generateSkillsJson(skills);
-  fs.writeFileSync(OUTPUT_JSON, jsonContent);
-  console.log('Generated skills.json');
 
   const redirectsContent = generateRedirects(skills);
   fs.writeFileSync(path.join(__dirname, '..', '_redirects'), redirectsContent);

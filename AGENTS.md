@@ -21,7 +21,6 @@ skills/ → git archive → pkg 分支（仅含 .zip 文件）
     ↓ CDN
 https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/<skill-name>.zip
 ```
-`skills.json` 中每个条目的 `zip_url` 字段包含对应 zip 的完整 URL。
 ```
 
 **关键影响**：
@@ -33,7 +32,7 @@ https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/<skill-name>.zip
 
 | 命令 | 用途 |
 |------|------|
-| `node scripts/scan.js` | 扫描 skills/ 目录，生成 SKILLS_INDEX.md + skills.json + _redirects |
+| `node scripts/scan.js` | 扫描 skills/ 目录，生成 SKILLS_INDEX.md + _redirects |
 | `node scripts/sync-watch.js --once` | 手动触发一次同步（scan + git push） |
 | `node scripts/sync-watch.js` | 启动监听模式（chokidar 监听 .agents/skills/ 变化，自动 push） |
 | `node scripts/sync-watch.js --once --dry-run` | 试运行，不实际 push |
@@ -57,8 +56,7 @@ https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/<skill-name>.zip
 | `scripts/sync-lib.js` | 同步核心库（runBuild + gitCommitAndPush） |
 | `scripts/config.js` | 项目配置（路径、URL、同步间隔） |
 | `scripts/scheduled-task-prompt.md` | 定时推送任务的 prompt 模板 |
-| `SKILLS_INDEX.md` | scan.js 生成的 skill 目录索引（根目录） |
-| `skills.json` | scan.js 生成的结构化 skill 列表（根目录） |
+| `SKILLS_INDEX.md` | scan.js 生成的 skill 目录索引（AI agent 通过它发现所有 skill） |
 | `INDEX_HEADER.md` | INDEX.md 的头部模板（根目录） |
 | `_redirects` | Netlify 重定向规则（根目录，scan.js 生成） |
 | `.skillignore` | scan.js 忽略规则（排除 __pycache__/、workspace/、.zip 等） |
@@ -69,14 +67,14 @@ https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/<skill-name>.zip
 
 - **脚本文件**：Node.js CommonJS（`require`），不用 ES modules
 - **配置文件**：`config.js` 集中管理所有路径和 URL
-- **生成文件**：`SKILLS_INDEX.md`、`skills.json`、`_redirects` 由 scan.js 自动生成，不要手动编辑
+- **生成文件**：`SKILLS_INDEX.md`、`_redirects` 由 scan.js 自动生成，不要手动编辑
 
 ## Boundaries
 
 - ✅ **可以**：修改 `scripts/` 下的工具脚本、`.github/workflows/`、`config.js`
 - ✅ **可以**：在 `~/.agents/skills/` 中编辑 skill 文件（通过符号链接自动反映到 hub）
 - 🚫 **不要**：直接编辑 `jason-skill-hub/skills/` 下的文件（会被覆盖）
-- 🚫 **不要**：手动编辑 `SKILLS_INDEX.md`、`skills.json`、`_redirects`（scan.js 生成）
+- 🚫 **不要**：手动编辑 `SKILLS_INDEX.md`、`_redirects`（scan.js 生成）
 - 🚫 **不要**：提交包含 API key / token / secret 的文件（全局 pre-commit hook 会拦截）
 - ✅ **可以**：向 `.skillignore` 添加规则（排除不应用 CDN 分发的文件）
 
