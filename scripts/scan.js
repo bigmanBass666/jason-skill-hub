@@ -23,6 +23,36 @@ const OUTPUT_JSON = path.join(__dirname, '..', 'skills.json');
 const OUTPUT_REDIRECTS = path.join(__dirname, '..', '_redirects');
 const AGENTS_TEMPLATE = path.join(__dirname, '..', 'AGENTS.md.template');
 const OUTPUT_AGENTS = path.join(__dirname, '..', 'AGENTS.md');
+const SKILLIGNORE_PATH = path.join(__dirname, '..', '.skillignore');
+
+/**
+ * 加载并解析 .skillignore 文件
+ * 返回模式列表，每条模式是 { raw, isDir, regex }
+ */
+function loadSkillIgnore() {
+  if (!fs.existsSync(SKILLIGNORE_PATH)) return [];
+
+  const rawPatterns = fs.readFileSync(SKILLIGNORE_PATH, 'utf-8')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#'));
+
+  return rawPatterns.map(p => {
+    const isDir = p.endsWith('/');
+    const namePart = isDir ? p.slice(0, -1) : p;
+    // 将 glob 转换为正则：转义特殊字符，* 匹配非分隔符
+    const escaped = namePart.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '.');
+    return { raw: p, isDir, regex: new RegExp('^' + escaped + '$', 'i') };
+  });
+}
+
+/**
+ * 判断文件名是否匹配 .skillignore 中的某个模式
+ * 不带 / 的模式匹配 basename（任意层级）
+ */
+function isIgnored(name, patterns) {
+  return patterns.some(p => p.regex.test(name));
+}
 
 /**
  * 获取 skill 的完整 URL
@@ -67,9 +97,9 @@ function parseFrontmatter(content) {
 }
 
 /**
- * 递归获取目录下所有文件
+ * 递归获取目录下所有文件（跳过 .skillignore 匹配项）
  */
-function getAllFiles(dirPath, basePath = '') {
+function getAllFiles(dirPath, basePath = '', ignorePatterns = []) {
   const files = [];
 
   if (!fs.existsSync(dirPath)) return files;
@@ -80,8 +110,11 @@ function getAllFiles(dirPath, basePath = '') {
     const fullPath = path.join(dirPath, entry.name);
     const relativePath = path.join(basePath, entry.name);
 
+    // 检查是否被 .skillignore 排除
+    if (isIgnored(entry.name, ignorePatterns)) continue;
+
     if (entry.isDirectory()) {
-      files.push(...getAllFiles(fullPath, relativePath));
+      files.push(...getAllFiles(fullPath, relativePath, ignorePatterns));
     } else {
       files.push(relativePath);
     }
@@ -164,6 +197,7 @@ function isReferenceFile(normalized) {
  */
 function scanSkills() {
   const skills = [];
+  const ignorePatterns = loadSkillIgnore();
 
   if (!fs.existsSync(SKILLS_DIR)) {
     console.error('Skills directory not found:', SKILLS_DIR);
@@ -174,6 +208,9 @@ function scanSkills() {
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
+
+    // 跳过被 .skillignore 排除的顶级目录
+    if (isIgnored(entry.name, ignorePatterns)) continue;
 
     const skillDir = path.join(SKILLS_DIR, entry.name);
     const skillMd = path.join(skillDir, 'SKILL.md');
@@ -189,7 +226,7 @@ function scanSkills() {
 
     checkReferences(skillDir, entry.name, content);
 
-    const allFiles = getAllFiles(skillDir);
+    const allFiles = getAllFiles(skillDir, '', ignorePatterns);
 
     skills.push({
       name: frontmatter.name || entry.name,

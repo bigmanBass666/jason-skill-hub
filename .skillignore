@@ -1,0 +1,25 @@
+# .skillignore — 排除不应出现在 CDN 上的 skill 文件
+#
+# 语法类似 .gitignore：
+#   - 不带 / 的模式匹配 basename（任意层级）
+#   - 以 / 结尾只匹配目录
+#   - * 匹配任意字符（不含 /）
+#   - 空行和 # 开头的行被忽略
+
+# Python 字节码
+__pycache__/
+*.pyc
+*.pyo
+
+# Skill eval 输出目录（所有 *-workspace/ 目录）
+*-workspace/
+
+# Skill 打包文件
+*.zip
+
+# Mac/Windows 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
