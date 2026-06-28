@@ -1,0 +1,50 @@
+name: Build Skill Packages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'skills/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Generate zip packages for each skill
+        run: |
+          mkdir -p zips
+          for dir in skills/*/; do
+            [ -d "$dir" ] || continue
+            skill_name=$(basename "$dir")
+            # Strip trailing slash for git archive path
+            archive_path="${dir%/}"
+            echo "Packaging: $skill_name"
+            git archive --format=zip --output="zips/${skill_name}.zip" HEAD:"${archive_path}"
+          done
+          echo "---"
+          echo "Generated $(ls zips/*.zip | wc -l) package(s)"
+          ls -lh zips/
+
+      - name: Push packages to pkg branch
+        run: |
+          cd zips
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b pkg
+          git add .
+          git commit -m "build: skill packages $(date -u +%Y-%m-%d)"
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push --force origin pkg
+
+      - name: Purge jsDelivr CDN cache (pkg branch)
+        if: success()
+        run: |
+          curl -s "https://purge.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/" || true
