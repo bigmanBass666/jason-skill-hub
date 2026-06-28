@@ -51,5 +51,4 @@ jobs:
       - name: Purge jsDelivr CDN cache
         if: steps.check_changes.outputs.changed == 'true'
         run: |
-          curl -s "https://purge.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/SKILLS_INDEX.md" || true
-          curl -s "https://purge.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/skills.json" || true
+          curl -s "https://purge.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/" || true
