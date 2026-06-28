@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "filter-read-x5",
+  "prompt": "项目路径 D:\\Test\\claude_test\\subagent_test。找到 ~/.claude/projects 下对应的目录，用 subagent-inspect skill 只列出该项目的 Read 工具调用",
+  "assertions": [
+    {"text": "正确编码了项目路径", "passed": true, "evidence": "最终定位到 D--Test-claude-test-subagent-test，匹配 D:\\Test\\claude_test\\subagent_test"},
+    {"text": "识别了所有5个subagent", "passed": true, "evidence": "输出表格列出 agent-a179/a8f65/a982/ab5c432/add180a"},
+    {"text": "确认了Read调用数量为0", "passed": true, "evidence": "明确声明 'Read 调用全部为 0'，并说明均为Explore类型，只使用web-search/web-fetch"},
+    {"text": "发现了工具命名错误", "passed": true, "evidence": "额外发现 agent-a179 在第36行触发了不存在的 mcp__web-fetch__fetchWebContent 工具名，连续失败2次后纠正"}
+  ]
+}

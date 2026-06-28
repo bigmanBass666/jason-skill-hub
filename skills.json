@@ -20,9 +20,19 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/agents-md/SKILL.md"
   },
   {
+    "name": "android-cli",
+    "description": "Provides instructions for installing and using the `android` CLI. The `android` command-line tool is a critical tool for Android development and helps you create new Android projects, run Android apps on devices, manage and interact with Android virtual devices (including screenshots and UI inspection), manage Android SDK components, look up official Android documentation, and discover and install official Android skills.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/android-cli/SKILL.md"
+  },
+  {
     "name": "article-to-image-prompt",
     "description": "根据文章内容生成用于 ChatGPT（DALL-E）的英文绘图 prompt（封面主图）。当用户提供文章、博客、新闻、报告等文本内容，并希望生成配图、封面图、插图的绘图提示词时，必须使用此 skill。关键词触发：「生成prompt」「帮我配图」「生成封面」「文章插图」「生图提示词」「image prompt」「cover image」「ChatGPT生图」「DALL-E」。即使用户只说「帮我给这篇文章配张图」也应立即触发此 skill。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/article-to-image-prompt/SKILL.md"
+  },
+  {
+    "name": "brainstorming",
+    "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/brainstorming/SKILL.md"
   },
   {
     "name": "canvas-design",
@@ -46,8 +56,13 @@
   },
   {
     "name": "claude-project-mover",
-    "description": "移动项目文件夹并同步更新 Claude 聊天记录路径，确保移动后对话历史不丢失。当用户说\"移动项目\"、\"搬项目\"、\"把XX移到别处但保留聊天记录\"、\"relocate project\"、\"move this folder but keep claude history\"、\"换位置但保留对话\"时触发。即使只说\"帮我搬个项目\"也应触发。",
+    "description": "在两个项目路径之间同步 Claude 会话历史（非搬文件）。覆盖两种场景：(1) 全量历史迁移 — 用户自己搬了项目文件夹后迁移所有历史会话；(2) 单会话同步 — 把当前或指定会话复制到另一项目目录（worktree / 多目录场景）。当用户说\"搬项目\"、\"迁移历史\"、\"同步聊天记录\"、\"sync session\"、\"保留对话\"、\"claude 历史不见了\"、\"change project path but keep history\"、\"relocate project\"、\"move this folder but keep claude history\"时触发。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/claude-project-mover/SKILL.md"
+  },
+  {
+    "name": "code-review-skill",
+    "description": "|",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/code-review-skill/SKILL.md"
   },
   {
     "name": "design-principles",
@@ -58,6 +73,11 @@
     "name": "diagnose",
     "description": "Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test. Use when user says \"diagnose this\" / \"debug this\", reports a bug, says something is broken/throwing/failing, or describes a performance regression.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/diagnose/SKILL.md"
+  },
+  {
+    "name": "doc-links",
+    "description": "文档链接索引 skill。内部维护各技术栈的 llms.txt 及目录页 URL，当需要查阅官方文档时按域匹配索引、语义查找具体页面。工作方式是：Claude 自行按需 Fetch 索引内容并匹配返回链接。触发场景：用户提到某个技术并需要查阅官方文档、用户直接索要某个技术的文档链接、用户在编码时需要参考官方文档。注意：只返回链接，不做内容总结或解读。",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/SKILL.md"
   },
   {
     "name": "docx",
@@ -76,18 +96,23 @@
   },
   {
     "name": "free-resource-hunter",
-    "description": "开发者免费资源情报雷达。通过增量对比扫描法（加载基线→多源搜索→计算差异→验证→输出增量）帮助开发者实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。触发场景包括但不限于：免费资源搜索、免费 API 发现、资源变动追踪、限时优惠、模型上新、白嫖情报、平台评估、Token 赠送、额度缩水、平台对比。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。当用户提到任何与免费 AI 资源、免费额度、平台变动、Token 赠送相关的话题时，都应使用此 skill。",
+    "description": "开发者免费资源情报雷达。通过增量对比扫描帮助实时追踪 AI 模型 API、云服务、工具的免费/优惠变动。触发场景：免费资源搜索、模型上新、额度变动、限时优惠、平台评估、Token 赠送。即使用户只说「最近有什么免费的」「扫一下」「跑一次」也应触发。当用户提到任何免费 AI 资源、额度、平台变动相关话题时都应使用此 skill。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-resource-hunter/SKILL.md"
   },
   {
     "name": "free-vision",
-    "description": "Vision Arsenal — extend text-only model with visual capabilities via external vision APIs. INVOKE ONLY when VISION_BLOCK_READ=1 (text-only model mode). If VISION_BLOCK_READ is not set or not equal to 1, the current model has native vision capabilities — process images directly, do NOT invoke this skill. When active (VISION_BLOCK_READ=1), use this skill whenever the user asks to look at, describe, analyze, OCR, or understand any image — screenshots, photos, diagrams, charts, UI mockups, error screenshots, generated images, or any visual content. Also trigger when built-in image reading fails, returns errors, or is unavailable. CRITICAL: when MCP tools (Playwright, etc.) return screenshots with [Image] tags, do NOT try to process the image directly — use this skill with the saved file path instead. Even trigger when the user mentions an image without explicitly asking you to read it. Supports local files, URLs, audio files, and video. Auto-routes between stable backends with fallback. Never refuse an image request.",
+    "description": "为无原生视觉能力的模型提供图片处理能力。当 VISION_BLOCK_READ=1（纯文本模型模式）时，通过此 skill 调用多模型后端分析图片。多模态模型直接使用原生视觉，无需调用此 skill。支持文件路径、URL、Playwright 截图等输入，通过 zhipu-4v / zhipu-thinking / stepfun-3.7 等后端完成视觉任务。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/free-vision/SKILL.md"
   },
   {
     "name": "frontend-design",
-    "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+    "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/frontend-design/SKILL.md"
+  },
+  {
+    "name": "github-repo-initializer",
+    "description": "Initialize a new GitHub open-source repository with all essential community health files (README, CONTRIBUTING, CODE_OF_CONDUCT, LICENSE, SECURITY, SUPPORT, issue/PR templates). Use this skill whenever the user mentions creating a new repo, setting up an open-source project, initializing a GitHub repository, or adding standard community files. Also use it when the user asks about \"community profile\", \"health files\", or wants to follow GitHub's best practices for open source.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/github-repo-initializer/SKILL.md"
   },
   {
     "name": "gitignore-gen",
@@ -95,14 +120,29 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/gitignore-gen/SKILL.md"
   },
   {
+    "name": "goal-generator-lite",
+    "description": ">",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/goal-generator-lite/SKILL.md"
+  },
+  {
     "name": "god-view",
     "description": "",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/god-view/SKILL.md"
   },
   {
+    "name": "grill-me",
+    "description": "A relentless interview to sharpen a plan or design.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/grill-me/SKILL.md"
+  },
+  {
     "name": "huashu-design",
-    "description": "花叔Design——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审。根据任务embody对应专家（UX/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、设计Demo、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、设计探索、做个HTML页面、做个可视化、app原型、iOS原型、移动应用mockup、导出MP4、导出GIF、60fps视频、设计风格、设计方向、设计哲学、配色方案、视觉风格、推荐风格、选个风格、做个好看的、评审、好不好看、review this design、带解说的动画、解说视频、概念解释视频、长视频科普、配音动画、voiceover、narration、TTS+动画、5分钟讲清楚什么是XX。**主干能力**：Junior Designer工作流（先假设+reasoning+placeholder再迭代）、反AI slop清单、React+Babel最佳实践、Tweaks变体切换、Speaker Notes、Starter Components（幻灯片/变体/动画/设备边框/解说Stage）、App原型守则（Wikimedia/Met/Unsplash取真图+AppPhone可交互+Playwright点击测试）、HTML动画→MP4/GIF导出（25fps基础+60fps插帧+palette优化+场景化BGM+自动fade）、**带解说长动画pipeline**（豆包TTS+实测时长生timeline+NarrationStage+ducking混音；铁律：连续运动叙事，禁PowerPoint切换）。**需求模糊Fallback**：设计方向顾问——5流派×20哲学（Pentagram信息建筑/Field.io运动诗学/Kenya Hara东方极简/Sagmeister实验先锋等）推3方向+24预制showcase+并行3 Demo选。**可选**：5维度评审（哲学一致/视觉层级/细节/功能/创新各10分+修复清单）。",
+    "description": "花叔Design——用HTML做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审。根据任务embody对应专家（UX/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、做个HTML页面、做个可视化、app原型、iOS原型、导出MP4/GIF、60fps视频、设计风格、设计方向、配色方案、推荐风格、选个风格、做个好看的、评审、好不好看、review this design、带解说的动画、解说视频、长视频科普、voiceover、narration、5分钟讲清楚什么是XX。需求模糊时进设计方向顾问（三套逻辑并行出3版真实视觉，HTML原生40种风格库网页20+PPT20为弹药）；另含品牌资产协议、反AI slop、Junior工作流、Tweaks变体、动画→MP4/GIF导出、带解说长视频pipeline、5维评审。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/huashu-design/SKILL.md"
+  },
+  {
+    "name": "improve-codebase-architecture",
+    "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/improve-codebase-architecture/SKILL.md"
   },
   {
     "name": "kaggle-run",
@@ -135,6 +175,11 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/officecli/SKILL.md"
   },
   {
+    "name": "pdf",
+    "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pdf/SKILL.md"
+  },
+  {
     "name": "pptx",
     "description": "Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \\\"deck,\\\" \\\"slides,\\\" \\\"presentation,\\\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/pptx/SKILL.md"
@@ -143,6 +188,16 @@
     "name": "save-work-dir",
     "description": "记录当前工作目录到桌面的历史文件。当用户说\"记录工作目录\"、\"保存工作目录\"、\"记录当前目录\"、\"save work dir\"、\"记住这个目录\"时触发此 skill。",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/save-work-dir/SKILL.md"
+  },
+  {
+    "name": "scauzj-article-format",
+    "description": "共青团华南农业大学珠江学院工作规范",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/scauzj-article-format/SKILL.md"
+  },
+  {
+    "name": "setup-project-mcp",
+    "description": "一键在项目中注册 MCP 服务器，自动创建/更新 .mcp.json。当用户说\"添加项目级 MCP\"、\"配置 MCP 服务器\"、\"register MCP\"、\"setup project MCP\"、\"帮我在项目中注册一个 MCP\"或需要将某个 MCP 服务器关联到当前项目时，使用此 skill。即使配置来自其他 MCP 服务器的 deferred tools 列表（系统注入的 <system-reminder>），也应使用此 skill 将其写入 .mcp.json。",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/setup-project-mcp/SKILL.md"
   },
   {
     "name": "skill-creator",
@@ -155,14 +210,24 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/sub-agent-designer/SKILL.md"
   },
   {
+    "name": "subagent-inspect",
+    "description": "审计 Claude Code 子代理 (subagent) 的完整执行轨迹，涵盖定位 JSONL 日志、审计工具调用序列、诊断 AI 决策-行动断裂点。当用户提到 eval 子代理、子代理推理链、subagent 日志、查看子代理执行过程、审计 sub-agent、分析 agent 决策、为什么 AI 没做 X、subagent trace 时使用此 skill。",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/subagent-inspect/SKILL.md"
+  },
+  {
     "name": "tdd",
-    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development.",
+    "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/tdd/SKILL.md"
   },
   {
     "name": "trae-forum-pro",
     "description": ">",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/SKILL.md"
+  },
+  {
+    "name": "trae-plan",
+    "description": "优先规划任务的执行方向，用户确认后再执行",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-plan/SKILL.md"
   },
   {
     "name": "trae-solo-cn",
@@ -175,9 +240,19 @@
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-solo-cn-config/SKILL.md"
   },
   {
+    "name": "trae-spec",
+    "description": "根据需求细化完整的规范、任务、验收文档，用户确认后再严格执行，适合复杂的长线任务",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-spec/SKILL.md"
+  },
+  {
     "name": "ui-ux-pro-max",
     "description": "UI/UX design intelligence. 67 styles, 96 palettes, 57 font pairings, 25 charts, 13 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.",
     "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/SKILL.md"
+  },
+  {
+    "name": "universal-article-engineering",
+    "description": "将一段真实的工作探索转化为高质量技术文章的完整流程 Skill。当用户说\"我不想让这段工作白费\"、\"帮我把这次探索写成文章\"、\"以你的身份写下来\"、\"这次调查值得被记录\"时，必须立即触发。也适用于：技术博客、Reverse Engineering 报告、故障溯源记录、架构分析、工程实践文章、Hacker 风格长文。核心前提：文章素材来自真实发生的工作，以真实视角撰写，不捏造，不夸大。",
+    "url": "https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/SKILL.md"
   },
   {
     "name": "wiztree-cli",

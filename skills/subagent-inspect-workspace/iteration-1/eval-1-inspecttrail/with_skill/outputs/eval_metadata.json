@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "inspect-trail",
+  "prompt": "项目的sub-agent日志在 D:\\Test\\api_key_test\\flux2_boundary_tests，请找到 Claude Code 会话日志目录，定位它的sub-agent jsonl文件，审计完整执行轨迹，报告最重要的3个工具调用",
+  "assertions": [
+    {"text": "正确编码了项目路径", "passed": true, "evidence": "输出 D--Test-api-key-test-flux2-boundary-tests，完全匹配"},
+    {"text": "调用了 inspect_agent.py", "passed": true, "evidence": "从JSONL分析质量和执行步骤可验证"},
+    {"text": "输出超过100字符", "passed": true, "evidence": "完整审计报告+诊断内容远超100字符"},
+    {"text": "报告了最重要的3个工具调用", "passed": true, "evidence": "明确列出 Read(读取文件)、web-search(并行搜索)、fetchWebContent(抓取权威来源)"},
+    {"text": "给出了深度诊断结论", "passed": true, "evidence": "识别出模型级别参数序列化故障导致35次连续Write/Edit失败"}
+  ]
+}

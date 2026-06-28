@@ -1,78 +1,47 @@
 ---
 name: claude-project-mover
-description: 移动项目文件夹并同步更新 Claude 聊天记录路径，确保移动后对话历史不丢失。当用户说"移动项目"、"搬项目"、"把XX移到别处但保留聊天记录"、"relocate project"、"move this folder but keep claude history"、"换位置但保留对话"时触发。即使只说"帮我搬个项目"也应触发。
+description: 在两个项目路径之间同步 Claude 会话历史（非搬文件）。覆盖两种场景：(1) 全量历史迁移 — 用户自己搬了项目文件夹后迁移所有历史会话；(2) 单会话同步 — 把当前或指定会话复制到另一项目目录（worktree / 多目录场景）。当用户说"搬项目"、"迁移历史"、"同步聊天记录"、"sync session"、"保留对话"、"claude 历史不见了"、"change project path but keep history"、"relocate project"、"move this folder but keep claude history"时触发。
 ---
 
-# Claude Project Mover
+# Claude Project Mover — 会话历史同步
 
-用户要求移动项目时，必须同步更新 `~/.claude/projects/` 下的聊天记录目录名，否则历史对话会"丢失"。
+⚠ **默认只读副本操作。** 本 skill 的所有处理均在副本上执行，绝不碰源文件。**删除旧历史目录或旧项目目录必须由用户手动确认后自行操作。**
 
-## 编码规则
+调用 `python move_project_history.py` 同步 `~/.claude/projects/` 下的会话。核心逻辑：复制模式（不动源）+ JSONL 中 `cwd` 字段修正。
 
-Claude 把项目绝对路径编码成目录名：
-- `\` → `-`
-- `:` → 去掉
-- 大小写保留
+## 场景 1：全量历史迁移（migrate）
 
-示例：`D:\Test\claude_test\claude-mem-trae` → `D--Test-claude-test-claude-mem-trae`
+用户自己用 git / mv / cp 把项目文件夹搬到了新位置，需要将所有历史会话迁移到新项目路径。
 
-## 执行流程
-
-### 1. 确认路径
-问清楚源路径和目标路径，如果用户没说清楚，必须追问。
-
-### 2. 检查历史记录是否存在
 ```powershell
-$oldName = "<源路径>" -replace ':','' -replace '\\','-'
-$historyDir = "$env:USERPROFILE\.claude\projects\$oldName"
-Test-Path $historyDir
+python move_project_history.py check "D:\旧路径" "D:\新路径"
+python move_project_history.py migrate "D:\旧路径" "D:\新路径"
 ```
-不存在则跳过历史迁移，直接执行第 3 步。
 
-### 3. 移动项目
+## 场景 2：单会话同步（sync-session）
+
+用户有多个 worktree，或想在另一目录继续当前对话。将当前（或指定）会话复制到目标项目目录。
+
 ```powershell
-Move-Item -Path "<源路径>" -Destination "<目标路径>"
-```
-目标位置已有同名文件夹时，先问用户是否覆盖，不要直接执行。
+# 同步最新会话
+python move_project_history.py sync-session "D:\src" "D:\dst"
 
-### 4. 重命名历史记录目录（如果有）
-```powershell
-Rename-Item $historyDir -NewName ("<目标路径>" -replace ':','' -replace '\\','-')
+# 指定会话 ID
+python move_project_history.py sync-session --session <uuid> "D:\src" "D:\dst"
 ```
 
-### 5. 修正 JSONL 中的 cwd 字段（关键）
+## 通用选项
 
-Claude Code 用 JSONL 中的 `cwd` 字段匹配项目路径。目录重命名后 cwd 仍指向旧路径，必须替换：
+| 选项 | 说明 |
+|------|------|
+| `--dry-run` | 预览将要执行的操作，不实际修改文件 |
+| `--no-backup` | 不创建备份（仅 migrate 场景） |
 
-```python
-import json
-from pathlib import Path
+任何操作前先用 `--dry-run` 预览再执行。
 
-history_dir = Path.home() / ".claude" / "projects" / "<新编码目录名>"
-old_cwd = r"<源路径>"
-new_cwd = r"<目标路径>"
+## 删除指引
 
-for f in history_dir.glob("*.jsonl"):
-    lines = []
-    changed = 0
-    with open(f, "r", encoding="utf-8") as fh:
-        for line in fh:
-            try:
-                d = json.loads(line.strip())
-                if d.get("cwd") == old_cwd:
-                    d["cwd"] = new_cwd
-                    line = json.dumps(d, ensure_ascii=False) + "\n"
-                    changed += 1
-            except:
-                pass
-            lines.append(line)
-    with open(f, "w", encoding="utf-8") as fh:
-        fh.writelines(lines)
-    print(f"  {f.name}: {changed} cwd entries fixed")
-```
+确认新路径下的历史会话无误后，再手动清理旧目录：
+1. 删除旧项目目录：`Remove-Item -Recurse "D:\旧项目路径"`
+2. 删除旧历史记录：`Remove-Item -Recurse "~/.claude/projects/<旧项目名>"`
 
-> **为什么不能用字符串替换？** JSONL 中路径的反斜杠是双转义的（`D:\\\\Test`），直接字符串替换匹配不到。必须通过 `json.loads` → 修改 → `json.dumps`。
-
-### 6. 告知用户
-确认两个操作都成功，告诉用户：
-> 项目已移至 `<目标路径>`，聊天记录已同步。下次在新位置打开 Claude 时历史对话会自动恢复。

@@ -1,0 +1,6 @@
+{
+  "eval_id": 3,
+  "eval_name": "target-exists-confirm",
+  "prompt": "我要把 D:\\Projects\\my-app 移到 D:\\Projects\\my-app-v2，保留聊天记录。",
+  "assertions": []
+}

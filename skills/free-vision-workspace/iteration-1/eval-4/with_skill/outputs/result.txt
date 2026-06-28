@@ -1,0 +1,92 @@
+====================================
+free-vision 执行结果记录
+====================================
+
+【执行命令】
+python "C:\Users\86150\.agents\skills\free-vision\scripts\vision_read.py" "D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png" "提取图片中的所有文字内容，用中文回答。"
+
+【图片路径】
+D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png
+
+【自定义 Prompt】
+提取图片中的所有文字内容，用中文回答。
+
+==================== stderr 日志 ====================
+尝试: 智谱 GLM-4V-Flash ...
+成功: 智谱 GLM-4V-Flash [tokens: 946→135]
+==================== 结束 =========================
+
+【模型选择分析】
+- 未指定 --backend，使用默认路由（default group）。
+- 默认组按优先级顺序尝试：zhipu-4v → zhipu-thinking → nvidia-phi4。
+- 本次首次尝试 zhipu-4v 成功，未继续切换至其他模型。
+- 选择模型：智谱 GLM-4V-Flash（zhipu-4v）
+- 原因：默认路由自动选择，该模型中文 OCR 能力强且并发最高。
+
+【Token 统计】
+- 输入 tokens：946
+- 输出 tokens：135
+
+====================================
+OCR 内容（模型返回结果）
+====================================
+
+扩展程序
+搜索扩展程序
+开发者模式
+加载未打包的扩展程序
+打包扩展程序
+更新
+我的扩展程序
+键盘快捷键
+正在开发扩展程序？请参阅 Chrome 扩展程序开发者文档，及时了解最新动态。
+在 Chrome 应用商店中发现更多扩展程序和主题
+在无痕模式下启用
+警告：Google Chrome 无法阻止扩展程序记录您的浏览活动。若要在无痕模式下停用此扩展程序，请取消选中此选项。
+允许访问文件网址
+收集各项错误
+扩展程序选项
+在 Chrome 应用商店中查看详情
+来源 Chrome 应用商店
+下载扩展程序
+
+====================================
+自定义 Prompt 传递验证
+====================================
+
+【脚本流程验证】
+1. 命令行解析（argparse）：
+   - args.image = "D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png"
+   - args.prompt = "提取图片中的所有文字内容，用中文回答。"（自定义 prompt，非 DEFAULT_PROMPT 默认值）
+   代码位置：parser.add_argument("prompt", nargs="?", default=DEFAULT_PROMPT, ...)
+
+2. 路由调用（第 300 行）：
+   route(args.image, args.prompt, args.backend)  →  prompt 被传递给 route()
+
+3. 模型调用（第 247 行，call_model 函数）：
+   text, usage = call_model(model, image_input, prompt)
+   prompt 被传递给 call_model()
+
+4. API payload 构建（第 190-209 行，call_model 函数内）：
+   payload = {
+       "model": model["model"],
+       "max_tokens": model["max_tokens"],
+       "messages": [{
+           "role": "user",
+           "content": [
+               {"type": "image_url", "image_url": {"url": image_url}},
+               {"type": "text", "text": prompt},   ← 第 205 行：自定义 prompt 作为 text 字段传入
+           ],
+       }],
+   }
+
+【结论】
+✅ 自定义 prompt "提取图片中的所有文字内容，用中文回答。" 被正确传递给了模型。
+在整个调用链中，prompt 未经修改地作为 API payload 的 messages[0].content[1].text 字段值传入，
+模型收到的请求中包含：
+- 多模态消息中包含图片（image_url）
+- 文本内容为自定义 prompt："提取图片中的所有文字内容，用中文回答。"
+
+模型的 OCR 输出以中文列表形式呈现了 Chrome 扩展程序管理页面的可见文字内容。
+内容类型为中文 UI 截图（Chrome 扩展程序页面），与 prompt 要求的 UTF-8 中文输出一致。
+模型准确识别了界面元素如菜单项、按钮文本和警告信息。

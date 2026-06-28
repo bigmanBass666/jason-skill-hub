@@ -1,0 +1,12 @@
+{
+  "eval_id": 4,
+  "eval_name": "deep-dive-largest-agent",
+  "prompt": "D:\\Test\\Oh-My-Trae\\trae-to-claude-mem 项目有大量 sub-agent 执行记录。找到这个项目最大的一个 agent jsonl 文件（文件最大），审计它的执行轨迹。",
+  "assertions": [
+    {"text": "正确编码了项目路径", "passed": true, "evidence": "匹配 D--Test-Oh-My-Trae-trae-to-claude-mem"},
+    {"text": "找到最大文件并报告大小", "passed": true, "evidence": "报告 agent-a7d9792fb5c466b6e.jsonl，555KB"},
+    {"text": "输出了任务目标", "passed": true, "evidence": "明确任务：研究MCP图片处理机制"},
+    {"text": "列出了主要执行步骤", "passed": true, "evidence": "6阶段按时间顺序：MCP规范→源码404→Playwright MCP→npm包分析→二进制逆向→被中断"},
+    {"text": "发现了有价值的细节", "passed": true, "evidence": "识别了32MB图片限制、Hook字段名（hook_event_name/tool_name）、convertToolResult函数名"}
+  ]
+}

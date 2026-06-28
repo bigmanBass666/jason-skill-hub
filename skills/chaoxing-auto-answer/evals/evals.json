@@ -1,0 +1,41 @@
+{
+  "skill_name": "chaoxing-auto-answer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我打开了学习通的考试页面 https://mooc1.chaoxing.com/exam-ans/mooc2/exam/preview?courseId=260942396&classId=143168065&examRelationId=10076934&examRelationAnswerId=171153323&enc=xxx ，需要你帮我自动完成这个考试。目标是满分。我的答案：单选题 1.C 2.A 3.C 4.A 5.A 6.B 7.B 8.B 9.D 10.D；判断题 31.错 32.对 33.对 34.对 35.错",
+      "expected_output": "系统应识别出是考试预览页(/exam/preview)，自动检测并触发'进入考试'，然后跳转到考试答题页，使用批量索引公式填写所有答案，最后验证并等待用户确认是否提交",
+      "files": [],
+      "expectations": [
+        "识别出URL类型为 exam_preview（不是直接进入答题）",
+        "触发'进入考试'操作（点击tabIntoexam2或类似按钮）",
+        "使用批量索引公式填写答案（不是逐个点击）",
+        "填写后进行状态验证"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "我在学习通上有一个作业要完成，URL是 https://mooc1.chaoxing.com/mooc-ans/mooc2/work/dowork?workId=12345&answerId=67890&enc=abc ，帮我填写答案。单选题：1.A 2.B 3.C 4.D 5.A。填空题：6.数据流图 7.软件危机。判断题：8.对 9.错 10.对。（注意：作业的页面结构和考试不同）",
+      "expected_output": "系统应识别出是作业答题页(/work/dowork)，直接进入答题流程，使用侦察脚本分析DOM结构后用索引公式填写，处理UEditor iframe填写填空题",
+      "files": [],
+      "expectations": [
+        "识别出URL类型为 work（作业答题页）",
+        "执行侦察脚本获取页面结构",
+        "正确区分单选/填空/判断的填写方式",
+        "使用索引公式批量填写，不是逐个ref点击"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我打开了这个学习通链接，但页面是空白的只显示'考试'两个字，URL是 https://mooc1.chaoxing.com/exam-ans/exam/test/look?courseId=123&classId=456&examId=789&examAnswerId=012&cpi=345 ，我需要做什么？",
+      "expected_output": "系统应识别出是已交卷查看页(/exam/test/look)，检测页面上的'交卷成功'文本，告知用户考试已提交，终止答题流程",
+      "files": [],
+      "expectations": [
+        "识别出URL类型为 exam_look（已交卷页）",
+        "检测到'交卷成功'或提交时间等确认信息",
+        "终止答题流程，不尝试填写或提交",
+        "给出清晰的提示告知用户考试已提交"
+      ]
+    }
+  ]
+}

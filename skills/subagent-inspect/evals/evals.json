@@ -1,0 +1,53 @@
+{
+  "skill_name": "subsubagent-inspect",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "discover-and-inspect-subagent",
+      "prompt": "有一个项目在 D:\\Test\\api_key_test\\flux2_boundary_tests，里面使用了 sub-agent。请找到这个项目对应的 Claude Code 会话日志目录（在 ~/.claude/projects/ 下），定位一个 sub-agent 的 jsonl 文件，然后用 subagent-inspect skill 审计它的完整执行轨迹。报告这个 sub-agent 最重要的 3 个工具调用。",
+      "expected_output": "agent 能：(1) 在 ~/.claude/projects/ 下找到编码目录名 D--Test-api-key-test-flux2-boundary-tests，(2) 定位到 <session>/subagents/agent-*.jsonl，(3) 调用 inspect_agent.py 输出可读 trace，(4) 总结关键工具调用",
+      "files": [],
+      "assertions": [
+        {"name": "找到编码目录", "check": "output contains 'D--Test-api-key-test-flux2-boundary-tests' or invokes python with correct .jsonl path"},
+        {"name": "使用 inspect_agent.py", "check": "output contains 'inspect_agent.py'"},
+        {"name": "输出有实质内容", "check": "output_length > 100"}
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "discover-and-filter",
+      "prompt": "项目在 D:\\Test\\claude_test\\subagent_test。用 Bash 找到 ~/.claude/projects/ 下对应的目录，然后用 subagent-inspect skill 的 --filter Read 参数，只看 Read 工具调用。列出所有 Read 调用及其参数。",
+      "expected_output": "agent 能找到编码目录，运行 inspect_agent.py --filter Read，只输出 Read 工具调用",
+      "files": [],
+      "assertions": [
+        {"name": "只输出 Read 调用", "check": "output contains '[TOOL' and 'Read(' and does NOT contain '[TOOL' lines with 'Bash' or 'Skill'"},
+        {"name": "使用了 subagent-inspect skill", "check": "output contains 'inspect_agent.py'"},
+        {"name": "输出有实质内容", "check": "output_length > 50"}
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "discover-and-stats",
+      "prompt": "在 D:\\Test\\skill_design 项目中找到了 sub-agent 日志。用 subagent-inspect skill 的 --stats 参数统计工具调用情况，告诉我这个 sub-agent 总共调用了哪些工具、各调用了多少次。",
+      "expected_output": "agent 能找到 D--Test-skill-design 对应目录，输出 tool call counts 统计",
+      "files": [],
+      "assertions": [
+        {"name": "有工具统计信息", "check": "output contains 'Tool' or 'tool' and a number"},
+        {"name": "使用了 subagent-inspect skill", "check": "output contains 'inspect_agent.py' or '[TOOL'"},
+        {"name": "输出有实质内容", "check": "output_length > 50"}
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "deep-dive-large-subagent",
+      "prompt": "D:\\Test\\Oh-My-Trae\\trae-to-claude-mem 项目有大量 sub-agent 执行记录。用 subagent-inspect skill 找到这个项目最大的一个 agent jsonl 文件（文件最大），审计它的执行轨迹，告诉我这个 agent 的任务目标和主要执行步骤。",
+      "expected_output": "agent 找到 D--Test-Oh-My-Trae-trae-to-claude-mem 目录，用 find/sort 找到最大的 jsonl，审计并给出摘要",
+      "files": [],
+      "assertions": [
+        {"name": "定位了最大文件", "check": "output contains a jsonl filename or file size mention"},
+        {"name": "输出了执行摘要", "check": "output_length > 100"},
+        {"name": "不调用 skill 脚本", "check": "output does NOT contain 'vision_read.py' (this is not an image task)"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "返回实质内容（output_length > 30）",
+      "passed": true,
+      "evidence": "OCR 输出 18 行中文 UI 文本（扩展程序、搜索扩展程序、开发者模式等），远大于 30 字符"
+    },
+    {
+      "text": "非默认 prompt 响应",
+      "passed": true,
+      "evidence": "子代理追踪了完整调用链：命令行 positional arg → args.prompt → route() → call_model() → payload[\"messages\"][0][\"content\"][1][\"text\"] 全程透传。模型识别到 Chrome 扩展页面的全部中文 UI 文字，输出内容与「提取所有文字」要求一致，而非默认的「Describe this image in detail」"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 0,
+    "total": 2,
+    "pass_rate": 1.0
+  },
+  "eval_feedback": {
+    "overall": "自定义 prompt 透传完全正确。zhipu-4v 在 946→135 tokens 下精确保留了所有 UI 文字内容。"
+  },
+  "timing": {
+    "grader_duration_seconds": 0,
+    "total_duration_seconds": 0
+  },
+  "execution_metrics": {
+    "output_chars": 2435
+  }
+}

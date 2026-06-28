@@ -1,0 +1,10 @@
+{
+  "eval_id": 3,
+  "eval_name": "stats-summary",
+  "prompt": "在 D:\\Test\\skill_design 项目中找到了 sub-agent 日志。用 subagent-inspect skill 的 --stats 参数统计工具调用情况。",
+  "assertions": [
+    {"text": "调用了 inspect_agent.py --stats", "passed": true, "evidence": "5个 Bash 调用都包含 python inspect_agent.py --stats"},
+    {"text": "有工具统计数字", "passed": true, "evidence": "输出包含 Bash 81次、Read 13次、Glob 11次等数字"},
+    {"text": "匹配了正确的项目路径", "passed": false, "evidence": "根因：agent编码后去glob精确匹配未果，降级为grep -i subagent，返回了当前项目 D--Test-skill-design-subagent-jsonl-analyze 的前缀 D--Test-skill-design，agent未验证完整路径是否等价就使用了。应归因于prompt清晰度 + agent的验证不足"}
+  ]
+}

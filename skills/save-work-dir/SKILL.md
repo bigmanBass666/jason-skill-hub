@@ -1,6 +1,8 @@
 ---
 name: save-work-dir
 description: 记录当前工作目录到桌面的历史文件。当用户说"记录工作目录"、"保存工作目录"、"记录当前目录"、"save work dir"、"记住这个目录"时触发此 skill。
+disable-model-invocation: true
+
 ---
 
 # 保存工作目录

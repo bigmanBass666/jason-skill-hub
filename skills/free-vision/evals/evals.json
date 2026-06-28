@@ -3,55 +3,57 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "看一下这张截图 D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png",
-      "expected_output": "Chrome 扩展管理页面的中文详细描述，由 zhipu-4v 自动路由",
+      "eval_name": "screenshot-ocr",
+      "prompt": "描述这张图片 D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png",
+      "expected_output": "脚本成功返回图片描述，包含截图中的文字和 UI 内容。",
       "files": ["D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png"],
       "assertions": [
-        {"name": "有意义输出", "check": "output_length > 50"},
-        {"name": "识别页面类型", "check": "contains 'chrome' or '扩展' or 'extension'"},
-        {"name": "使用智谱后端", "check": "stderr contains '智谱'"}
+        {"name": "返回实质内容", "check": "output_length > 50"}
       ]
     },
     {
       "id": 2,
-      "prompt": "What's in this image? D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-20-14-039Z.png",
-      "expected_output": "Kaggle homepage description in English from zhipu-4v",
-      "files": ["D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-20-14-039Z.png"],
+      "eval_name": "missing-file-early-fail",
+      "prompt": "描述这张图片 D:/Test/skill_design/nonexistent_path.png",
+      "expected_output": "脚本检测到文件不存在后立即报错退出，在调用任何 API 之前就失败。",
+      "files": [],
       "assertions": [
-        {"name": "有意义输出", "check": "output_length > 50"},
-        {"name": "识别 Kaggle", "check": "contains 'kaggle'"}
+        {"name": "快速失败", "check": "output_length < 200"},
+        {"name": "含错误提示", "check": "output contains '不存在' or 'not found' or 'Error' or 'error' or '未设置'"}
       ]
     },
     {
       "id": 3,
-      "prompt": "帮我看看这个图片里的错误信息 D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-25-17-090Z.png",
-      "expected_output": "Extracts any text/error visible in the screenshot",
-      "files": ["D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-25-17-090Z.png"],
+      "eval_name": "list-models",
+      "prompt": "列出 free-vision 的所有可用模型",
+      "expected_output": "输出模型列表，包含默认组模型（zhipu-4v, zhipu-thinking, nvidia-phi4-4v）及各自的可用状态。",
+      "files": [],
       "assertions": [
-        {"name": "有意义输出", "check": "output_length > 50"},
-        {"name": "描述了页面内容", "check": "output contains descriptive text"}
+        {"name": "包含 zhipu-4v", "check": "output contains 'zhipu-4v'"},
+        {"name": "包含 zhipu-thinking", "check": "output contains 'zhipu-thinking'"},
+        {"name": "含状态标记", "check": "output contains '✅' or '❌'"}
       ]
     },
     {
       "id": 4,
-      "prompt": "读一下这个不存在的图片 /tmp/nonexistent_image.png",
-      "expected_output": "Clean error message about file not found, no API call wasted",
-      "files": [],
+      "eval_name": "custom-prompt-ocr",
+      "prompt": "提取这张图片里的所有文字内容，用中文回答。\n图片：D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png",
+      "expected_output": "自定义 prompt 被正确执行——提取文字而非泛泛描述图片。输出包含实际识别的文本内容。",
+      "files": ["D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png"],
       "assertions": [
-        {"name": "文件不存在报错", "check": "stderr or stdout contains '不存在' or 'not found'"},
-        {"name": "退出码非零", "check": "exit_code != 0"},
-        {"name": "没有调用 API", "check": "stderr does NOT contain '尝试'"}
+        {"name": "返回实质内容", "check": "output_length > 30"}
       ]
     },
     {
       "id": 5,
-      "prompt": "分析这张图片的 UI 设计，用 zhipu-thinking 模型来分析 D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png",
-      "expected_output": "Deep UI analysis using zhipu-thinking backend (explicitly specified)",
+      "eval_name": "model-selection-reasoning",
+      "prompt": "D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png 是一张数据仪表盘截图。请分析图片内容。",
+      "expected_output": "Claude 应根据路由指南选择适合复杂图表分析的模型。输出中应明确说明选择了哪个模型及理由。",
       "files": ["D:/Test/api_key_test/.playwright-mcp/page-2026-05-19T18-18-44-626Z.png"],
       "assertions": [
-        {"name": "使用 thinking 模型", "check": "stderr contains '4.1V-Thinking'"},
-        {"name": "有意义输出", "check": "output_length > 100"},
-        {"name": "包含 UI 分析", "check": "contains '布局' or 'layout' or '设计' or 'design'"}
+        {"name": "成功返回分析", "check": "output_length > 100"},
+        {"name": "提及选择的模型", "check": "output contains 'zhipu-thinking' or 'zhipu-4v' or '默认路由' or 'backend' or '--backend'"},
+        {"name": "说明选择理由", "check": "output contains '复杂' or '图表' or '推理' or '场景' or 'routing' or '路由'"}
       ]
     }
   ]

@@ -35,7 +35,7 @@ def main():
             "permissionDecisionReason": (
                 "Image file detected. The current model is text-only "
                 "and cannot process images. Use the free-vision skill instead: "
-                "call the script at ~/.claude/skills/free-vision/scripts/vision_read.py "
+                "call the script at ~/.agents/skills/free-vision/scripts/vision_read.py "
                 "with the image path."
             )
         }

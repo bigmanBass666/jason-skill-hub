@@ -1,3 +1,6 @@
+﻿---
+name: adb-app-explorer
+---
 # ADB App Explorer
 
 > 快速、系统性地对任何陌生 Android App 进行全量 UI 探索，生成完整的功能地图。目标是让 AI 在 10 分钟内掌握一个 App 的所有能力，而不是花几个小时被反复纠正。
