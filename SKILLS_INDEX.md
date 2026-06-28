@@ -13,6 +13,11 @@
 3. 示例：SKILL.md 在 `.../arch-design/SKILL.md`，引用 `./references/guide.md` → `.../arch-design/references/guide.md`
 
 ## Skills
+### scauzj-article-format
+- **Description**: 共青团华南农业大学珠江学院工作规范
+- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/SCAUZJ-article-format/SKILL.md
+- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/SCAUZJ-article-format.zip
+
 ### adb-app-explorer
 - **Description**: 
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/adb-app-explorer/SKILL.md
@@ -67,7 +72,7 @@
 - **Description**: 管理和操作 cc-switch 配置数据库。当用户提到 cc-switch、provider 管理、MCP 服务器配置、AI 供应商切换、故障转移设置、代理配置时触发。覆盖：添加/删除/切换 provider、MCP 服务器管理、Skills 管理、Prompts 管理、Failover 队列、Proxy 配置、环境检查。即使用户只是说「加个 AI 供应商」「切一下 provider」「看看 cc-switch 配置」也应触发。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/cc-switch.zip
-- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .md(1), .disabled(1).
+- **Has 2 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/cc-switch/` Directories: references/. File types: .disabled(1), .md(1).
 
 ### chaoxing-auto-answer
 - **Description**: >
@@ -228,11 +233,6 @@
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/save-work-dir/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/save-work-dir.zip
 
-### scauzj-article-format
-- **Description**: 共青团华南农业大学珠江学院工作规范
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/SCAUZJ-article-format/SKILL.md
-- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/SCAUZJ-article-format.zip
-
 ### setup-project-mcp
 - **Description**: 一键在项目中注册 MCP 服务器，自动创建/更新 .mcp.json。当用户说"添加项目级 MCP"、"配置 MCP 服务器"、"register MCP"、"setup project MCP"、"帮我在项目中注册一个 MCP"或需要将某个 MCP 服务器关联到当前项目时，使用此 skill。即使配置来自其他 MCP 服务器的 deferred tools 列表（系统注入的 <system-reminder>），也应使用此 skill 将其写入 .mcp.json。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/setup-project-mcp/SKILL.md
@@ -294,12 +294,6 @@
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/ui-ux-pro-max.zip
 - **Has 27 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/ui-ux-pro-max/` Directories: data/, scripts/. File types: .csv(24), .py(3).
-
-### universal-article-engineering
-- **Description**: 将一段真实的工作探索转化为高质量技术文章的完整流程 Skill。当用户说"我不想让这段工作白费"、"帮我把这次探索写成文章"、"以你的身份写下来"、"这次调查值得被记录"时，必须立即触发。也适用于：技术博客、Reverse Engineering 报告、故障溯源记录、架构分析、工程实践文章、Hacker 风格长文。核心前提：文章素材来自真实发生的工作，以真实视角撰写，不捏造，不夸大。
-- **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/SKILL.md
-- **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/universal-article-engineering.zip
-- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/universal-article-engineering/` File types: .md(1).
 
 ### wiztree-cli
 - **Description**: >
