@@ -206,6 +206,58 @@ Get-Content "update.sql" | sqlite3 $dbPath
 | `common_config_opencode` | OpenCode 通用模板 |
 | `official_providers_seeded` | 官方 provider 是否已初始化 |
 
+## mcp_servers 表结构
+
+```sql
+CREATE TABLE mcp_servers (
+    id TEXT NOT NULL,                    -- 标识符（如 "github", "web-search"）
+    name TEXT NOT NULL,                  -- 显示名称
+    server_config TEXT NOT NULL,         -- JSON，server 配置
+    description TEXT DEFAULT '',         -- 描述
+    tags TEXT DEFAULT '[]',              -- JSON 数组
+    enabled_claude INTEGER DEFAULT 0,    -- 是否在 Claude Code 中启用
+    enabled_codex INTEGER DEFAULT 0,     -- 是否在 Codex 中启用
+    enabled_gemini INTEGER DEFAULT 0,    -- 是否在 Gemini CLI 中启用
+    enabled_opencode INTEGER DEFAULT 0,  -- 是否在 OpenCode 中启用
+    enabled_hermes INTEGER DEFAULT 0,    -- 是否在 Hermes CLI 中启用
+    PRIMARY KEY (id)
+);
+```
+
+### server_config 格式
+
+```json
+{
+  "type": "stdio",           // "stdio" | "http"
+  "command": "cmd",          // stdio 的可执行文件
+  "args": ["/c", "npx", "-y", "package@latest"],  // 命令行参数
+  "env": {                   // 可选的环境变量
+    "KEY": "value"
+  }
+}
+```
+
+### 常用查询
+
+```sql
+-- 查看所有启用的 MCP（按客户端）
+SELECT id, name, enabled_claude, enabled_codex FROM mcp_servers WHERE enabled_claude = 1 OR enabled_codex = 1;
+
+-- 查看某个 MCP 的完整配置
+SELECT id, server_config FROM mcp_servers WHERE id = 'github';
+
+-- 查看 npm 包名（args 数组第 3 个元素）
+SELECT id, json_extract(server_config, '$.args[3]') as package FROM mcp_servers WHERE json_extract(server_config, '$.args[3]') IS NOT NULL;
+
+-- 统计各客户端启用数量
+SELECT
+  SUM(enabled_claude) as claude,
+  SUM(enabled_codex) as codex,
+  SUM(enabled_gemini) as gemini,
+  SUM(enabled_opencode) as opencode
+FROM mcp_servers;
+```
+
 ## 参考现有 Provider
 
 ```powershell
