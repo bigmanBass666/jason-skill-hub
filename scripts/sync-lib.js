@@ -2,14 +2,63 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+const LOG_DIR = process.env.LOG_DIR || path.join(__dirname, '..', 'logs');
+const LOG_RETENTION_DAYS = 30;
+
 function timestamp() {
   const now = new Date();
   return now.toTimeString().slice(0, 8);
 }
 
+function getLogDate() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function logToFile(msg) {
+  try {
+    const logDir = path.resolve(LOG_DIR);
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+    const logFile = path.join(logDir, `sync-${getLogDate()}.log`);
+    const entry = `[${new Date().toISOString()}] ${msg}\n`;
+    fs.appendFileSync(logFile, entry, 'utf-8');
+  } catch (e) {
+    // 文件日志失败不阻塞主流程
+  }
+}
+
+function cleanOldLogs() {
+  try {
+    const logDir = path.resolve(LOG_DIR);
+    if (!fs.existsSync(logDir)) return;
+    const maxAge = LOG_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const entries = fs.readdirSync(logDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isFile() || !entry.name.endsWith('.log')) continue;
+      const fullPath = path.join(logDir, entry.name);
+      const stat = fs.statSync(fullPath);
+      if (now - stat.mtimeMs > maxAge) {
+        fs.unlinkSync(fullPath);
+      }
+    }
+  } catch (e) {
+    // 清理失败不阻塞主流程
+  }
+}
+
 function log(msg) {
   console.log(`[${timestamp()}] ${msg}`);
+  logToFile(msg);
 }
+
+// 模块加载时执行一次旧日志清理
+cleanOldLogs();
 
 const IGNORED_DIRS = new Set(['.git', '__pycache__', 'node_modules', '.DS_Store', 'free-resource-hunter-workspace']);
 const PRESERVED_FILES = new Set(['INDEX.md', 'INDEX_HEADER.md', 'skills.json']);

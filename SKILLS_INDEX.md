@@ -124,7 +124,7 @@
 - **Description**: 文档链接索引 skill。内部维护各技术栈的 llms.txt 及目录页 URL，当需要查阅官方文档时按域匹配索引、语义查找具体页面。工作方式是：Claude 自行按需 Fetch 索引内容并匹配返回链接。触发场景：用户提到某个技术并需要查阅官方文档、用户直接索要某个技术的文档链接、用户在编码时需要参考官方文档。注意：只返回链接，不做内容总结或解读。
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/doc-links.zip
-- **Has 3 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/` Directories: .omc/, references/. File types: .json(2), .md(1).
+- **Has 1 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/doc-links/` Directories: references/. File types: .md(1).
 
 ### docx
 - **Description**: Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.
@@ -403,7 +403,7 @@
 - **Description**: >
 - **Raw**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/SKILL.md
 - **Zip**: https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@pkg/trae-forum-pro.zip
-- **Has 38 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/` Directories: .git/, evals/, references/, scripts/. File types: .sample(14), .md(3), .sh(2), .git/commit_editmsg(1), .git/config(1), .git/description(1), .git/fetch_head(1), .git/head(1), .git/index(1), .git/info/exclude(1), .git/logs/head(1), .git/logs/refs/heads/main(1), .git/logs/refs/remotes/origin/main(1), .git/objects/15/009f6ad345e5fb4f7649d108db901739853324(1), .git/objects/4f/de5b344823c3ae03184dd6463135c8b2bb1e87(1), .git/objects/73/7bb989fd5e1ba29d423067a2eaa84a916aae32(1), .idx(1), .pack(1), .rev(1), .git/refs/heads/main(1), .git/refs/remotes/origin/main(1), .json(1).
+- **Has 6 file(s)**: ⚠️ You MUST read these files before using this skill. Access by appending relative path to the Raw URL base: `https://cdn.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/skills/trae-forum-pro/` Directories: evals/, references/, scripts/. File types: .md(3), .sh(2), .json(1).
 
 ### trae-plan
 - **Description**: 优先规划任务的执行方向，用户确认后再执行
