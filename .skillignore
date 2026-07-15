@@ -5,6 +5,16 @@
 #   - 以 / 结尾只匹配目录
 #   - * 匹配任意字符（不含 /）
 #   - 空行和 # 开头的行被忽略
+#
+# 层级机制（v2）：
+#   - 根目录的 .skillignore 作为全局规则
+#   - 每个 skill 目录下也可以放 .skillignore，只作用于该 skill
+#   - 子目录的规则会追加到父级规则上（不覆盖）
+#   - 例如：在 skills/tailscale-ssh/ 下放 .skillignore 写 *，整个 skill 被忽略
+#
+# 用途示例：
+#   根 .skillignore → 全局排除 __pycache__、.zip 等
+#   skills/foo/.skillignore → 只排除 foo 这个 skill
 
 # Python 字节码
 __pycache__/
