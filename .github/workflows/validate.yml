@@ -12,8 +12,11 @@ on:
       - 'skills/**'
       - 'scripts/**'
 
+# validate.yml 只做验证，不做 auto-fix。
+# auto-fix/commit/push/CDN-purge 由 auto-fix-index.yml 处理，
+# 避免两个 workflow 同时 push 导致竞争条件。
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -37,22 +40,10 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
+            echo "diff<<EOF" >> $GITHUB_OUTPUT
+            git diff SKILLS_INDEX.md _redirects >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
           fi
-
-      - name: Auto-fix and commit index files (push only)
-        if: github.event_name == 'push' && steps.check_changes.outputs.changed == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add SKILLS_INDEX.md _redirects
-          git commit -m "chore: auto-update skill index files"
-          git pull --rebase origin master
-          git push
-
-      - name: Purge jsDelivr CDN cache (push only)
-        if: github.event_name == 'push' && steps.check_changes.outputs.changed == 'true'
-        run: |
-          curl -s "https://purge.jsdelivr.net/gh/bigmanBass666/jason-skill-hub@master/" || true
 
       - name: Fail if index files out of date (PR only)
         if: github.event_name == 'pull_request' && steps.check_changes.outputs.changed == 'true'
@@ -60,6 +51,12 @@ jobs:
           echo "❌ Index files are out of date. Run 'node scripts/scan.js' and commit the changes."
           git diff SKILLS_INDEX.md _redirects
           exit 1
+
+      - name: Warn if index files out of date (push only)
+        if: github.event_name == 'push' && steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "⚠️  Index files out of date — auto-fix-index.yml should handle this."
+          echo "If you see this warning repeatedly, check auto-fix-index.yml."
 
       - name: ✅ Index files are up to date
         if: steps.check_changes.outputs.changed == 'false'
