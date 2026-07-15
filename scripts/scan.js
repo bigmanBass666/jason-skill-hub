@@ -25,14 +25,11 @@ const OUTPUT_AGENTS = path.join(__dirname, '..', 'AGENTS.md');
 const SKILLIGNORE_PATH = path.join(__dirname, '..', '.skillignore');
 
 /**
- * 加载并解析 .skillignore 文件
- * 返回模式列表，每条模式是 { raw, isDir, regex }
+ * 解析 .skillignore 文本，返回模式列表
+ * 每条模式是 { raw, isDir, regex }
  */
-function loadSkillIgnore() {
-  if (!fs.existsSync(SKILLIGNORE_PATH)) return [];
-
-  const rawPatterns = fs.readFileSync(SKILLIGNORE_PATH, 'utf-8')
-    .split('\n')
+function parseIgnorePatterns(rawText) {
+  const rawPatterns = rawText.split('\n')
     .map(l => l.trim())
     .filter(l => l && !l.startsWith('#'));
 
@@ -43,6 +40,24 @@ function loadSkillIgnore() {
     const escaped = namePart.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '.');
     return { raw: p, isDir, regex: new RegExp('^' + escaped + '$', 'i') };
   });
+}
+
+/**
+ * 加载根目录 .skillignore 文件
+ */
+function loadSkillIgnore() {
+  if (!fs.existsSync(SKILLIGNORE_PATH)) return [];
+  return parseIgnorePatterns(fs.readFileSync(SKILLIGNORE_PATH, 'utf-8'));
+}
+
+/**
+ * 加载指定目录的 .skillignore 文件
+ * 用于层级 ignore 机制：每个子目录都可以放自己的 .skillignore
+ */
+function loadLocalSkillIgnore(dirPath) {
+  const ignorePath = path.join(dirPath, '.skillignore');
+  if (!fs.existsSync(ignorePath)) return [];
+  return parseIgnorePatterns(fs.readFileSync(ignorePath, 'utf-8'));
 }
 
 /**
@@ -97,11 +112,16 @@ function parseFrontmatter(content) {
 
 /**
  * 递归获取目录下所有文件（跳过 .skillignore 匹配项）
+ * 支持层级 .skillignore：每层目录的规则与父级规则合并
  */
-function getAllFiles(dirPath, basePath = '', ignorePatterns = []) {
+function getAllFiles(dirPath, basePath = '', inheritedPatterns = []) {
   const files = [];
 
   if (!fs.existsSync(dirPath)) return files;
+
+  // 加载本目录的 .skillignore 并合并到继承的规则中
+  const localPatterns = loadLocalSkillIgnore(dirPath);
+  const effectivePatterns = inheritedPatterns.concat(localPatterns);
 
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
@@ -109,11 +129,11 @@ function getAllFiles(dirPath, basePath = '', ignorePatterns = []) {
     const fullPath = path.join(dirPath, entry.name);
     const relativePath = path.join(basePath, entry.name);
 
-    // 检查是否被 .skillignore 排除
-    if (isIgnored(entry.name, ignorePatterns)) continue;
+    // 检查是否被任一层的 .skillignore 排除
+    if (isIgnored(entry.name, effectivePatterns)) continue;
 
     if (entry.isDirectory()) {
-      files.push(...getAllFiles(fullPath, relativePath, ignorePatterns));
+      files.push(...getAllFiles(fullPath, relativePath, effectivePatterns));
     } else {
       files.push(relativePath);
     }
@@ -208,10 +228,16 @@ function scanSkills() {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
 
-    // 跳过被 .skillignore 排除的顶级目录
+    // 跳过被 .skillignore 排除的顶级目录（根 .skillignore）
     if (isIgnored(entry.name, ignorePatterns)) continue;
 
     const skillDir = path.join(SKILLS_DIR, entry.name);
+
+    // 检查 skill 目录内的 .skillignore（层级机制）
+    // 如果 skill 目录中有 .skillignore，匹配该目录名则整个 skill 被忽略
+    const localPatterns = loadLocalSkillIgnore(skillDir);
+    if (isIgnored(entry.name, localPatterns)) continue;
+
     const skillMd = path.join(skillDir, 'SKILL.md');
 
     if (!fs.existsSync(skillMd)) continue;
@@ -225,7 +251,9 @@ function scanSkills() {
 
     checkReferences(skillDir, entry.name, content);
 
-    const allFiles = getAllFiles(skillDir, '', ignorePatterns);
+    // 合并根 .skillignore + 本技能目录的 .skillignore，传给 getAllFiles
+    const allIgnorePatterns = ignorePatterns.concat(localPatterns);
+    const allFiles = getAllFiles(skillDir, '', allIgnorePatterns);
 
     skills.push({
       name: frontmatter.name || entry.name,
