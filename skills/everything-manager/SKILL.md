@@ -20,6 +20,18 @@ description: |
 
 This skill helps you manage Everything Search (voidtools) on Windows. Everything is a fast file search utility that indexes your files for instant search results.
 
+## Prerequisites (MCP)
+
+For the Everything MCP to work, you need:
+
+1. **Everything service must be running** — check with `Get-Service -Name "Everything" | Select-Object Status`; start with `Everything.exe -startup`
+2. **`EVERYTHING_ES_PATH` environment variable** must point to `es.exe` (e.g. `D:\apps\Everything\es.exe`). Set it as a User environment variable:
+   ```powershell
+   [Environment]::SetEnvironmentVariable("EVERYTHING_ES_PATH", "<path-to-es.exe>", "User")
+   ```
+
+> **Troubleshooting tip:** If the MCP reports `"es.exe not found"`, the actual cause may be that Everything service is not running — the error message is misleading. Try starting Everything first before checking paths.
+
 ## Common Tasks
 
 ### Check Everything Status
@@ -238,18 +250,24 @@ Everything.exe -start-service
 
 ### MCP Connection Failed
 
-If MCP reports "Everything service not running":
+If the MCP reports an error:
+
+**Case 1: `"es.exe not found"`**
+- `es.exe` might actually be found, but **Everything service is not running** — this error is misleading
+- Start Everything: `Everything.exe -startup`
+- Then verify: `Get-Process -Name "Everything"`
+
+**Case 2: `"Everything service not running"`**
 1. Check if Everything is running: `Get-Process -Name "Everything*"`
 2. If not, start it: `Everything.exe -startup`
-3. If running but MCP fails, restart: `Everything.exe -exit; Everything.exe -startup`
+3. If running but MCP still fails, restart: `Everything.exe -exit; Everything.exe -startup`
 
 ## Best Practices
 
 1. **Use `-startup`** for background operation without GUI
 2. **Exclude system directories** to reduce memory usage
 3. **Reindex after config changes** to apply exclusions
-4. **Install as service** for automatic startup
-5. **Monitor memory** periodically with `Get-Process`
+4. **Monitor memory** periodically with `Get-Process`
 
 ## Finding Everything Path
 

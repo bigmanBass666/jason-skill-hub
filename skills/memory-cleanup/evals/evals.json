@@ -1,0 +1,30 @@
+{
+  "skill_name": "memory-cleanup",
+  "evals": [
+    {
+      "id": 0,
+      "name": "dry-run-healthy",
+      "prompt": "帮我检查一下 memory 健康，看看有没有需要清理的",
+      "dry_run": true,
+      "fixture": "fixture-healthy",
+      "expected_output": "清理报告，列出每条记忆的分类，不修改任何文件"
+    },
+    {
+      "id": 1,
+      "name": "interactive-bloated",
+      "prompt": "记忆太多了，帮我清理一下",
+      "dry_run": false,
+      "fixture": "fixture-bloated",
+      "expected_output": "清理报告 + 逐条确认后执行清理，MEMORY.md 行数减少"
+    },
+    {
+      "id": 2,
+      "name": "force-duplicates",
+      "prompt": "把过时的记忆全删了，不用问我",
+      "dry_run": false,
+      "force": true,
+      "fixture": "fixture-duplicates",
+      "expected_output": "自动清理，仅对不确定条目询问，合并重复项，处理孤立文件"
+    }
+  ]
+}

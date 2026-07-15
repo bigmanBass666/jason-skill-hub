@@ -128,7 +128,7 @@ def run_loop(
             "test_passed": test_summary["passed"] if test_summary else None,
             "test_failed": test_summary["failed"] if test_summary else None,
             "test_total": test_summary["total"] if test_summary else None,
-            "test_results": test_results["results"] if test_results else None,
+            "test_results": test_results["results"] if test_results else [],
             # For backward compat with report generator
             "passed": train_summary["passed"],
             "failed": train_summary["failed"],

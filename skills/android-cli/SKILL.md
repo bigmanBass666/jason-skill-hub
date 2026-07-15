@@ -1,17 +1,6 @@
 ---
 name: android-cli
-description: Provides instructions for installing and using the `android` CLI. The `android` command-line tool is a critical tool for Android development and helps you create new Android projects, run Android apps on devices, manage and interact with Android virtual devices (including screenshots and UI inspection), manage Android SDK components, look up official Android documentation, and discover and install official Android skills.
-license: Complete terms in LICENSE.txt
-metadata:
-  author: Google LLC
-  keywords:
-  - sdk
-  - emulator
-  - skills
-  - docs
-  - knowledge base
-  - project creation
-  - screenshots
+description: Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line tool.
 ---
 # Android CLI Specialist
 
@@ -229,3 +218,4 @@ update
           Usage: android update [--url=PARAM]
           Update the Android CLI
                 --url=PARAM   The URL to download the update from
+

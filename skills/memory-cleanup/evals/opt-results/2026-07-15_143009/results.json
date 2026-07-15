@@ -1,0 +1,1390 @@
+{
+  "exit_reason": "max_iterations (5)",
+  "original_description": "Scan and clean up Claude Code's auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says \"clean up memory\", \"memory is bloated\", \"review my memories\", \"check memory health\", \"memory is too big\", \"MEMORY.md needs cleaning\", \"memory maintenance\", \"\u5e2e\u6211\u6e05\u7406\u8bb0\u5fc6\", \"\u8bb0\u5fc6\u592a\u591a\u4e86\", \"memory is messy\", or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say \"you should have known X but didn't\" (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing \u2014 only for auto memory (~/.claude/projects/.../memory/).",
+  "best_description": "Scan and clean up Claude Code's auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says \"clean up memory\", \"memory is bloated\", \"review my memories\", \"check memory health\", \"memory is too big\", \"MEMORY.md needs cleaning\", \"memory maintenance\", \"\u5e2e\u6211\u6e05\u7406\u8bb0\u5fc6\", \"\u8bb0\u5fc6\u592a\u591a\u4e86\", \"memory is messy\", or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say \"you should have known X but didn't\" (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing \u2014 only for auto memory (~/.claude/projects/.../memory/).",
+  "best_score": "4/8",
+  "best_train_score": "6/12",
+  "best_test_score": "4/8",
+  "final_description": "When someone's auto-memory needs a spring clean \u2014 stale entries culled, duplicates merged, the index trimmed. Use this skill when the vibe is 'memory maintenance' (\u6e05\u7406/\u6574\u7406/\u7ba1\u7406\u8bb0\u5fc6, \u592a\u591a\u4e86/\u592a\u4e71\u4e86, 'clean up', 'too messy', 'health check'). It scans MEMORY.md + topic files, spots what's outdated or redundant, and helps decide what stays before the 200-line limit silently drops entries.",
+  "iterations_run": 5,
+  "holdout": 0.4,
+  "train_size": 12,
+  "test_size": 8,
+  "history": [
+    {
+      "iteration": 1,
+      "description": "Scan and clean up Claude Code's auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says \"clean up memory\", \"memory is bloated\", \"review my memories\", \"check memory health\", \"memory is too big\", \"MEMORY.md needs cleaning\", \"memory maintenance\", \"\u5e2e\u6211\u6e05\u7406\u8bb0\u5fc6\", \"\u8bb0\u5fc6\u592a\u591a\u4e86\", \"memory is messy\", or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say \"you should have known X but didn't\" (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing \u2014 only for auto memory (~/.claude/projects/.../memory/).",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "\u5e2e\u6211\u770b\u770b\u8bb0\u5fc6\u91cc\u6709\u4ec0\u4e48\u8fc7\u65f6\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "memory is getting bloated, check it",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "MEMORY.md \u662f\u4e0d\u662f\u8be5\u6e05\u7406\u4e86",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "the memory files are piling up, review them",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "add this to memory",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "forget about that specific config",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the project context",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u770b\u770b CLAUDE.md \u6709\u4ec0\u4e48\u95ee\u9898",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "description": "Memory getting cluttered? This skill cleans up Claude's auto memory \u2014 not saving new memories, but auditing what's already there for stale, duplicate, or oversized entries. Use when saying '\u5e2e\u6211\u6e05\u7406\u8bb0\u5fc6', '\u6574\u7406\u4e00\u4e0b', '\u8bb0\u5fc6\u592a\u4e71\u4e86', 'memory maintenance', 'check memory health', 'memory is bloated', or context feels overloaded. It trims MEMORY.md and topic files before the 200-line limit silently drops old ones. Do NOT invoke for saving memories, editing CLAUDE.md, or reviewing rules.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "\u5e2e\u6211\u770b\u770b\u8bb0\u5fc6\u91cc\u6709\u4ec0\u4e48\u8fc7\u65f6\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "MEMORY.md \u662f\u4e0d\u662f\u8be5\u6e05\u7406\u4e86",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "the memory files are piling up, review them",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "memory is getting bloated, check it",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "add this to memory",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "forget about that specific config",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u770b\u770b CLAUDE.md \u6709\u4ec0\u4e48\u95ee\u9898",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the project context",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "description": "\u5f53\u7528\u6237\u8868\u8fbe\"\u8bb0\u5fc6\u9700\u8981\u6574\u7406\u3001\u6e05\u7406\u3001\u5ba1\u67e5\u6216\u7ef4\u62a4\"\u7684\u610f\u56fe\u65f6\u4f7f\u7528\u2014\u2014\u4e2d\u82f1\u6587\u7686\u53ef\uff0c\u4e0d\u9650\u4e8e\u7279\u5b9a\u63aa\u8f9e\u3002\u672c\u6280\u80fd\u626b\u63cf Claude Code \u9879\u76ee\u7684 auto memory\uff08MEMORY.md \u548c topic files\uff09\uff0c\u8bc6\u522b\u8fc7\u65f6\u3001\u91cd\u590d\u3001\u5b64\u7acb\u3001\u8fc7\u5927\u7684\u6761\u76ee\u5e76\u5e2e\u52a9\u6e05\u7406\u6216\u5408\u5e76\uff0c\u5728 200 \u884c/25KB \u52a0\u8f7d\u4e0a\u9650\u524d\u4e3b\u52a8\u7ef4\u62a4\u3002\u4e13\u505a\u5b58\u91cf\u8bb0\u5fc6\u6574\u7406\uff0c\u4e0d\u505a\u65b0\u589e\u6216\u641c\u7d22\u3002",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "\u5e2e\u6211\u770b\u770b\u8bb0\u5fc6\u91cc\u6709\u4ec0\u4e48\u8fc7\u65f6\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "memory is getting bloated, check it",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "MEMORY.md \u662f\u4e0d\u662f\u8be5\u6e05\u7406\u4e86",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "the memory files are piling up, review them",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "add this to memory",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "forget about that specific config",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u770b\u770b CLAUDE.md \u6709\u4ec0\u4e48\u95ee\u9898",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the project context",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 4,
+      "description": "Use this skill to audit and clean up Claude's auto memory when it gets cluttered, stale, or oversized. It's the right tool when someone wants to \u6574\u7406\u8bb0\u5fc6\u3001\u6e05\u7406\u8bb0\u5fc6\u3001\u8bb0\u5fc6\u7ba1\u7406\u3001\u68c0\u67e5\u8bb0\u5fc6\u5065\u5eb7\u3001\u6574\u7406\u4e00\u4e0b \u2014 or any expression of memory needing a tidy-up, health check, or spring clean. The skill reads MEMORY.md and topic files, pinpoints what's outdated or redundant, and helps decide what to keep or delete before the 200-line limit causes silent loss.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "\u5e2e\u6211\u770b\u770b\u8bb0\u5fc6\u91cc\u6709\u4ec0\u4e48\u8fc7\u65f6\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "MEMORY.md \u662f\u4e0d\u662f\u8be5\u6e05\u7406\u4e86",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "memory is getting bloated, check it",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "the memory files are piling up, review them",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u770b\u770b CLAUDE.md \u6709\u4ec0\u4e48\u95ee\u9898",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "forget about that specific config",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add this to memory",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the project context",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 5,
+      "description": "When someone's auto-memory needs a spring clean \u2014 stale entries culled, duplicates merged, the index trimmed. Use this skill when the vibe is 'memory maintenance' (\u6e05\u7406/\u6574\u7406/\u7ba1\u7406\u8bb0\u5fc6, \u592a\u591a\u4e86/\u592a\u4e71\u4e86, 'clean up', 'too messy', 'health check'). It scans MEMORY.md + topic files, spots what's outdated or redundant, and helps decide what stays before the 200-line limit silently drops entries.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "\u5e2e\u6211\u770b\u770b\u8bb0\u5fc6\u91cc\u6709\u4ec0\u4e48\u8fc7\u65f6\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "MEMORY.md \u662f\u4e0d\u662f\u8be5\u6e05\u7406\u4e86",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "the memory files are piling up, review them",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "memory is getting bloated, check it",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "add this to memory",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "forget about that specific config",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u770b\u770b CLAUDE.md \u6709\u4ec0\u4e48\u95ee\u9898",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the project context",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "\u6211\u7684\u8bb0\u5fc6\u592a\u4e71\u4e86\uff0c\u5e2e\u6211\u6574\u7406",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "clean up the auto memory, it's a mess",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u7ba1\u7406\uff0c\u68c0\u67e5\u4e00\u4e0b\u6709\u6ca1\u6709\u80fd\u5220\u7684",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "check memory health for this project",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u5e2e\u6211\u6e05\u7406\u4e00\u4e0b\u8bb0\u5fc6",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u8bb0\u5fc6\u592a\u591a\u4e86\uff0c\u6574\u7406\u4e00\u4e0b",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "remember that I use pnpm not npm",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save my preferences",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "review my CLAUDE.md for outdated rules",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u8bb0\u5f55\u4e00\u4e0b\u73b0\u5728\u7684\u8fdb\u5ea6\u5230\u8bb0\u5fc6",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "\u5e2e\u6211\u5199\u4e2a CLAUDE.md",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "what does my memory contain",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

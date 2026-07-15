@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>memory-cleanup — Skill Description Optimization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', Georgia, serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #faf9f5;
+            color: #141413;
+        }
+        h1 { font-family: 'Poppins', sans-serif; color: #141413; }
+        .explainer {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e6dc;
+            color: #b0aea5;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        .summary {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e6dc;
+        }
+        .summary p { margin: 5px 0; }
+        .best { color: #788c5d; font-weight: bold; }
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+        table {
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #e8e6dc;
+            border-radius: 6px;
+            font-size: 12px;
+            min-width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #e8e6dc;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        th {
+            font-family: 'Poppins', sans-serif;
+            background: #141413;
+            color: #faf9f5;
+            font-weight: 500;
+        }
+        th.test-col {
+            background: #6a9bcc;
+        }
+        th.query-col { min-width: 200px; }
+        td.description {
+            font-family: monospace;
+            font-size: 11px;
+            word-wrap: break-word;
+            max-width: 400px;
+        }
+        td.result {
+            text-align: center;
+            font-size: 16px;
+            min-width: 40px;
+        }
+        td.test-result {
+            background: #f0f6fc;
+        }
+        .pass { color: #788c5d; }
+        .fail { color: #c44; }
+        .rate {
+            font-size: 9px;
+            color: #b0aea5;
+            display: block;
+        }
+        tr:hover { background: #faf9f5; }
+        .score {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        .score-good { background: #eef2e8; color: #788c5d; }
+        .score-ok { background: #fef3c7; color: #d97706; }
+        .score-bad { background: #fceaea; color: #c44; }
+        .train-label { color: #b0aea5; font-size: 10px; }
+        .test-label { color: #6a9bcc; font-size: 10px; font-weight: bold; }
+        .best-row { background: #f5f8f2; }
+        th.positive-col { border-bottom: 3px solid #788c5d; }
+        th.negative-col { border-bottom: 3px solid #c44; }
+        th.test-col.positive-col { border-bottom: 3px solid #788c5d; }
+        th.test-col.negative-col { border-bottom: 3px solid #c44; }
+        .legend { font-family: 'Poppins', sans-serif; display: flex; gap: 20px; margin-bottom: 10px; font-size: 13px; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-swatch { width: 16px; height: 16px; border-radius: 3px; display: inline-block; }
+        .swatch-positive { background: #141413; border-bottom: 3px solid #788c5d; }
+        .swatch-negative { background: #141413; border-bottom: 3px solid #c44; }
+        .swatch-test { background: #6a9bcc; }
+        .swatch-train { background: #141413; }
+    </style>
+</head>
+<body>
+    <h1>memory-cleanup — Skill Description Optimization</h1>
+    <div class="explainer">
+        <strong>Optimizing your skill's description.</strong> This page updates automatically as Claude tests different versions of your skill's description. Each row is an iteration — a new description attempt. The columns show test queries: green checkmarks mean the skill triggered correctly (or correctly didn't trigger), red crosses mean it got it wrong. The "Train" score shows performance on queries used to improve the description; the "Test" score shows performance on held-out queries the optimizer hasn't seen. When it's done, Claude will apply the best-performing description to your skill.
+    </div>
+
+    <div class="summary">
+        <p><strong>Original:</strong> Scan and clean up Claude Code&#x27;s auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says &quot;clean up memory&quot;, &quot;memory is bloated&quot;, &quot;review my memories&quot;, &quot;check memory health&quot;, &quot;memory is too big&quot;, &quot;MEMORY.md needs cleaning&quot;, &quot;memory maintenance&quot;, &quot;帮我清理记忆&quot;, &quot;记忆太多了&quot;, &quot;memory is messy&quot;, or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say &quot;you should have known X but didn&#x27;t&quot; (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing — only for auto memory (~/.claude/projects/.../memory/).</p>
+        <p class="best"><strong>Best:</strong> Scan and clean up Claude Code&#x27;s auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says &quot;clean up memory&quot;, &quot;memory is bloated&quot;, &quot;review my memories&quot;, &quot;check memory health&quot;, &quot;memory is too big&quot;, &quot;MEMORY.md needs cleaning&quot;, &quot;memory maintenance&quot;, &quot;帮我清理记忆&quot;, &quot;记忆太多了&quot;, &quot;memory is messy&quot;, or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say &quot;you should have known X but didn&#x27;t&quot; (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing — only for auto memory (~/.claude/projects/.../memory/).</p>
+        <p><strong>Best Score:</strong> 4/8 (test)</p>
+        <p><strong>Iterations:</strong> 5 | <strong>Train:</strong> 12 | <strong>Test:</strong> 8</p>
+    </div>
+
+    <div class="legend">
+        <span style="font-weight:600">Query columns:</span>
+        <span class="legend-item"><span class="legend-swatch swatch-positive"></span> Should trigger</span>
+        <span class="legend-item"><span class="legend-swatch swatch-negative"></span> Should NOT trigger</span>
+        <span class="legend-item"><span class="legend-swatch swatch-train"></span> Train</span>
+        <span class="legend-item"><span class="legend-swatch swatch-test"></span> Test</span>
+    </div>
+
+    <div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Iter</th>
+                <th>Train</th>
+                <th>Test</th>
+                <th class="query-col">Description</th>
+                <th class="positive-col">我的记忆太乱了，帮我整理</th>
+                <th class="positive-col">clean up the auto memory, it&#x27;s a mess</th>
+                <th class="positive-col">记忆管理，检查一下有没有能删的</th>
+                <th class="positive-col">帮我清理一下记忆</th>
+                <th class="positive-col">check memory health for this project</th>
+                <th class="positive-col">记忆太多了，整理一下</th>
+                <th class="negative-col">remember that I use pnpm not npm</th>
+                <th class="negative-col">save my preferences</th>
+                <th class="negative-col">review my CLAUDE.md for outdated rules</th>
+                <th class="negative-col">帮我写个 CLAUDE.md</th>
+                <th class="negative-col">帮我记录一下现在的进度到记忆</th>
+                <th class="negative-col">what does my memory contain</th>
+                <th class="test-col positive-col">帮我看看记忆里有什么过时的</th>
+                <th class="test-col positive-col">memory is getting bloated, check it</th>
+                <th class="test-col positive-col">MEMORY.md 是不是该清理了</th>
+                <th class="test-col positive-col">the memory files are piling up, review them</th>
+                <th class="test-col negative-col">add this to memory</th>
+                <th class="test-col negative-col">forget about that specific config</th>
+                <th class="test-col negative-col">update the project context</th>
+                <th class="test-col negative-col">帮我看看 CLAUDE.md 有什么问题</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="best-row">
+                <td>1</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">Scan and clean up Claude Code&#x27;s auto memory (MEMORY.md + topic files). Identify stale, duplicate, orphaned, or bloated entries and help you consolidate them. Trigger when the user says &quot;clean up memory&quot;, &quot;memory is bloated&quot;, &quot;review my memories&quot;, &quot;check memory health&quot;, &quot;memory is too big&quot;, &quot;MEMORY.md needs cleaning&quot;, &quot;memory maintenance&quot;, &quot;帮我清理记忆&quot;, &quot;记忆太多了&quot;, &quot;memory is messy&quot;, or any variant of memory management / context hygiene. Also trigger when context seems crowded or when the user mentions the 200-line / 25KB MEMORY.md limit, or when they say &quot;you should have known X but didn&#x27;t&quot; (which may indicate memory was truncated). Do NOT trigger for CLAUDE.md editing — only for auto memory (~/.claude/projects/.../memory/).</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>2</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">Memory getting cluttered? This skill cleans up Claude&#x27;s auto memory — not saving new memories, but auditing what&#x27;s already there for stale, duplicate, or oversized entries. Use when saying &#x27;帮我清理记忆&#x27;, &#x27;整理一下&#x27;, &#x27;记忆太乱了&#x27;, &#x27;memory maintenance&#x27;, &#x27;check memory health&#x27;, &#x27;memory is bloated&#x27;, or context feels overloaded. It trims MEMORY.md and topic files before the 200-line limit silently drops old ones. Do NOT invoke for saving memories, editing CLAUDE.md, or reviewing rules.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>3</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">当用户表达&quot;记忆需要整理、清理、审查或维护&quot;的意图时使用——中英文皆可，不限于特定措辞。本技能扫描 Claude Code 项目的 auto memory（MEMORY.md 和 topic files），识别过时、重复、孤立、过大的条目并帮助清理或合并，在 200 行/25KB 加载上限前主动维护。专做存量记忆整理，不做新增或搜索。</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>4</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">Use this skill to audit and clean up Claude&#x27;s auto memory when it gets cluttered, stale, or oversized. It&#x27;s the right tool when someone wants to 整理记忆、清理记忆、记忆管理、检查记忆健康、整理一下 — or any expression of memory needing a tidy-up, health check, or spring clean. The skill reads MEMORY.md and topic files, pinpoints what&#x27;s outdated or redundant, and helps decide what to keep or delete before the 200-line limit causes silent loss.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>5</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">When someone&#x27;s auto-memory needs a spring clean — stale entries culled, duplicates merged, the index trimmed. Use this skill when the vibe is &#x27;memory maintenance&#x27; (清理/整理/管理记忆, 太多了/太乱了, &#x27;clean up&#x27;, &#x27;too messy&#x27;, &#x27;health check&#x27;). It scans MEMORY.md + topic files, spots what&#x27;s outdated or redundant, and helps decide what stays before the 200-line limit silently drops entries.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+</body>
+</html>

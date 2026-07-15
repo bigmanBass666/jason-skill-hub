@@ -1,0 +1,22 @@
+[
+  {"query": "帮我清理一下记忆", "should_trigger": true},
+  {"query": "记忆太多了，整理一下", "should_trigger": true},
+  {"query": "memory is getting bloated, check it", "should_trigger": true},
+  {"query": "MEMORY.md 是不是该清理了", "should_trigger": true},
+  {"query": "check memory health for this project", "should_trigger": true},
+  {"query": "我的记忆太乱了，帮我整理", "should_trigger": true},
+  {"query": "clean up the auto memory, it's a mess", "should_trigger": true},
+  {"query": "帮我看看记忆里有什么过时的", "should_trigger": true},
+  {"query": "the memory files are piling up, review them", "should_trigger": true},
+  {"query": "记忆管理，检查一下有没有能删的", "should_trigger": true},
+  {"query": "帮我写个 CLAUDE.md", "should_trigger": false},
+  {"query": "remember that I use pnpm not npm", "should_trigger": false},
+  {"query": "帮我看看 CLAUDE.md 有什么问题", "should_trigger": false},
+  {"query": "add this to memory", "should_trigger": false},
+  {"query": "update the project context", "should_trigger": false},
+  {"query": "forget about that specific config", "should_trigger": false},
+  {"query": "帮我记录一下现在的进度到记忆", "should_trigger": false},
+  {"query": "review my CLAUDE.md for outdated rules", "should_trigger": false},
+  {"query": "save my preferences", "should_trigger": false},
+  {"query": "what does my memory contain", "should_trigger": false}
+]

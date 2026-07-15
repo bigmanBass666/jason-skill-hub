@@ -1,111 +1,36 @@
 ---
 name: tdd
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: 测试驱动开发。适用于用户想用先写测试的方式构建功能或修复缺陷、提到 “red-green-refactor”，或需要集成测试时。
 ---
 
 # Test-Driven Development
 
-## Philosophy
+TDD 是 red -> green loop。这个 skill 是让该 loop 产出值得保留的 tests 的 reference：什么是好 test、tests 应该放在哪里、anti-patterns，以及 loop 的规则。每个 cycle 前和 cycle 中都要参考这些内容，而不是事后才看。
 
-**Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.
+探索 codebase 时，读取 `CONTEXT.md`（如果存在），让 test names 和 interface vocabulary 与项目 domain language 对齐，并尊重你触碰区域的 ADRs。
 
-**Good tests** are integration-style: they exercise real code paths through public APIs. They describe _what_ the system does, not _how_ it does it. A good test reads like a specification - "user can checkout with valid cart" tells you exactly what capability exists. These tests survive refactors because they don't care about internal structure.
+## What a good test is
 
-**Bad tests** are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn't changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
+Tests 应通过 public interfaces 验证 behavior，而不是 implementation details。代码可以完全改变；tests 不该随之改变。一个好 test 读起来像 specification："user can checkout with valid cart" 能清楚说明存在什么能力；因为它不关心 internal structure，所以能承受 refactors。
 
-**Tautological tests** restate the implementation inside the assertion, so they pass by construction and give zero confidence. When the expected value is computed the way the code computes it — `expect(add(a, b)).toBe(a + b)`, snapshotting a figure you derived by hand the same way the code does, asserting a constant equals itself — the test can never disagree with the code: break the code wrong and the assertion breaks wrong with it. The expected value must come from an independent source of truth — a known-good literal, a worked example, the spec.
+示例见 [tests.md](tests.md)，mocking 规则见 [mocking.md](mocking.md)。
 
-See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+## Seams — where tests go
 
-## Anti-Pattern: Horizontal Slices
+**Seam** 是你测试的 public boundary：可以观察 behavior、但不伸手进入内部的 interface。Tests 放在 seams 上，绝不针对 internals。
 
-**DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
+**只测试预先认可的 seams。** 写任何 test 前，先写下要测试的 seams 并与用户确认。未经确认的 seam 不写 test。你无法测试所有东西；提前认可 seams，才能把测试精力放在 critical paths 和复杂 logic 上，而不是每个 edge case。
 
-This produces **crap tests**:
+询问："What's the public interface, and which seams should we test?"
 
-- Tests written in bulk test _imagined_ behavior, not _actual_ behavior
-- You end up testing the _shape_ of things (data structures, function signatures) rather than user-facing behavior
-- Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
-- You outrun your headlights, committing to test structure before understanding the implementation
+## Anti-patterns
 
-**Correct approach**: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
+- **Implementation-coupled** — mock internal collaborators、测试 private methods，或通过 side channel 验证（例如不用 interface 而直接查询 database）。特征是 refactor 时 test 失败，但 behavior 没变。
+- **Tautological** — assertion 以和代码相同的方式重新计算 expected value（`expect(add(a, b)).toBe(a + b)`、手工按同一逻辑生成 snapshot、把 constant 断言等于它自己），因此天然 pass，永远无法与代码 disagree。Expected values 必须来自独立 source of truth：known-good literal、worked example 或 spec。
+- **Horizontal slicing** — 先写所有 tests，再写所有 implementation。批量 tests 验证的是 _想象中的_ behavior：你测试的是东西的 _shape_，不是 user-facing behavior；tests 会对真实变化迟钝，并在理解 implementation 前承诺 test structure。改用 **vertical slices**：一个 test -> 一个 implementation -> repeat，每个 test 都是回应上一轮学习的 **tracer bullet**。
 
-```
-WRONG (horizontal):
-  RED:   test1, test2, test3, test4, test5
-  GREEN: impl1, impl2, impl3, impl4, impl5
+## Rules of the loop
 
-RIGHT (vertical):
-  RED→GREEN: test1→impl1
-  RED→GREEN: test2→impl2
-  RED→GREEN: test3→impl3
-  ...
-```
-
-## Workflow
-
-### 1. Planning
-
-When exploring the codebase, read `CONTEXT.md` (if it exists) so that test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
-
-Before writing any code:
-
-- [ ] Confirm with user what interface changes are needed
-- [ ] Confirm with user which behaviors to test (prioritize)
-- [ ] Identify opportunities for deep modules (small interface, deep implementation) — run the `/codebase-design` skill for the vocabulary and the testability checks
-- [ ] List the behaviors to test (not implementation steps)
-- [ ] Get user approval on the plan
-
-Ask: "What should the public interface look like? Which behaviors are most important to test?"
-
-**You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
-
-### 2. Tracer Bullet
-
-Write ONE test that confirms ONE thing about the system:
-
-```
-RED:   Write test for first behavior → test fails
-GREEN: Write minimal code to pass → test passes
-```
-
-This is your tracer bullet - proves the path works end-to-end.
-
-### 3. Incremental Loop
-
-For each remaining behavior:
-
-```
-RED:   Write next test → fails
-GREEN: Minimal code to pass → passes
-```
-
-Rules:
-
-- One test at a time
-- Only enough code to pass current test
-- Don't anticipate future tests
-- Keep tests focused on observable behavior
-
-### 4. Refactor
-
-After all tests pass, look for [refactor candidates](refactoring.md):
-
-- [ ] Extract duplication
-- [ ] Deepen modules (move complexity behind simple interfaces)
-- [ ] Apply SOLID principles where natural
-- [ ] Consider what new code reveals about existing code
-- [ ] Run tests after each refactor step
-
-**Never refactor while RED.** Get to GREEN first.
-
-## Checklist Per Cycle
-
-```
-[ ] Test describes behavior, not implementation
-[ ] Test uses public interface only
-[ ] Test would survive internal refactor
-[ ] Expected values are independent literals, not recomputed from the code
-[ ] Code is minimal for this test
-[ ] No speculative features added
-```
+- **Red before green.** 先写 failing test，再只写足够让它通过的代码。不要预判未来 tests，也不要添加 speculative features。
+- **One slice at a time.** 每个 cycle 只处理一个 seam、一个 test、一个 minimal implementation。
+- **Refactoring is not part of the loop.** Refactoring 属于 review stage（见 `code-review` skill），不属于 red -> green implementation cycle。
