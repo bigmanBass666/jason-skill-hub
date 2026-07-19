@@ -13,11 +13,14 @@ description: 文档链接索引 skill。内部维护各技术栈的 llms.txt 及
 
 ## 查询流程
 
-1. **读索引** — 读取 `references/index_store.md`，逐条阅读每项内容
+1. **读索引** — 读取 `references/index_store.md`，逐条阅读每项内容，注意每条记录的 `type` 字段（llms.txt / html / raw）决定 Fetch 后的解析方式
 2. **匹配域** — 根据用户提到的技术名称，在索引中找到匹配的条目
    - 匹配依据：条目的 domain、description 及 URL 中包含的技术关键词
    - 允许模糊匹配（如用户说 "ts" 可匹配 "TypeScript"、"tailwind" 可匹配 "Tailwind CSS"）
-3. **取回内容** — 对匹配条目的 `link` 执行 Fetch，获取原始文本（llms.txt / markdown目录）
+3. **取回内容** — 对匹配条目的 `link` 执行 Fetch，获取原始文本（llms.txt / llms-full.txt / markdown目录页）
+   - 如果同一域在索引中同时有 `llms.txt`（精选）和 `llms-full.txt`（全量）两个条目：
+     - 优先取 `llms.txt`（精选，量少，快速定位核心文档）
+     - 如果在 `llms.txt` 中找不到匹配，再取 `llms-full.txt` 兜底（全量，覆盖所有页面）
 4. **语义查找** — 在获取到的内容中，理解用户实际想查什么，定位最相关的链接或锚点
 5. **返回结果** — 将找到的链接返回给用户。格式：`[技术名称] 的文档：https://...`
    - 如果索引中一个或多个链接可覆盖用户的完整问题，一并列出
