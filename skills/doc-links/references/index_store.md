@@ -12,3 +12,11 @@
 - [Claude Code · Claude Code 官方文档索引]
   link: https://code.claude.com/docs/llms.txt
   type: llms.txt
+
+- [Grafana · Grafana 全栈文档索引（标准版）]
+  link: https://grafana.com/llms.txt
+  type: llms.txt
+
+- [Grafana · Grafana 全栈文档索引（完整版）]
+  link: https://grafana.com/llms-full.txt
+  type: llms.txt
