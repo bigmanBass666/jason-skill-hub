@@ -31,9 +31,10 @@ Claude Code 将项目路径转为历史目录名的规则（实测验证）：
 
 **一句话：仅保留 `[a-zA-Z0-9]`，其余所有字符 → `-`**
 
-示例：
-- `D:\Working\programming_projects\AK-Switch` → `D--Working-programming-projects-AK-Switch`
-- `C:\Users\86150` → `C--Users-86150`
+**worktree 目录命名规则：**
+- 主项目路径编码后，追加 `--claude-worktrees-<worktree名>`
+- 示例：`D:\Work\Projects\AK-Switch` → `D--Work-Projects-AK-Switch`（主目录）
+- 示例：`D:\Work\Projects\AK-Switch` 的 worktree `cli-logs` → `D--Work-Projects-AK-Switch--claude-worktrees-cli-logs`
 
 ## 脚本路径
 
@@ -48,6 +49,8 @@ python3 "$SKILL_DIR/scripts/move_project_history.py" <command> <args>
 
 用户用 git / mv / cp 把项目文件夹搬到新位置后，迁移所有历史会话。
 
+**worktree 自动迁移：** 如果旧项目有 worktree 会话（`<主目录>--claude-worktrees-*`），`migrate` 会自动发现并同步它们到新项目路径。同步后会话也会备份到主项目目录，方便 `-r` 查找。
+
 ```bash
 # 1. 预览
 python3 "$SKILL_DIR/scripts/move_project_history.py" check "旧路径" "新路径"
@@ -60,12 +63,14 @@ python3 "$SKILL_DIR/scripts/move_project_history.py" migrate "旧路径" "新路
 
 用户有多个 worktree，或想在另一目录继续当前对话。
 
+**worktree 会话查找：** 如果指定会话 ID 在主项目目录中找不到，`sync-session` 会自动搜索 worktree 目录。找到后会同步到新项目的对应 worktree 目录 + 主项目目录。
+
 ```bash
 # 同步最新会话（先 dry-run）
 python3 "$SKILL_DIR/scripts/move_project_history.py" sync-session --dry-run "源路径" "目标路径"
 python3 "$SKILL_DIR/scripts/move_project_history.py" sync-session "源路径" "目标路径"
 
-# 指定会话 ID
+# 指定会话 ID（支持 worktree 中的会话）
 python3 "$SKILL_DIR/scripts/move_project_history.py" sync-session --session <uuid> "源路径" "目标路径"
 ```
 

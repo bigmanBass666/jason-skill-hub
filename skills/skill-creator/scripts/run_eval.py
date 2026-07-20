@@ -31,11 +31,15 @@ def find_project_root() -> Path:
     return current
 
 
-def parse_stream_output(buffer: str, clean_name: str) -> bool:
+def parse_stream_output(buffer: str, clean_name: str, skill_name: str) -> bool:
     """Parse stream-json output lines for skill trigger events.
 
     Works on a complete buffer (no streaming needed), compatible with
     both Windows and Unix.
+
+    clean_name is the unique command filename (e.g. "memory-cleanup-skill-abc123").
+    skill_name is the base skill name (e.g. "memory-cleanup").
+    The model calls Skill tool with the base name, not the unique filename.
     """
     triggered = False
     pending_tool_name = None
@@ -70,12 +74,15 @@ def parse_stream_output(buffer: str, clean_name: str) -> bool:
                 delta = se.get("delta", {})
                 if delta.get("type") == "input_json_delta":
                     accumulated_json += delta.get("partial_json", "")
-                    if clean_name in accumulated_json:
+                    # Skill tool input uses skill_name (base name), Read uses clean_name (unique filename)
+                    target = skill_name if pending_tool_name == "Skill" else clean_name
+                    if target in accumulated_json:
                         return True
 
             elif se_type in ("content_block_stop", "message_stop"):
                 if pending_tool_name:
-                    return clean_name in accumulated_json
+                    target = skill_name if pending_tool_name == "Skill" else clean_name
+                    return target in accumulated_json
                 if se_type == "message_stop":
                     return False
 
@@ -87,8 +94,11 @@ def parse_stream_output(buffer: str, clean_name: str) -> bool:
                     continue
                 tool_name = content_item.get("name", "")
                 tool_input = content_item.get("input", {})
-                if tool_name == "Skill" and clean_name in tool_input.get("skill", ""):
-                    triggered = True
+                if tool_name == "Skill":
+                    # Model calls the skill with its base name, not the unique command filename
+                    skill_called = tool_input.get("skill", "")
+                    if skill_called == skill_name or skill_name in skill_called:
+                        triggered = True
                 elif tool_name == "Read" and clean_name in tool_input.get("file_path", ""):
                     triggered = True
                 return triggered
@@ -164,7 +174,7 @@ def run_single_query(
             process.wait()
             return False
 
-        return parse_stream_output(buffer, clean_name)
+        return parse_stream_output(buffer, clean_name, skill_name)
     finally:
         if command_file.exists():
             command_file.unlink()

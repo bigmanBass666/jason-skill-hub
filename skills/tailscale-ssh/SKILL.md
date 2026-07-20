@@ -111,6 +111,36 @@ cat Z:/somefile.txt
 cat Y:/Users/Administrator/.claude/rules/installation.md
 ```
 
+### 进阶用法：SMB 作为软件分发通道
+
+SMB 不只是文件读写——它是**安装软件到远程**的最可靠方式，比 SCP 快且稳定，尤其适合大文件传输。
+
+**典型场景：远程电脑因 GFW 无法下载 GitHub releases，从本机分发安装包。**
+
+```powershell
+# 1. 本机用 Scoop 安装软件（确保下载成功）
+scoop install pwsh
+
+# 2. 通过 SMB 把安装目录复制到远程 D: 盘
+# Z: = 远程 D$
+cp -r D:\apps\scoop\apps\pwsh\current\. Z:\apps\pwsh\
+
+# 3. SSH 到远程验证并配置
+ssh remote-laptop "D:\apps\pwsh\pwsh.exe --version"
+
+# 4. 注册到远程 PATH（需执行一次）
+[Environment]::SetEnvironmentVariable('PATH', "D:\apps\pwsh;$env:PATH", 'User')
+```
+
+**适用场景对比：**
+
+| 手段 | 适合 | 不适合 |
+|------|------|--------|
+| **SMB 复制** | 大文件、目录结构、安装包分发 | 远程执行安装程序 |
+| **SCP** | 小文件、单文件快速传输 | 大目录、嵌套结构 |
+| **Taildrop** | 端到端加密传单文件 | 大目录、目标需在线 |
+| **SSH 执行 curl** | 远程直接下载 | GFW 阻断时不可用 |
+
 ### 前置条件（远程电脑需配置）
 
 **第一步：远程电脑开启凭据认证的 SMB 共享**
@@ -186,6 +216,41 @@ ssh remote-laptop "要执行的命令"
 
 # 从远程笔记本 → 本机
 ssh 86150@100.65.183.101 "要执行的命令"
+```
+
+### 执行远程 PowerShell 命令（重要注意事项）
+
+**直接通过 SSH 传复杂 PowerShell 命令是灾难——** 嵌套引号、`$` 变量、反引号会导致 escape 地狱，反复调试无果是常态。
+
+**推荐做法（经过实战验证）：** 本地写脚本 → SMB 复制到远程 → SSH 执行。
+
+```bash
+# 1. 本地写好脚本文件（D:\Test\remote_task.ps1）
+
+# 2. 通过 SMB（Y: 盘 = 远程 C$）复制到远程
+cp D:\Test\remote_task.ps1 Y:/Users/Administrator/remote_task.ps1
+
+# 3. SSH 执行（务必加 -ExecutionPolicy Bypass）
+ssh remote-laptop "powershell -ExecutionPolicy Bypass -File C:\Users\Administrator\remote_task.ps1"
+
+# 4. 执行完后清理远程脚本
+ssh remote-laptop "del C:\Users\Administrator\remote_task.ps1"
+```
+
+**如果必须在 SSH 命令中内联写 PowerShell，注意：**
+- **`$env:VAR`** 中的 `$` 要转义为 `\$`（在双引号中）或用单引号包裹
+- **反引号 `` ` ``** 要转义为 `` \` ``
+- **中文** 在 SSH 输出中会乱码，见"中文 Windows 路径问题"小节的解决方法
+- **布尔条件**（`&&`、`||`、`;`）在跨 shell 时行为不一致，尽量拆成多条命令
+
+**执行策略问题：** 远程 Windows 的 PowerShell 默认执行策略可能是 Restricted，导致脚本无法运行。**任何远程执行的 .ps1 脚本都必须加 `-ExecutionPolicy Bypass`：**
+
+```bash
+# ✅ 正确
+ssh remote-laptop "powershell -ExecutionPolicy Bypass -File C:\path\to\script.ps1"
+
+# ❌ 错误（Permission denied）
+ssh remote-laptop "powershell -File C:\path\to\script.ps1"
 ```
 
 ### 前置条件
@@ -291,10 +356,65 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 
 或者在普通（非管理员）PowerShell 中运行 `net use` 映射。
 
-### 6. 中文 Windows 路径问题
+### 6. 中文 Windows 路径与 SSH 乱码
 
-- 远程电脑的下载目录可能是中文名（"下载"），用 `[Environment]::GetFolderPath('UserProfile')` 定位用户目录
-- 建议用绝对路径避免歧义
+**问题：** SSH 命令中的中文字符（路径、注释、错误消息）在终端输出会变成乱码（如 `ϵͳҲָ·` 或 ``）。原因是：SSH 客户端（Git Bash）使用 UTF-8，而远程 Windows 的 cmd/PowerShell 使用系统区域编码（中文 Windows = GBK/CP936），编码不匹配导致显示错误。
+
+**永久解决方案（推荐，一次配置永久生效）：**
+
+在远程电脑的 PowerShell Profile 中添加编码设置：
+
+```powershell
+# 放在 profile 顶部
+$OutputEncoding = [Console]::OutputEncoding = [Text.Encoding]::UTF8
+```
+
+这会修改远程 PowerShell 会话的控制台编码为 UTF-8，所有后续的 SSH 命令输出都能正确显示中文。PS5.1 和 PS7 都需要加（如果 PS7 的 profile 是 dot-source PS5.1 的，则只需加一次）。
+
+**验证方法：**
+```bash
+# 修改后测试 SSH 中文输出
+ssh remote-laptop "powershell -Command \"Write-Host '中文测试'\""
+# 应该正常显示"中文测试"而不是乱码
+```
+
+**临时解决方法（来不及改 profile 时）：**
+
+| 方法 | 做法 | 适用场景 |
+|------|------|---------|
+| 切换远程 console 到 UTF-8 | 命令前加 `chcp 65001 > nul &&` | 单次执行 |
+| 避免中文 | 用 `$env:USERPROFILE` 替代中文路径 | 最稳妥 |
+| 通过 SMB 操作 | Y:/Z: 盘中文正常显示 | 文件操作 |
+| 设置 PowerShell 输出编码 | `[Console]::OutputEncoding = [Text.Encoding]::UTF8` | 单次 session |
+
+### 7. GFW 导致 GitHub 不可用
+
+**问题：** 两台机器在中国大陆，`raw.githubusercontent.com` 被 DNS 污染阻断，`github.com` 间歇性阻断，GitHub releases 下载（`objects.githubusercontent.com` / `release-assets.githubusercontent.com`）超时或截断。
+
+**表现：**
+- `Invoke-WebRequest github.com` → OK
+- `Invoke-WebRequest raw.githubusercontent.com` → 超时
+- `git clone github.com` → 间歇性 fail
+- `curl -L github.com/releases/...` → 下载中途断连，zip 文件损坏（"找不到中央目录结尾记录"）
+
+**应对方案（按优先级）：**
+
+| 方案 | 做法 | 适用场景 |
+|------|------|---------|
+| **本机安装 → SMB 复制** | 本机 Scoop 安装成功 → SMB 复制 `D:\apps\scoop\apps\<name>` 到远程 `Z:\apps\<name>` | 最可靠，已验证通过 |
+| **Git 克隆替代** | 用 `git clone --depth 1` 替代 `Invoke-WebRequest`（`github.com` 的 git 通道有时能通） | Scoop 本身的安装 |
+| **重试** | GFW 是间歇性阻断，等几分钟重试可能就通了 | Starship 等小文件 |
+| **开代理（如有 Karing）** | 启动 Karing 或 VPN，通过代理路由 GitHub 流量 | 远程有 Karing 但通常没开 |
+
+**验证连接的命令：**
+```powershell
+# 测试 GitHub 连通性
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri 'https://github.com' -UseBasicParsing -TimeoutSec 10 -Method Head
+
+# 测试 raw.githubusercontent.com
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com' -UseBasicParsing -TimeoutSec 10 -Method Head
+```
 
 ---
 
@@ -315,6 +435,20 @@ tailscale file cp 本地文件路径 远程设备名:
 # 方法二：SMB 网络驱动器（适合大量文件操作）
 # 直接操作 Z: 盘，像本地文件一样读写
 cp D:\本地文件.txt Z:\目标目录\
+```
+
+### 安装软件到远程（GFW 绕行方案）
+
+```powershell
+# 1. 本机用 Scoop 安装好
+scoop install 软件名
+
+# 2. SMB 复制到远程（Z: = 远程 D$, Y: = 远程 C$）
+# 工具本身：复制到 D:\apps\<软件名>
+cp -r D:\apps\scoop\apps\<软件名>\current\. Z:\apps\<软件名>\
+
+# 3. 注册到远程 PATH
+ssh remote-laptop "powershell -ExecutionPolicy Bypass -Command \"[Environment]::SetEnvironmentVariable('PATH', 'D:\apps\<软件名>;\'+[Environment]::GetEnvironmentVariable('PATH','User'), 'User')\""
 ```
 
 ### 从远程取文件

@@ -20,3 +20,7 @@
 - [Grafana · Grafana 全栈文档索引（完整版）]
   link: https://grafana.com/llms-full.txt
   type: llms.txt
+
+- []
+  link: https://modelcontextprotocol.io/llms.txt
+  type: llms.txt
