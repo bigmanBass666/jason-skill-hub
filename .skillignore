@@ -33,3 +33,6 @@ Thumbs.db
 
 # 临时文件
 *.tmp
+
+# 私人 skill — 不公开
+report-file-edit-issue/
